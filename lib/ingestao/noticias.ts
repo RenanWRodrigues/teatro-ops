@@ -128,3 +128,36 @@ export async function processarNoticias(
     linhas,
   };
 }
+
+/**
+ * Tenta de novo traduzir títulos que ficaram pendentes (motor indisponível na hora da coleta).
+ * Mais recentes primeiro, até `limite` por execução, para não estourar a cota de uma vez.
+ */
+export async function retraduzirPendentes(
+  db: SupabaseClient,
+  traducao: DependenciasTraducao,
+  opcoes: { limite?: number; seco?: boolean } = {},
+): Promise<{ traduzidos: number; caracteresDeepL: number }> {
+  const { data, error } = await db
+    .from("noticias")
+    .select("hash, titulo_original, idioma_original")
+    .is("titulo_pt", null)
+    .order("publicado_em", { ascending: false })
+    .limit(opcoes.limite ?? 100);
+  if (error) throw new Error(`consulta de pendentes: ${error.message}`);
+  const pendentes = (data ?? []) as { hash: string; titulo_original: string; idioma_original: string | null }[];
+  if (pendentes.length === 0) return { traduzidos: 0, caracteresDeepL: 0 };
+
+  const t = await traduzirLote(
+    pendentes.map((p) => ({ texto: p.titulo_original, idioma: p.idioma_original })),
+    opcoes.seco ? { ...traducao, cache: { ...traducao.cache, gravar: async () => {} } } : traducao,
+  );
+  let traduzidos = 0;
+  for (const [i, p] of pendentes.entries()) {
+    const pt = t.saidas[i]!.textoPt;
+    if (!pt || opcoes.seco) continue;
+    const { error: e } = await db.from("noticias").update({ titulo_pt: pt }).eq("hash", p.hash).is("titulo_pt", null);
+    if (!e) traduzidos++;
+  }
+  return { traduzidos, caracteresDeepL: t.caracteresDeepL };
+}

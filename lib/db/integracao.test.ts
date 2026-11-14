@@ -13,7 +13,7 @@ import {
   ultimaAtualizacao,
 } from "./consultas";
 import { paraConflito, paraEquipamento, paraManchete } from "./esquemas";
-import { processarNoticias } from "@/lib/ingestao/noticias";
+import { processarNoticias, retraduzirPendentes } from "@/lib/ingestao/noticias";
 import { registrarExecucao } from "@/lib/fontes/_base/execucao";
 import { hashUrl } from "@/lib/fontes/_base/url";
 import { criarTravador } from "@/lib/traducao/glossario";
@@ -230,6 +230,14 @@ describe.skipIf(!configurado)("Supabase local: pipeline de notícias", () => {
     await registrarExecucao(admin, "teste-pipeline", "gdelt-doc", inicio, primeira.resultado);
     const { data } = await admin.from("execucoes_ingestao").select("itens_novos, erro").eq("job", "teste-pipeline");
     expect(data).toEqual([{ itens_novos: 2, erro: null }]);
+
+    // Numa execução seguinte com motor disponível, o pendente é traduzido.
+    const comMotor = { ...traducao(), libre: { traduzir: async (t: string[]) => t.map((x) => `PT ${x}`) } };
+    const re = await retraduzirPendentes(admin, comMotor, { limite: 500 });
+    expect(re.traduzidos).toBeGreaterThanOrEqual(1);
+    const { data: depois } = await admin.from("noticias").select("titulo_pt").eq("url", urls[1]);
+    expect(depois?.[0]?.titulo_pt).toBe("PT [TEST] English headline about Ukraine");
+    await admin.from("noticias").update({ titulo_pt: null }).eq("url", urls[1]);
 
     // O site lê a tradução pendente como o título original com o selo.
     const r = await listarManchetes(50, anon);

@@ -6,7 +6,7 @@ import type { AdaptadorFonte, NoticiaNormalizada, ResultadoExecucao } from "@/li
 import { criarAdaptadorGdelt } from "@/lib/fontes/gdelt-doc";
 import type { FonteYaml } from "@/lib/fontes/registro";
 import type { DependenciasTraducao } from "@/lib/traducao/traduzir";
-import { processarNoticias, type LinhaNoticia } from "./noticias";
+import { processarNoticias, retraduzirPendentes, type LinhaNoticia } from "./noticias";
 
 export const JOBS = ["noticias", "governos", "eventos", "arsenal", "manutencao"] as const;
 export type Job = (typeof JOBS)[number];
@@ -64,6 +64,10 @@ export async function executarIngestao(
     let saida: ExecucaoFonte;
     try {
       const r = await processarNoticias(db, fabrica(fonte), desde, traducao, { seco: opcoes.seco, log });
+      // Aproveita a execução para traduzir títulos que ficaram pendentes em coletas anteriores.
+      const re = await retraduzirPendentes(db, traducao, { seco: opcoes.seco });
+      if (re.traduzidos > 0) log(`[${fonte.id}] ${re.traduzidos} título(s) pendente(s) traduzido(s) agora`);
+      r.resultado.caracteresTraduzidos += re.caracteresDeepL;
       saida = { fonteId: fonte.id, ...r };
     } catch (e) {
       const erro = limparErro(e);
