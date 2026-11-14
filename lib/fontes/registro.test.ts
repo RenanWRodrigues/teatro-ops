@@ -12,8 +12,9 @@ describe("lerRegistroFontes", () => {
     expect(fontes.find((f) => f.id === "gdelt-doc")).toMatchObject({
       url_base: "https://api.gdeltproject.org/api/v2/doc/doc",
       categoria: "pesquisa",
-      status: "a_verificar",
+      status: "quebrada",
     });
+    expect(fontes.find((f) => f.id === "gdelt-gkg")?.status).toBe("ativa");
     // Fonte só com página (feed ainda não descoberto) usa a página como url_base.
     expect(fontes.find((f) => f.id === "kremlin")?.url_base).toBe("http://en.kremlin.ru/events/president/news");
     expect(ignoradas).toContainEqual({ id: "imprensa-exemplo", motivo: "placeholder [preencher]" });

@@ -1,6 +1,7 @@
 -- GERADO por scripts/gerar-seed-fontes.ts a partir de config/fontes.yaml. Não edite à mão.
 insert into fontes (id, nome, url_base, licenca, tipo, categoria, pais, status) values
-  ('gdelt-doc', 'GDELT DOC 2.0 API', 'https://api.gdeltproject.org/api/v2/doc/doc', 'Livre para qualquer uso, com citação e link ao GDELT', 'api', 'pesquisa', null, 'a_verificar'),
+  ('gdelt-doc', 'GDELT DOC 2.0 API', 'https://api.gdeltproject.org/api/v2/doc/doc', 'Livre para qualquer uso, com citação e link ao GDELT', 'api', 'pesquisa', null, 'quebrada'),
+  ('gdelt-gkg', 'GDELT GKG 2.0 (arquivos de 15 min)', 'https://data.gdeltproject.org/gdeltv2/', 'Livre para qualquer uso, com citação e link ao GDELT', 'dataset', 'pesquisa', null, 'ativa'),
   ('gdelt-geo', 'GDELT GEO 2.0 API', 'https://api.gdeltproject.org/api/v2/geo/geo', 'Livre com citação', 'api', 'pesquisa', null, 'a_verificar'),
   ('acled', 'ACLED', 'https://acleddata.com/api/acled/read', 'Termos de uso + EULA + política de atribuição ACLED', 'api', 'pesquisa', null, 'a_verificar'),
   ('ucdp', 'UCDP — Uppsala Conflict Data Program', 'https://ucdpapi.pcr.uu.se/api/', 'CC BY 4.0', 'api', 'pesquisa', null, 'a_verificar'),

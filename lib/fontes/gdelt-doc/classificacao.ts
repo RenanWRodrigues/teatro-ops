@@ -59,7 +59,7 @@ const PAISES: [string, CodigoRegiao, string[]][] = [
   ["PH", "IP", ["Philippines", "Philippine", "Filipino", "Manila", "Filipinas", "filipino"]],
   ["MM", "IP", ["Myanmar", "Burma", "Burmese", "Mianmar"]],
   ["IN", "AC", ["India", "Indian", "New Delhi", "Índia", "indiano"]],
-  ["PK", "AC", ["Pakistan", "Pakistani", "Islamabad", "Paquistão", "paquistanês"]],
+  ["PK", "AC", ["Pakistan", "Pakistani", "Pak", "Islamabad", "Balochistan", "Khyber Pakhtunkhwa", "Paquistão", "paquistanês", "Baluchistão"]],
   ["AF", "AC", ["Afghanistan", "Afghan", "Taliban", "Kabul", "Afeganistão", "afegão", "Talibã", "Cabul"]],
   ["US", "AM", ["United States", "U.S.", "US", "American", "Pentagon", "Washington", "Estados Unidos", "EUA", "americano", "Pentágono"]],
   ["VE", "AM", ["Venezuela", "Venezuelan", "Caracas", "venezuelano"]],

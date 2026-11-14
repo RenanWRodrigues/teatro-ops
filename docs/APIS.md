@@ -80,3 +80,10 @@ O estilo usado é `https://tiles.openfreemap.org/styles/dark` (verificado em 14/
 | `yaml` | Leitura de `config/fontes.yaml` para gerar o seed | ISC |
 | `@electric-sql/pglite` | Postgres em memória para testar migrações e RLS (só desenvolvimento) | Apache-2.0 |
 | Supabase CLI | `pnpm db:migrate` (`supabase db push`) | MIT; gratuito |
+
+## 7. GDELT: API DOC × arquivos GKG (14/11/2026)
+
+- **API DOC 2.0** (`gdelt-doc`): respondeu HTTP 429 ("limit requests to one every 5 seconds") de forma contínua, tanto da rede local quanto do GitHub Actions, mesmo após 10+ min sem chamadas. Status `quebrada`; o adaptador fica pronto para quando voltar.
+- **Arquivos GKG 2.0** (`gdelt-gkg`): `https://data.gdeltproject.org/gdeltv2/lastupdate.txt` aponta o arquivo mais recente; um arquivo por 15 min (~3 MB compactado, ~800 notícias, todas com `<PAGE_TITLE>`). Sem chave e sem limite de requisições; usamos 1 req/s por educação. Mesma licença do GDELT (uso livre com citação).
+- **Filtro de relevância** (em `config/fontes.yaml`, ajustável sem código): termo das `consultas` no título **e** ao menos um dos `temas_gdelt` marcados pelo GDELT, menos as `excluir`. Medido em 2 h de dados: 39 → 14 notícias, removendo esportes ("offensive line"), entretenimento ("war movie"), economia ("trade war") e história ("Civil War").
+- O fluxo principal do GKG é de veículos em inglês; o fluxo traduzido (`*.translation.gkg.csv.zip`) pode ser somado depois.

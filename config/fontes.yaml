@@ -18,7 +18,29 @@ conflitos:
       drones: '(drone OR UAV OR "loitering munition" OR "drone strike")'
       ia: '("artificial intelligence" OR "AI") (military OR defense OR weapon)'
       guerra_eletronica: '("electronic warfare" OR jamming OR "GPS spoofing")'
-    status: a_verificar
+    status: quebrada   # 14/11/2026: HTTP 429 contínuo, inclusive a partir do GitHub Actions; ver gdelt-gkg
+
+  # Arquivos brutos do GDELT (sem API, sem limite): usados porque a API DOC responde 429
+  # inclusive a partir do GitHub Actions. Mesmas consultas, aplicadas ao título da página.
+  - id: gdelt-gkg
+    nome: GDELT GKG 2.0 (arquivos de 15 min)
+    url: https://data.gdeltproject.org/gdeltv2/
+    tipo: dataset
+    auth: nenhuma
+    limite: "1 req / s"
+    licenca: "Livre para qualquer uso, com citação e link ao GDELT"
+    categoria: pesquisa
+    job: noticias
+    consultas:
+      conflitos: '(war OR airstrike OR offensive OR ceasefire OR shelling)'
+      drones: '(drone OR UAV OR "loitering munition" OR "drone strike")'
+      ia: '("artificial intelligence" OR "AI") (military OR defense OR weapon)'
+      guerra_eletronica: '("electronic warfare" OR jamming OR "GPS spoofing")'
+    # Títulos com estes termos são descartados (falsos positivos medidos em 14/11/2026).
+    excluir: '("trade war" OR "price war" OR "culture war" OR "Civil War" OR "World War" OR "War Cemetery" OR "War Cemetary" OR "Star Wars" OR "war movie" OR "offensive line" OR "offensive player" OR "offensive coordinator" OR "light show")'
+    # Além do termo no título, o GDELT precisa ter marcado a notícia com ao menos um destes temas.
+    temas_gdelt: [ARMEDCONFLICT, MILITARY, KILL, TERROR, CEASEFIRE, WB_2433_CONFLICT_AND_VIOLENCE, MIL_WEAPONS_PROLIFERATION, WMD, REBELLION, MILITARY_COOPERATION, PEACEKEEPING, BLOCKADE, TAX_MILITARY_TITLE]
+    status: ativa      # 14/11/2026: coleta real ok (5.797 notícias em 2 h, 14 gravadas após filtros)
 
   - id: gdelt-geo
     nome: GDELT GEO 2.0 API

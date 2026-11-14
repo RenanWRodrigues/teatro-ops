@@ -94,14 +94,23 @@ export function normalizarArtigo(item: ItemGdelt): NoticiaNormalizada | null {
   };
 }
 
-/** Une itens repetidos (mesma URL em consultas diferentes), somando os temas. */
+const chaveTitulo = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+
+/**
+ * Une itens repetidos — mesma URL (consultas diferentes) ou mesmo título (republicação em vários sites) —
+ * somando os temas. Fica o primeiro visto.
+ */
 export function deduplicar(itens: NoticiaNormalizada[]): NoticiaNormalizada[] {
-  const porHash = new Map<string, NoticiaNormalizada>();
+  const porChave = new Map<string, NoticiaNormalizada>();
+  const chaveDe = new Map<string, string>();
   for (const n of itens) {
-    const atual = porHash.get(n.hash);
-    porHash.set(n.hash, atual ? { ...atual, temas: [...new Set([...atual.temas, ...n.temas])].sort() } : n);
+    const chave = chaveDe.get(n.hash) ?? chaveDe.get(chaveTitulo(n.tituloOriginal)) ?? n.hash;
+    chaveDe.set(n.hash, chave);
+    chaveDe.set(chaveTitulo(n.tituloOriginal), chave);
+    const atual = porChave.get(chave);
+    porChave.set(chave, atual ? { ...atual, temas: [...new Set([...atual.temas, ...n.temas])].sort() } : n);
   }
-  return [...porHash.values()];
+  return [...porChave.values()];
 }
 
 export function criarAdaptadorGdelt(config: FonteYaml, fetchImpl: typeof fetch = fetch): AdaptadorFonte<ItemGdelt, NoticiaNormalizada> {

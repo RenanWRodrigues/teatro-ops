@@ -2,7 +2,7 @@
 // Uso: pnpm env:verificar   (lê o .env.local)
 import { existsSync, readFileSync } from "node:fs";
 
-const NOMES = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY"] as const;
+const NOMES = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY", "DEEPL_API_KEY"] as const;
 
 function forma(v: string | undefined): string {
   if (v === undefined) return "não definida";
@@ -15,7 +15,11 @@ function forma(v: string | undefined): string {
         ? "sb_secret_…"
         : v.startsWith("eyJ")
           ? "JWT legado (eyJ…)"
-          : "formato inesperado";
+          : /^[0-9a-f-]{36}:fx$/i.test(v)
+            ? "chave DeepL Free (…:fx)"
+            : /^[0-9a-f-]{36}$/i.test(v)
+              ? "⚠ chave DeepL Pro (sem :fx) — o projeto usa o endereço Free"
+              : "formato inesperado";
   const alerta = /\s|^["']|["']$|#/.test(v) ? "  ⚠ contém espaço, aspas ou #" : "";
   return `${tipo}, ${v.length} caracteres${alerta}`;
 }

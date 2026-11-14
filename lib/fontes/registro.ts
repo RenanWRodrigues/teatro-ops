@@ -28,6 +28,10 @@ export const esquemaFonteYaml = z.object({
   env: z.array(z.string()).optional(),
   opcional: z.boolean().optional(),
   consultas: z.record(z.string(), z.string()).optional(),
+  /** Consulta no mesmo formato: títulos que casam são descartados. */
+  excluir: z.string().optional(),
+  /** GKG: temas do GDELT exigidos (ao menos um) além do termo no título. */
+  temas_gdelt: z.array(z.string()).optional(),
 });
 
 export type FonteYaml = z.infer<typeof esquemaFonteYaml>;

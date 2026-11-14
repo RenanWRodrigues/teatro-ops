@@ -18,10 +18,13 @@
     "db:seed:gerar": "tsx scripts/gerar-seed-fontes.ts",
     "test:db": "tsx scripts/testar-banco-local.ts",
     "env:verificar": "tsx --env-file-if-exists=.env.local scripts/verificar-env.ts",
-    "ingest:gdelt-doc": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-doc.ts"
+    "ingest:gdelt-doc": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-doc.ts",
+    "secrets:sincronizar": "tsx --env-file-if-exists=.env.local scripts/sincronizar-secrets.ts",
+    "ingest:gdelt-gkg": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-gkg.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
+    "fflate": "^0.8.3",
     "maplibre-gl": "^6.18.0",
     "next": "16.4.6",
     "react": "19.3.0",

@@ -262,7 +262,7 @@ export const esquemaLinhaManchete = z.object({
 export type LinhaManchete = z.infer<typeof esquemaLinhaManchete>;
 
 /** Agregadores: o veículo é a fonte exibida; o agregador aparece como "via". */
-const AGREGADORES: Record<string, string> = { "GDELT DOC 2.0 API": "GDELT" };
+const AGREGADORES: Record<string, string> = { "GDELT DOC 2.0 API": "GDELT", "GDELT GKG 2.0 (arquivos de 15 min)": "GDELT" };
 
 export function paraManchete(l: LinhaManchete): Manchete {
   const veiculo = new URL(l.url).hostname.replace(/^www\./, "");

@@ -4,7 +4,8 @@ import { configFontes } from "@/lib/fontes/_base/config";
 import { limparErro, registrarExecucao } from "@/lib/fontes/_base/execucao";
 import type { AdaptadorFonte, NoticiaNormalizada, ResultadoExecucao } from "@/lib/fontes/_base/tipos";
 import { criarAdaptadorGdelt } from "@/lib/fontes/gdelt-doc";
-import type { FonteYaml } from "@/lib/fontes/registro";
+import { criarAdaptadorGkg } from "@/lib/fontes/gdelt-gkg";
+import { lerRegistroFontes, type FonteYaml } from "@/lib/fontes/registro";
 import type { DependenciasTraducao } from "@/lib/traducao/traduzir";
 import { processarNoticias, retraduzirPendentes, type LinhaNoticia } from "./noticias";
 
@@ -19,6 +20,7 @@ type FabricaNoticias = (config: FonteYaml) => AdaptadorFonte<unknown, NoticiaNor
 /** Adaptadores implementados. Fontes do YAML sem adaptador aqui são puladas com aviso. */
 export const ADAPTADORES_NOTICIAS: Record<string, FabricaNoticias> = {
   "gdelt-doc": (c) => criarAdaptadorGdelt(c) as AdaptadorFonte<unknown, NoticiaNormalizada>,
+  "gdelt-gkg": (c) => criarAdaptadorGkg(c) as AdaptadorFonte<unknown, NoticiaNormalizada>,
 };
 
 export type ExecucaoFonte = { fonteId: string; resultado: ResultadoExecucao; linhas: LinhaNoticia[] };
@@ -49,6 +51,9 @@ export async function executarIngestao(
   const log = opcoes.log ?? console.log;
   const fontes = selecionarFontes(configFontes(), opcoes);
   if (fontes.length === 0) log(`[ingestao] nenhuma fonte ativa para o job "${opcoes.job}".`);
+
+  // noticias.fonte_id referencia `fontes`: garante a linha (e o status) de cada fonte a rodar, a partir do YAML.
+  if (!opcoes.seco && fontes.length > 0) await sincronizarFontes(db, fontes.map((f) => f.id));
 
   const saidas: ExecucaoFonte[] = [];
   for (const fonte of fontes) {
@@ -82,4 +87,15 @@ export async function executarIngestao(
     saidas.push(saida);
   }
   return saidas;
+}
+
+/** Upsert das linhas de `fontes` a partir de config/fontes.yaml (o YAML é a fonte da verdade). */
+async function sincronizarFontes(db: SupabaseClient, ids: string[]): Promise<void> {
+  const { readFileSync } = await import("node:fs");
+  const path = await import("node:path");
+  const { fontes } = lerRegistroFontes(readFileSync(path.join(process.cwd(), "config/fontes.yaml"), "utf8"));
+  const linhas = fontes.filter((f) => ids.includes(f.id));
+  if (linhas.length === 0) return;
+  const { error } = await db.from("fontes").upsert(linhas, { onConflict: "id" });
+  if (error) throw new Error(`sincronização de fontes: ${error.message}`);
 }

@@ -116,7 +116,7 @@ export default async function Home() {
               </div>
             </div>
             <div className="flex flex-wrap gap-6">
-              <MapaConflitos conflitos={conflitos.dados} className="h-[360px] flex-[2_1_640px] md:h-[520px]" />
+              <MapaConflitos conflitos={conflitos.exemplo ? [] : conflitos.dados} className="h-[360px] flex-[2_1_640px] md:h-[520px]" />
               <div className="flex min-w-0 flex-[1_1_340px] flex-col border border-line">
                 {/* Conflitos curados (Fase 5) › notícias reais do tema "conflitos" › placeholders [EXEMPLO]. */}
                 {!conflitos.exemplo || noticiasConflito.length === 0
