@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>TEATRO//OPS — Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0B}
+a{color:#F2A900;text-decoration:none}a:hover{color:#FFC94D}
+.ph{background-color:#141816;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.035) 0 2px,transparent 2px 14px)}
+.sweep{transform-origin:200px 200px;transform-box:view-box;animation:sweep 6s linear infinite}
+@keyframes sweep{to{transform:rotate(360deg)}}
+.blip{animation:blip 2.4s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+.tick{animation:tick 40s linear infinite}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.sweep,.blip,.tick{animation:none}}
+</style>
+</helmet>
+<div style="background: #0A0C0B; color: #E8EAE6; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
+
+<!-- TOP BAR -->
+<header style="border-bottom: 1px solid #232825; position: relative">
+<div style="max-width: 1360px; margin: 0 auto; padding: 18px 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px">
+<a href="#top" style="display: flex; align-items: center; gap: 12px; color: #E8EAE6">
+<svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#F2A900" stroke-width="1.6" aria-hidden="true"><circle cx="15" cy="15" r="10"></circle><circle cx="15" cy="15" r="3"></circle><path d="M15 1v8M15 21v8M1 15h8M21 15h8"></path></svg>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: 0.06em">TEATRO<span style="color: #F2A900">//</span>OPS</span>
+</a>
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; gap: 28px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase">
+<a href="#conflitos" style="color: #C9CEC9">Conflitos</a>
+<a href="Arsenal.dc.html" style="color: #C9CEC9">Arsenal</a>
+<a href="#taticas" style="color: #C9CEC9">Táticas</a>
+<a href="Tech.dc.html" style="color: #C9CEC9">IA &amp; Drones</a>
+<a href="#arquivo" style="color: #C9CEC9">Arquivo</a>
+</nav>
+<div style="display: flex; gap: 12px; align-items: center">
+<button type="button" aria-label="Buscar" style="width: 44px; height: 44px; border: 1px solid #2E3430; background: transparent; color: #E8EAE6; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+<a href="#briefing" style="height: 44px; padding: 0 20px; background: #F2A900; color: #0A0C0B; font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; display: flex; align-items: center">Briefing diário</a>
+</div>
+</div>
+<!-- ticker -->
+<div style="border-top: 1px solid #232825; background: #0F1211; overflow: hidden; display: flex; align-items: stretch">
+<div style="flex: none; background: #E5483D; color: #0A0C0B; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; padding: 10px 16px; display: flex; align-items: center; gap: 8px; z-index: 1">
+<span class="blip" style="width: 8px; height: 8px; border-radius: 50%; background: #0A0C0B"></span>AO VIVO</div>
+<div style="overflow: hidden; flex: 1">
+<div class="tick" style="display: flex; gap: 48px; white-space: nowrap; padding: 10px 24px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9BA39D; width: max-content">
+<span><span style="color: #F2A900">EUROPA ORIENTAL</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">ORIENTE MÉDIO</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">INDO-PACÍFICO</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">ÁFRICA SUBSAARIANA</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">CIBER</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">EUROPA ORIENTAL</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">ORIENTE MÉDIO</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">INDO-PACÍFICO</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">ÁFRICA SUBSAARIANA</span> · [manchete em tempo real]</span>
+<span><span style="color: #F2A900">CIBER</span> · [manchete em tempo real]</span>
+</div>
+</div>
+</div>
+</header>
+
+<!-- HERO -->
+<section id="top" style="position: relative; border-bottom: 1px solid #232825; background-image: linear-gradient(#161A18 1px, transparent 1px), linear-gradient(90deg, #161A18 1px, transparent 1px); background-size: 64px 64px">
+<div style="max-width: 1360px; margin: 0 auto; padding: 96px 40px 88px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
+<div style="flex: 1 1 560px; min-width: 0">
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; color: #F2A900; margin-bottom: 28px">// INTELIGÊNCIA DE DEFESA EM LINGUAGEM CLARA</div>
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(64px, 9vw, 132px); line-height: 0.88; letter-spacing: -0.01em; text-transform: uppercase">O mundo<br>em conflito,<br><span style="color: #F2A900">decodificado.</span></h1>
+<p style="margin: 32px 0 0; max-width: 560px; font-size: 19px; line-height: 1.6; color: #B5BCB6">Mapas de conflitos ativos, fichas técnicas de caças, tanques e navios, análises de táticas militares e a nova frente da guerra: inteligência artificial e drones.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px">
+<a href="#conflitos" style="height: 56px; padding: 0 28px; background: #F2A900; color: #0A0C0B; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 12px">Abrir mapa de conflitos <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg></a>
+<a href="Arsenal.dc.html" style="height: 56px; padding: 0 28px; border: 1px solid #3A413C; color: #E8EAE6; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center">Explorar arsenal</a>
+</div>
+</div>
+
+<!-- radar panel -->
+<div style="flex: 1 1 440px; min-width: 0; max-width: 520px; border: 1px solid #2A302C; background: #0D100F; position: relative">
+<div style="display: flex; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #232825; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #9BA39D">
+<span>MONITOR GLOBAL</span><span style="color: #F2A900">● SINCRONIZADO</span>
+</div>
+<div style="padding: 24px; display: flex; justify-content: center">
+<svg viewBox="0 0 400 400" style="width: 100%; max-width: 420px; height: auto" role="img" aria-label="Radar estilizado com pontos de conflito">
+<g fill="none" stroke="#24302A" stroke-width="1">
+<circle cx="200" cy="200" r="190"></circle><circle cx="200" cy="200" r="140"></circle><circle cx="200" cy="200" r="90"></circle><circle cx="200" cy="200" r="40"></circle>
+<path d="M200 10v380M10 200h380M66 66l268 268M334 66L66 334"></path>
+</g>
+<g class="sweep">
+<path d="M200 200 L200 10 A190 190 0 0 1 334 66 Z" fill="#F2A900" fill-opacity="0.14"></path>
+<path d="M200 200 L200 10" stroke="#F2A900" stroke-width="2"></path>
+</g>
+<g fill="#E5483D">
+<circle class="blip" cx="262" cy="118" r="6"></circle>
+<circle class="blip" cx="128" cy="160" r="5" style="animation-delay: .6s"></circle>
+<circle class="blip" cx="290" cy="250" r="5" style="animation-delay: 1.2s"></circle>
+</g>
+<g fill="#F2A900"><circle cx="150" cy="282" r="4"></circle><circle cx="232" cy="300" r="4"></circle></g>
+<g font-family="JetBrains Mono, monospace" font-size="11" fill="#9BA39D">
+<text x="272" y="112">ZONA A</text><text x="58" y="152">ZONA B</text><text x="300" y="256">ZONA C</text>
+</g>
+</svg>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #232825; font-family: 'JetBrains Mono', monospace">
+<div style="padding: 16px 18px; border-right: 1px solid #232825"><div style="font-size: 11px; color: #9BA39D; letter-spacing: 0.1em">ALTA INTENSIDADE</div><div style="font-size: 26px; color: #E5483D; margin-top: 6px">[N]</div></div>
+<div style="padding: 16px 18px; border-right: 1px solid #232825"><div style="font-size: 11px; color: #9BA39D; letter-spacing: 0.1em">EM MONITORAMENTO</div><div style="font-size: 26px; color: #F2A900; margin-top: 6px">[N]</div></div>
+<div style="padding: 16px 18px"><div style="font-size: 11px; color: #9BA39D; letter-spacing: 0.1em">ATUALIZADO</div><div style="font-size: 26px; color: #E8EAE6; margin-top: 6px">[HH:MM]</div></div>
+</div>
+<!-- corner brackets -->
+<span aria-hidden="true" style="position: absolute; top: -6px; left: -6px; width: 18px; height: 18px; border-top: 2px solid #F2A900; border-left: 2px solid #F2A900"></span>
+<span aria-hidden="true" style="position: absolute; bottom: -6px; right: -6px; width: 18px; height: 18px; border-bottom: 2px solid #F2A900; border-right: 2px solid #F2A900"></span>
+</div>
+</div>
+</section>
+
+<!-- 4 AXES -->
+<section style="border-bottom: 1px solid #232825">
+<div style="max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
+<a href="#conflitos" style="padding: 36px 40px; border-right: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; color: #F2A900; font-size: 13px">01</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; text-transform: uppercase">Conflitos</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.5">Mapa vivo, cronologias e contexto geopolítico de cada frente.</span></a>
+<a href="Arsenal.dc.html" style="padding: 36px 40px; border-right: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; color: #F2A900; font-size: 13px">02</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; text-transform: uppercase">Arsenal</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.5">Fichas técnicas, galerias e comparador de equipamentos.</span></a>
+<a href="#taticas" style="padding: 36px 40px; border-right: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; color: #F2A900; font-size: 13px">03</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; text-transform: uppercase">Táticas</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.5">Doutrinas explicadas com diagramas animados e casos históricos.</span></a>
+<a href="Tech.dc.html" style="padding: 36px 40px; color: #E8EAE6; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; color: #F2A900; font-size: 13px">04</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; text-transform: uppercase">IA &amp; Drones</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.5">A guerra dos algoritmos: autonomia, enxames e guerra eletrônica.</span></a>
+</div>
+</section>
+
+<!-- CONFLITOS -->
+<section id="conflitos" style="border-bottom: 1px solid #232825">
+<div style="max-width: 1360px; margin: 0 auto; padding: 96px 40px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 40px">
+<div>
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; color: #F2A900">// 01 — SITUAÇÃO ATUAL</div>
+<h2 style="margin: 14px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 64px; line-height: 0.95; text-transform: uppercase">Conflitos em foco</h2>
+</div>
+<a href="#conflitos" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.1em">VER TODOS OS TEATROS →</a>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px">
+<!-- big map -->
+<div class="ph" style="flex: 2 1 640px; min-width: 0; height: 520px; border: 1px solid #232825; position: relative; display: flex; align-items: center; justify-content: center">
+<div style="text-align: center; font-family: 'JetBrains Mono', monospace; color: #7E8780; font-size: 13px; letter-spacing: 0.1em">[MAPA INTERATIVO — MAPBOX/DECK.GL]<br><span style="font-size: 12px">camadas: frentes · bases · rotas navais · zonas de exclusão aérea</span></div>
+<div style="position: absolute; left: 20px; bottom: 20px; display: flex; flex-wrap: wrap; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px">
+<span style="padding: 8px 12px; background: #0A0C0B; border: 1px solid #E5483D; color: #FF8A80">● Alta intensidade</span>
+<span style="padding: 8px 12px; background: #0A0C0B; border: 1px solid #F2A900; color: #F2A900">● Tensão</span>
+<span style="padding: 8px 12px; background: #0A0C0B; border: 1px solid #3A413C; color: #B5BCB6">● Cessar-fogo</span>
+</div>
+</div>
+<!-- list -->
+<div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; border: 1px solid #232825">
+<a href="#conflitos" style="padding: 24px; border-bottom: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: #FF8A80">● ALTA INTENSIDADE · EUROPA</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">[Nome do conflito]</span>
+<span style="color: #9BA39D; font-size: 14px; line-height: 1.5">[Resumo de 2 linhas sobre a situação da frente nesta semana.]</span></a>
+<a href="#conflitos" style="padding: 24px; border-bottom: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: #FF8A80">● ALTA INTENSIDADE · ORIENTE MÉDIO</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">[Nome do conflito]</span>
+<span style="color: #9BA39D; font-size: 14px; line-height: 1.5">[Resumo de 2 linhas sobre a situação da frente nesta semana.]</span></a>
+<a href="#conflitos" style="padding: 24px; border-bottom: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: #F2A900">● TENSÃO · INDO-PACÍFICO</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">[Nome do conflito]</span>
+<span style="color: #9BA39D; font-size: 14px; line-height: 1.5">[Resumo de 2 linhas sobre a situação da frente nesta semana.]</span></a>
+<a href="#conflitos" style="padding: 24px; color: #E8EAE6; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: #F2A900">● TENSÃO · ÁFRICA</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">[Nome do conflito]</span>
+<span style="color: #9BA39D; font-size: 14px; line-height: 1.5">[Resumo de 2 linhas sobre a situação da frente nesta semana.]</span></a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ARSENAL -->
+<section id="arsenal" style="border-bottom: 1px solid #232825; background: #0D100F">
+<div style="max-width: 1360px; margin: 0 auto; padding: 96px 40px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 40px">
+<div>
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; color: #F2A900">// 02 — ARSENAL</div>
+<h2 style="margin: 14px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 64px; line-height: 0.95; text-transform: uppercase">Máquinas de guerra</h2>
+</div>
+<a href="Arsenal.dc.html" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.1em">CATÁLOGO COMPLETO →</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">
+<a href="Ficha.dc.html" class="ph" style="grid-column: span 2; min-height: 460px; border: 1px solid #232825; position: relative; color: #E8EAE6; display: flex; flex-direction: column; justify-content: flex-end; padding: 32px">
+<span style="position: absolute; top: 24px; left: 32px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7E8780; letter-spacing: 0.1em">[FOTO EM DESTAQUE — CAÇA EM VOO]</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: #F2A900">CAÇAS · 5ª GERAÇÃO</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 72px; line-height: 0.9; text-transform: uppercase; margin-top: 10px">F-35A Lightning II</span>
+<span style="display: flex; gap: 28px; margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #B5BCB6"><span>MACH 1.6</span><span>MOTOR F135</span><span>FURTIVO</span></span>
+</a>
+<a href="Arsenal.dc.html" class="ph" style="min-height: 460px; border: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; position: relative">
+<span style="position: absolute; top: 24px; left: 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7E8780; letter-spacing: 0.1em">[FOTO]</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: #F2A900">TANQUES</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; line-height: 0.9; text-transform: uppercase; margin-top: 8px">Blindados &amp; carros de combate</span></a>
+<a href="Arsenal.dc.html" class="ph" style="min-height: 300px; border: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; position: relative">
+<span style="position: absolute; top: 24px; left: 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7E8780; letter-spacing: 0.1em">[FOTO]</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: #F2A900">EMBARCAÇÕES</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 40px; line-height: 0.9; text-transform: uppercase; margin-top: 8px">Porta-aviões, fragatas, submarinos</span></a>
+<a href="Arsenal.dc.html" class="ph" style="min-height: 300px; border: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; position: relative">
+<span style="position: absolute; top: 24px; left: 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7E8780; letter-spacing: 0.1em">[FOTO]</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: #F2A900">AVIÕES</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 40px; line-height: 0.9; text-transform: uppercase; margin-top: 8px">Bombardeiros &amp; transporte</span></a>
+<a href="Arsenal.dc.html" class="ph" style="min-height: 300px; border: 1px solid #232825; color: #E8EAE6; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; position: relative">
+<span style="position: absolute; top: 24px; left: 28px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7E8780; letter-spacing: 0.1em">[FOTO]</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: #F2A900">ARMAMENTO</span>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 40px; line-height: 0.9; text-transform: uppercase; margin-top: 8px">Mísseis, artilharia, armas leves</span></a>
+</div>
+
+<!-- comparator teaser -->
+<div style="margin-top: 20px; border: 1px solid #232825; background: #0A0C0B; display: flex; flex-wrap: wrap">
+<div style="flex: 1 1 320px; padding: 40px; border-right: 1px solid #232825">
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; color: #F2A900">COMPARADOR</div>
+<div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; line-height: 0.95; text-transform: uppercase; margin-top: 12px">F-35A <span style="color: #7E8780">vs</span> Su-57</div>
+<p style="color: #9BA39D; font-size: 15px; line-height: 1.6; margin: 16px 0 0">Escolha dois equipamentos e compare lado a lado. Valores aproximados de fontes abertas.</p>
+</div>
+<div style="flex: 2 1 520px; padding: 40px; display: flex; flex-direction: column; gap: 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px">
+<div>
+<div style="display: flex; justify-content: space-between; color: #9BA39D; margin-bottom: 8px"><span>VELOCIDADE MÁX.</span><span><span style="color: #F2A900">M 1.6</span> / <span style="color: #E8EAE6">M ~2.0</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="height: 8px; width: 80%; background: #F2A900"></div><div style="height: 8px; width: 100%; background: #6B746D"></div></div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; color: #9BA39D; margin-bottom: 8px"><span>COMPRIMENTO</span><span><span style="color: #F2A900">15,7 m</span> / <span style="color: #E8EAE6">20,1 m</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="height: 8px; width: 78%; background: #F2A900"></div><div style="height: 8px; width: 100%; background: #6B746D"></div></div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; color: #9BA39D; margin-bottom: 8px"><span>ENVERGADURA</span><span><span style="color: #F2A900">10,7 m</span> / <span style="color: #E8EAE6">14,1 m</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="height: 8px; width: 76%; background: #F2A900"></div><div style="height: 8px; width: 100%; background: #6B746D"></div></div>
+</div>
+<div style="display: flex; gap: 20px; color: #9BA39D; font-size: 12px"><span><span style="display: inline-block; width: 10px; height: 10px; background: #F2A900"></span> F-35A</span><span><span style="display: inline-block; width: 10px; height: 10px; background: #6B746D"></span> Su-57</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- TÁTICAS -->
+<section id="taticas" style="border-bottom: 1px solid #232825">
+<div style="max-width: 1360px; margin: 0 auto; padding: 96px 40px">
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; color: #F2A900">// 03 — DOUTRINA</div>
+<h2 style="margin: 14px 0 48px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 64px; line-height: 0.95; text-transform: uppercase">Táticas explicadas</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: #232825; border: 1px solid #232825">
+<a href="#taticas" style="background: #0A0C0B; padding: 32px; color: #E8EAE6; display: flex; flex-direction: column; gap: 16px">
+<svg viewBox="0 0 200 110" style="width: 100%; height: 110px" role="img" aria-label="Diagrama de pinça envolvendo uma posição"><g fill="none" stroke="#3A413C"><rect x="80" y="40" width="40" height="30"></rect></g><g fill="none" stroke="#F2A900" stroke-width="2.5"><path d="M10 20 C60 0 140 0 150 40"></path><path d="M10 90 C60 110 140 110 150 70"></path><path d="M144 34l6 6 2-8M144 76l6-6 2 8"></path></g></svg>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">Movimento de pinça</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.55">Duas forças atacam os flancos ao mesmo tempo para cercar o inimigo. De Canas a Stalingrado.</span></a>
+<a href="#taticas" style="background: #0A0C0B; padding: 32px; color: #E8EAE6; display: flex; flex-direction: column; gap: 16px">
+<svg viewBox="0 0 200 110" style="width: 100%; height: 110px" role="img" aria-label="Diagrama de ruptura em ponto concentrado"><g stroke="#3A413C" stroke-width="2"><path d="M100 0v110"></path></g><g fill="none" stroke="#F2A900" stroke-width="2.5"><path d="M10 55h150"></path><path d="M150 45l12 10-12 10"></path><path d="M30 30l60 22M30 80l60-22"></path></g></svg>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">Guerra de manobra</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.55">Velocidade e concentração num ponto fraco para romper a linha e desorganizar o comando inimigo.</span></a>
+<a href="#taticas" style="background: #0A0C0B; padding: 32px; color: #E8EAE6; display: flex; flex-direction: column; gap: 16px">
+<svg viewBox="0 0 200 110" style="width: 100%; height: 110px" role="img" aria-label="Diagrama de linhas defensivas sucessivas"><g fill="none" stroke="#F2A900" stroke-width="2.5"><path d="M40 10v90"></path></g><g fill="none" stroke="#6B746D" stroke-width="2" stroke-dasharray="6 6"><path d="M90 10v90M140 10v90"></path></g><path d="M180 55h-30" stroke="#E5483D" stroke-width="2.5"></path></svg>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">Defesa em profundidade</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.55">Camadas sucessivas que desgastam o atacante antes que ele alcance o objetivo.</span></a>
+<a href="#taticas" style="background: #0A0C0B; padding: 32px; color: #E8EAE6; display: flex; flex-direction: column; gap: 16px">
+<svg viewBox="0 0 200 110" style="width: 100%; height: 110px" role="img" aria-label="Diagrama de armas combinadas"><g fill="none" stroke="#F2A900" stroke-width="2.5"><circle cx="50" cy="55" r="18"></circle><rect x="86" y="37" width="36" height="36"></rect><path d="M150 73l18-36 18 36z"></path></g><g stroke="#3A413C" stroke-width="2"><path d="M68 55h18M122 55h28"></path></g></svg>
+<span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase">Armas combinadas</span>
+<span style="color: #9BA39D; font-size: 15px; line-height: 1.55">Infantaria, blindados, artilharia e aviação agindo juntos, cada um cobrindo a fraqueza do outro.</span></a>
+</div>
+</div>
+</section>
+
+<!-- TECH BAND -->
+<section style="background: #F2A900; color: #0A0C0B">
+<div style="max-width: 1360px; margin: 0 auto; padding: 96px 40px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
+<div style="flex: 1 1 520px; min-width: 0">
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; font-weight: 500">// 04 — A NOVA FRENTE</div>
+<h2 style="margin: 16px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(56px, 7vw, 104px); line-height: 0.88; text-transform: uppercase">A guerra dos algoritmos</h2>
+<p style="margin: 28px 0 0; max-width: 520px; font-size: 18px; line-height: 1.6; color: #2A2410">Drones FPV de baixo custo, enxames autônomos, IA na identificação de alvos e guerra eletrônica estão reescrevendo o campo de batalha — e o debate ético sobre autonomia letal.</p>
+<a href="Tech.dc.html" style="margin-top: 36px; height: 56px; padding: 0 28px; background: #0A0C0B; color: #F2A900; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; display: inline-flex; align-items: center">Entrar no dossiê</a>
+</div>
+<div style="flex: 1 1 420px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; background: #0A0C0B; border: 2px solid #0A0C0B">
+<div style="background: #F2A900; padding: 28px"><div style="font-family: 'JetBrains Mono', monospace; font-size: 12px">01</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase; margin-top: 10px">Drones FPV</div></div>
+<div style="background: #F2A900; padding: 28px"><div style="font-family: 'JetBrains Mono', monospace; font-size: 12px">02</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase; margin-top: 10px">Enxames</div></div>
+<div style="background: #F2A900; padding: 28px"><div style="font-family: 'JetBrains Mono', monospace; font-size: 12px">03</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase; margin-top: 10px">IA de alvos</div></div>
+<div style="background: #F2A900; padding: 28px"><div style="font-family: 'JetBrains Mono', monospace; font-size: 12px">04</div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; text-transform: uppercase; margin-top: 10px">Guerra eletrônica</div></div>
+</div>
+</div>
+</section>
+
+<!-- ARQUIVO / TIMELINE -->
+<section id="arquivo" style="border-bottom: 1px solid #232825">
+<div style="max-width: 1360px; margin: 0 auto; padding: 96px 40px">
+<div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; color: #F2A900">// ARQUIVO HISTÓRICO</div>
+<h2 style="margin: 14px 0 56px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 64px; line-height: 0.95; text-transform: uppercase">Um século de guerra</h2>
+<div style="position: relative">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 11px; height: 1px; background: #3A413C"></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 24px; position: relative">
+<a href="#arquivo" style="color: #E8EAE6; display: flex; flex-direction: column; gap: 12px"><span style="width: 22px; height: 22px; border: 2px solid #F2A900; background: #0A0C0B"></span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; color: #F2A900">1914</span><span style="font-size: 15px; color: #B5BCB6">Primeira Guerra Mundial — trincheiras e metralhadoras</span></a>
+<a href="#arquivo" style="color: #E8EAE6; display: flex; flex-direction: column; gap: 12px"><span style="width: 22px; height: 22px; border: 2px solid #F2A900; background: #0A0C0B"></span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; color: #F2A900">1939</span><span style="font-size: 15px; color: #B5BCB6">Segunda Guerra Mundial — blitzkrieg e porta-aviões</span></a>
+<a href="#arquivo" style="color: #E8EAE6; display: flex; flex-direction: column; gap: 12px"><span style="width: 22px; height: 22px; border: 2px solid #F2A900; background: #0A0C0B"></span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; color: #F2A900">1950</span><span style="font-size: 15px; color: #B5BCB6">Guerra da Coreia — primeiros combates entre jatos</span></a>
+<a href="#arquivo" style="color: #E8EAE6; display: flex; flex-direction: column; gap: 12px"><span style="width: 22px; height: 22px; border: 2px solid #F2A900; background: #0A0C0B"></span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; color: #F2A900">1965</span><span style="font-size: 15px; color: #B5BCB6">Vietnã — helicópteros e guerra de guerrilha</span></a>
+<a href="#arquivo" style="color: #E8EAE6; display: flex; flex-direction: column; gap: 12px"><span style="width: 22px; height: 22px; border: 2px solid #F2A900; background: #0A0C0B"></span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; color: #F2A900">1991</span><span style="font-size: 15px; color: #B5BCB6">Guerra do Golfo — munições guiadas e furtividade</span></a>
+<a href="#arquivo" style="color: #E8EAE6; display: flex; flex-direction: column; gap: 12px"><span style="width: 22px; height: 22px; border: 2px solid #E5483D; background: #E5483D"></span><span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 44px; color: #E8EAE6">2022→</span><span style="font-size: 15px; color: #B5BCB6">Ucrânia — drones em massa e guerra eletrônica</span></a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- NEWSLETTER + FOOTER -->
+<section id="briefing" style="border-bottom: 1px solid #232825">
+<div style="max-width: 1360px; margin: 0 auto; padding: 80px 40px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; justify-content: space-between">
+<div style="flex: 1 1 420px">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 52px; line-height: 0.95; text-transform: uppercase">Briefing diário, 06h00</h2>
+<p style="margin: 14px 0 0; color: #9BA39D; font-size: 16px">Cinco minutos de leitura. O que mudou nas frentes, no arsenal e na tecnologia.</p>
+</div>
+<form style="flex: 1 1 460px; display: flex; flex-wrap: wrap; gap: 12px">
+<label for="em" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">E-mail</label>
+<input id="em" type="email" placeholder="seu@email.com" style="flex: 1 1 260px; height: 56px; padding: 0 18px; background: #0F1211; border: 1px solid #3A413C; color: #E8EAE6; font-family: 'JetBrains Mono', monospace; font-size: 15px">
+<button type="button" style="height: 56px; padding: 0 28px; background: #F2A900; color: #0A0C0B; border: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer">Assinar</button>
+</form>
+</div>
+</section>
+<footer>
+<div style="max-width: 1360px; margin: 0 auto; padding: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7E8780; letter-spacing: 0.06em">
+<span>TEATRO//OPS · conteúdo informativo baseado em fontes abertas (OSINT)</span>
+<span>Metodologia · Fontes · Contato · Privacidade</span>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4300}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

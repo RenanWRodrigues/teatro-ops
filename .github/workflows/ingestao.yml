@@ -1,0 +1,75 @@
+# Ingestão agendada (gratuita) — horários em UTC
+name: ingestao
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"     # noticias: a cada 30 min
+    - cron: "17 * * * *"       # governos: a cada 1 h
+    - cron: "23 9 * * *"       # eventos: 1x/dia (06h23 Brasília)
+    - cron: "41 4 * * 1"       # arsenal: segundas-feiras
+    - cron: "53 5 * * *"       # manutencao: 1x/dia
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job para rodar manualmente"
+        required: true
+        default: noticias
+        type: choice
+        options: [noticias, governos, eventos, arsenal, manutencao]
+      fonte:
+        description: "Fonte específica (opcional, roda mesmo se status != ativa). Ex.: gdelt-doc"
+        required: false
+        type: string
+
+concurrency:
+  group: ingestao-${{ github.event.schedule || inputs.job }}
+  cancel-in-progress: false
+
+jobs:
+  rodar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      ACLED_EMAIL: ${{ secrets.ACLED_EMAIL }}
+      ACLED_PASSWORD: ${{ secrets.ACLED_PASSWORD }}
+      RELIEFWEB_APPNAME: ${{ secrets.RELIEFWEB_APPNAME }}
+      UCDP_ACCESS_TOKEN: ${{ secrets.UCDP_ACCESS_TOKEN }}
+      CONGRESS_GOV_API_KEY: ${{ secrets.CONGRESS_GOV_API_KEY }}
+      DVIDS_API_KEY: ${{ secrets.DVIDS_API_KEY }}
+      DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+      LIBRETRANSLATE_URL: ${{ secrets.LIBRETRANSLATE_URL }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      WIKIMEDIA_USER_AGENT: ${{ vars.WIKIMEDIA_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Escolher job
+        id: job
+        run: |
+          case "${{ github.event.schedule }}" in
+            "7,37 * * * *") echo "nome=noticias"   >> $GITHUB_OUTPUT ;;
+            "17 * * * *")   echo "nome=governos"   >> $GITHUB_OUTPUT ;;
+            "23 9 * * *")   echo "nome=eventos"    >> $GITHUB_OUTPUT ;;
+            "41 4 * * 1")   echo "nome=arsenal"    >> $GITHUB_OUTPUT ;;
+            "53 5 * * *")   echo "nome=manutencao" >> $GITHUB_OUTPUT ;;
+            *)              echo "nome=${{ inputs.job }}" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Rodar ingestão
+        env:
+          FONTE: ${{ inputs.fonte }}
+          JOB: ${{ steps.job.outputs.nome }}
+        run: |
+          if [ -n "$FONTE" ]; then
+            pnpm tsx scripts/ingestao/run.ts --fonte "$FONTE" --amostra 10
+          else
+            pnpm tsx scripts/ingestao/run.ts --job "$JOB"
+          fi

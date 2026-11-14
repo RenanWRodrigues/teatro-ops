@@ -1,0 +1,51 @@
+{
+  "name": "teatro-ops",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "ingest:all": "tsx --env-file-if-exists=.env.local scripts/ingestao/run.ts --job todos",
+    "db:migrate": "pnpm db:seed:gerar && supabase db push --include-seed",
+    "fontes:verificar": "tsx scripts/fontes-verificar.ts",
+    "db:seed:gerar": "tsx scripts/gerar-seed-fontes.ts",
+    "test:db": "tsx scripts/testar-banco-local.ts",
+    "env:verificar": "tsx --env-file-if-exists=.env.local scripts/verificar-env.ts",
+    "ingest:gdelt-doc": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-doc.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "maplibre-gl": "^6.18.0",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@electric-sql/pglite": "^0.5.16",
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.1.0"
+  },
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=24"
+  }
+}
