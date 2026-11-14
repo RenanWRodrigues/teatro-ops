@@ -19,6 +19,32 @@ const esquemaPares = z.object({
 const esquemaGlossarios = z.object({ glossaries: z.array(z.object({ glossary_id: z.string(), name: z.string() })) });
 const esquemaGlossarioCriado = z.object({ glossary_id: z.string() });
 
+/**
+ * Com tag_handling=xml o texto precisa ser XML válido: escapa &, < e > fora das marcas <keep>…</keep>
+ * (um "&" solto em "TV & Radio" derrubava o lote inteiro com HTTP 400).
+ */
+export function escaparParaXml(texto: string): string {
+  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return texto
+    .split(/(<keep>[\s\S]*?<\/keep>)/g)
+    .map((parte) => {
+      const m = /^<keep>([\s\S]*)<\/keep>$/.exec(parte);
+      return m ? `<keep>${esc(m[1]!)}</keep>` : esc(parte);
+    })
+    .join("");
+}
+
+/** Desfaz as entidades XML que o DeepL devolve no modo tag_handling=xml. */
+export function desescaparXml(texto: string): string {
+  return texto
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/&amp;/g, "&");
+}
+
 export type ClienteDeepL = ReturnType<typeof criarClienteDeepL>;
 
 export function criarClienteDeepL(chave: string, fetchImpl: typeof fetch = fetch) {
@@ -44,7 +70,7 @@ export function criarClienteDeepL(chave: string, fetchImpl: typeof fetch = fetch
       for (let i = 0; i < textos.length; i += LOTE_MAXIMO) {
         const lote = textos.slice(i, i + LOTE_MAXIMO);
         const corpo: Record<string, unknown> = {
-          text: lote,
+          text: lote.map(escaparParaXml),
           target_lang: "PT-BR",
           tag_handling: "xml",
           ignore_tags: ["keep"],
@@ -52,7 +78,9 @@ export function criarClienteDeepL(chave: string, fetchImpl: typeof fetch = fetch
         if (opcoes.idiomaOrigem) corpo.source_lang = opcoes.idiomaOrigem.toUpperCase();
         if (opcoes.glossarioId && opcoes.idiomaOrigem) corpo.glossary_id = opcoes.glossarioId;
         const r = await chamar("/translate", esquemaTraducao, { method: "POST", body: JSON.stringify(corpo) });
-        saida.push(...r.translations.map((t) => ({ texto: t.text, idiomaDetectado: t.detected_source_language.toLowerCase() })));
+        saida.push(
+          ...r.translations.map((t) => ({ texto: desescaparXml(t.text), idiomaDetectado: t.detected_source_language.toLowerCase() })),
+        );
       }
       return saida;
     },

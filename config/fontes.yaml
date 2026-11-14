@@ -37,7 +37,7 @@ conflitos:
       ia: '("artificial intelligence" OR "AI") (military OR defense OR weapon)'
       guerra_eletronica: '("electronic warfare" OR jamming OR "GPS spoofing")'
     # Títulos com estes termos são descartados (falsos positivos medidos em 14/11/2026).
-    excluir: '("trade war" OR "price war" OR "culture war" OR "Civil War" OR "World War" OR "War Cemetery" OR "War Cemetary" OR "Star Wars" OR "war movie" OR "offensive line" OR "offensive player" OR "offensive coordinator" OR "light show")'
+    excluir: '("trade war" OR "price war" OR "culture war" OR "Civil War" OR "World War" OR "War Cemetery" OR "War Cemetary" OR "Star Wars" OR "war movie" OR "offensive line" OR "offensive player" OR "offensive coordinator" OR "light show" OR Episode OR "TV series" OR thriller OR "box office" OR "TV & Radio")'
     # Além do termo no título, o GDELT precisa ter marcado a notícia com ao menos um destes temas.
     temas_gdelt: [ARMEDCONFLICT, MILITARY, KILL, TERROR, CEASEFIRE, WB_2433_CONFLICT_AND_VIOLENCE, MIL_WEAPONS_PROLIFERATION, WMD, REBELLION, MILITARY_COOPERATION, PEACEKEEPING, BLOCKADE, TAX_MILITARY_TITLE]
     status: ativa      # 14/11/2026: coleta real ok (5.797 notícias em 2 h, 14 gravadas após filtros)

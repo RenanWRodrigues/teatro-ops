@@ -40,7 +40,7 @@ const PAISES: [string, CodigoRegiao, string[]][] = [
   ["TR", "OM", ["Turkey", "Türkiye", "Turkish", "Ankara", "Turquia", "turco"]],
   ["EG", "NA", ["Egypt", "Egyptian", "Cairo", "Egito", "egípcio"]],
   ["LY", "NA", ["Libya", "Libyan", "Tripoli", "Líbia", "líbio"]],
-  ["SD", "AS", ["Sudan", "Sudanese", "Khartoum", "Darfur", "Sudão", "sudanês", "Cartum"]],
+  ["SD", "AS", ["Sudan", "Sudanese", "Khartoum", "Darfur", "El Fasher", "Nyala", "RSF", "Sudão", "sudanês", "Cartum"]],
   ["SS", "AS", ["South Sudan", "Sudão do Sul"]],
   ["ET", "AS", ["Ethiopia", "Ethiopian", "Tigray", "Etiópia", "etíope"]],
   ["SO", "AS", ["Somalia", "Somali", "al-Shabaab", "Mogadishu", "Somália", "somali"]],

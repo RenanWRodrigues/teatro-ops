@@ -131,3 +131,14 @@ describe("traduzirLote", () => {
     expect(r.saidas[0]?.motor).toBe("deepl");
   });
 });
+
+describe("escape XML para o DeepL (tag_handling=xml)", async () => {
+  const { escaparParaXml, desescaparXml } = await import("./deepl");
+  it("escapa & < > fora de <keep> e preserva as marcas", () => {
+    expect(escaparParaXml("Texas A&M <b> and <keep>OTAN</keep> & co")).toBe("Texas A&amp;M &lt;b&gt; and <keep>OTAN</keep> &amp; co");
+    expect(escaparParaXml("<keep>P&D</keep>")).toBe("<keep>P&amp;D</keep>");
+  });
+  it("desfaz o escape na volta, sem dupla conversão", () => {
+    expect(desescaparXml("A&amp;M &lt;3 &amp;lt;")).toBe("A&M <3 &lt;");
+  });
+});
