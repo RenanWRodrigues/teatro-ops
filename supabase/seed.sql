@@ -26,7 +26,7 @@ insert into fontes (id, nome, url_base, licenca, tipo, categoria, pais, status) 
   ('presidencia-ua', 'Presidência da Ucrânia', 'https://www.president.gov.ua/en/news', 'a confirmar', 'rss', 'oficial', 'UA', 'quebrada'),
   ('defesa-ua', 'Ministério da Defesa da Ucrânia', 'https://mod.gov.ua/en', 'a confirmar', 'rss', 'oficial', 'UA', 'quebrada'),
   ('governo-de', 'Governo Federal da Alemanha', 'https://www.bundesregierung.de/service/rss/breg-de/1151244/feed.xml', 'direitos do órgão; exibimos só título e link', 'rss', 'oficial', 'DE', 'ativa'),
-  ('defesa-de', 'Ministério da Defesa da Alemanha', 'https://www.bmvg.de/service/rss/de/17680/feed', 'direitos do órgão; exibimos só título e link', 'rss', 'oficial', 'DE', 'ativa'),
+  ('defesa-de', 'Ministério da Defesa da Alemanha', 'https://www.bmvg.de/service/rss/de/17680/feed', 'direitos do órgão; exibimos só título e link', 'rss', 'oficial', 'DE', 'quebrada'),
   ('wikidata', 'Wikidata', 'https://query.wikidata.org/sparql', 'CC0', 'api', 'enciclopedia', null, 'ativa'),
   ('wikipedia-pt', 'Wikipédia em português', 'https://pt.wikipedia.org/api/rest_v1/', 'CC BY-SA 4.0', 'api', 'enciclopedia', null, 'ativa'),
   ('wikipedia-en', 'Wikipédia em inglês (resumo traduzido quando não há artigo em português)', 'https://en.wikipedia.org/api/rest_v1/', 'CC BY-SA 4.0', 'api', 'enciclopedia', null, 'ativa'),
