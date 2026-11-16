@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { metadados } from "@/lib/site";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { AvisoExemplo } from "@/components/AvisoExemplo";
+import { CardNoticia } from "@/components/CardNoticia";
 import { Cabecalho } from "@/components/Cabecalho";
 import { FichaTecnica } from "@/components/FichaTecnica";
 import { FotoCreditada } from "@/components/FotoCreditada";
@@ -10,8 +13,9 @@ import { RefFonte } from "@/components/RefFonte";
 import { Rodape } from "@/components/Rodape";
 import { RotuloSecao } from "@/components/RotuloSecao";
 import { chaveFonte, fontesUnicas, formatarEspecificacao } from "@/lib/especificacao";
-import { obterEquipamento, obterEquipamentos } from "@/lib/dados";
-import { CATEGORIAS, type Equipamento, type Especificacao, type Fonte } from "@/lib/tipos";
+import { DetalheFonte } from "@/components/CreditoFonte";
+import { obterEquipamento, obterEquipamentos, obterNoticiasEquipamento } from "@/lib/dados";
+import { CATEGORIAS, type Equipamento, type Especificacao, type Fonte, type Manchete } from "@/lib/tipos";
 
 type Params = PageProps<"/arsenal/[categoria]/[slug]">["params"];
 
@@ -24,7 +28,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { categoria, slug } = await params;
   const { dados: e } = await obterEquipamento(categoria, slug);
   if (!e) return {};
-  return { title: `${e.nome} — ficha técnica`, description: e.descricao };
+  return metadados({ titulo: `${e.nome} — ficha técnica`, descricao: e.descricao, caminho: `/arsenal/${categoria}/${slug}` });
 }
 
 const textoSpec = formatarEspecificacao;
@@ -47,10 +51,16 @@ export default async function Page({ params }: { params: Params }) {
   const { categoria, slug } = await params;
   const { dados: e, exemplo } = await obterEquipamento(categoria, slug);
   if (!e) notFound();
-  return <ConteudoFicha e={e} exemplo={exemplo} />;
+  // Notícias só para fichas reais: as fixtures [EXEMPLO] não têm termos de busca.
+  const noticias = exemplo ? [] : await obterNoticiasEquipamento(e.slug);
+  return <ConteudoFicha e={e} exemplo={exemplo} noticias={noticias} />;
 }
 
-function ConteudoFicha({ e, exemplo }: { e: Equipamento; exemplo: boolean }) {
+type NoticiaFicha = Manchete & { resumo: string | null };
+
+function ConteudoFicha({ e, exemplo, noticias }: { e: Equipamento; exemplo: boolean; noticias: NoticiaFicha[] }) {
+  const primeira = e.galeria?.[0];
+  const capa = primeira && primeira.url !== null ? primeira : null;
   const categoria = CATEGORIAS[e.categoria];
   const refs = montarReferencias(e);
   // Nome em duas linhas como na referência: designação + apelido ("F-35A" / "Lightning II").
@@ -69,11 +79,23 @@ function ConteudoFicha({ e, exemplo }: { e: Equipamento; exemplo: boolean }) {
       <main id="conteudo" tabIndex={-1}>
         {/* HERO */}
         <section className="border-b border-line">
-          <div className="placeholder-listrado relative flex min-h-[480px] items-end md:min-h-[620px]">
-            <span className="absolute top-8 right-4 font-mono text-xs tracking-[0.1em] text-muted md:right-10">
-              [FOTO LIVRE PENDENTE · CRÉDITO E LICENÇA AQUI]
-            </span>
-            <div className="container-ops pb-14">
+          <div className={`relative flex min-h-[480px] items-end md:min-h-[620px] ${capa ? "bg-surface-2" : "placeholder-listrado"}`}>
+            {capa ? (
+              <>
+                <Image src={capa.url} alt={capa.legenda} fill priority sizes="100vw" className="object-cover" />
+                {/* Escurece a base da foto para o título manter contraste AA. */}
+                <div aria-hidden="true" className="absolute inset-0 bg-bg/60" />
+                <p className="absolute top-4 right-4 left-4 text-right font-mono text-[11px] leading-snug text-text-3 md:right-10">
+                  Foto: {capa.autor} · <DetalheFonte fonte={{ nome: capa.licenca, url: capa.licencaUrl ?? capa.fonteUrl }} /> ·{" "}
+                  <a href={capa.fonteUrl} className="text-text-2 underline underline-offset-2 hover:text-accent" rel="noopener noreferrer" target="_blank">
+                    Wikimedia Commons<span className="sr-only"> (abre em nova aba)</span>
+                  </a>
+                </p>
+              </>
+            ) : (
+              <span className="absolute top-8 right-4 font-mono text-xs tracking-[0.1em] text-muted md:right-10">SEM FOTO DE LICENÇA LIVRE</span>
+            )}
+            <div className="relative container-ops pb-14">
               <ul className="mb-5 flex flex-wrap gap-2.5 font-mono text-xs tracking-[0.12em] uppercase">
                 <li className="bg-accent px-3 py-2 text-bg">{e.classe ?? categoria}</li>
                 <li className="border border-line-strong bg-bg px-3 py-2">
@@ -130,7 +152,9 @@ function ConteudoFicha({ e, exemplo }: { e: Equipamento; exemplo: boolean }) {
                 ) : null}
               </div>
 
-              {e.planta ? <Planta comprimento={e.planta.comprimento} envergadura={e.planta.envergadura} referencia={refs.numero} /> : null}
+              {e.planta ? (
+                <Planta forma={e.planta.forma ?? "aeronave"} comprimento={e.planta.comprimento} envergadura={e.planta.envergadura} referencia={refs.numero} />
+              ) : null}
 
               {e.variantes && e.variantes.length > 0 ? (
                 <div>
@@ -161,6 +185,21 @@ function ConteudoFicha({ e, exemplo }: { e: Equipamento; exemplo: boolean }) {
                   </p>
                 </div>
               ) : null}
+
+              {!exemplo ? (
+                <div>
+                  <RotuloSecao className="mb-[18px]">Notícias relacionadas</RotuloSecao>
+                  {noticias.length > 0 ? (
+                    <div className="border border-line">
+                      {noticias.map((n) => (
+                        <CardNoticia key={n.url} noticia={n} />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="border border-line p-6 text-sm text-muted">Nenhuma notícia recente coletada cita este equipamento no título.</p>
+                  )}
+                </div>
+              ) : null}
             </div>
 
             {/* FICHA */}
@@ -169,7 +208,7 @@ function ConteudoFicha({ e, exemplo }: { e: Equipamento; exemplo: boolean }) {
                 <FichaTecnica itens={e.ficha ?? []} referencia={refs.numero} />
                 <div className="flex flex-col gap-2.5 border-t border-line px-[22px] py-[18px]">
                   <Link
-                    href={`/arsenal/${e.categoria}`}
+                    href={`/arsenal/comparar?a=${e.slug}`}
                     className="flex h-12 items-center justify-center bg-accent text-center font-display text-lg font-bold tracking-[0.06em] text-bg uppercase hover:bg-accent-hover"
                   >
                     + Comparar com outro equipamento
@@ -218,14 +257,17 @@ function ConteudoFicha({ e, exemplo }: { e: Equipamento; exemplo: boolean }) {
 }
 
 function Planta({
+  forma,
   comprimento,
   envergadura,
   referencia,
 }: {
+  forma: "aeronave" | "casco";
   comprimento: Especificacao;
   envergadura: Especificacao;
   referencia: (f: Fonte) => number;
 }) {
+  if (forma === "casco") return <PlantaCasco comprimento={comprimento} largura={envergadura} referencia={referencia} />;
   return (
     <figure className="border border-line bg-surface">
       <figcaption className="flex justify-between gap-4 border-b border-line px-5 py-3.5 font-mono text-xs tracking-[0.1em] text-muted">
@@ -261,6 +303,51 @@ function Planta({
         Comprimento {textoSpec(comprimento)}
         <RefFonte numero={referencia(comprimento.fonte)} /> · envergadura {textoSpec(envergadura)}
         <RefFonte numero={referencia(envergadura.fonte)} />
+      </p>
+    </figure>
+  );
+}
+
+/** Planta genérica de casco ou chassi (navios, blindados): retângulo proporcional, comprimento × largura. */
+function PlantaCasco({ comprimento, largura, referencia }: { comprimento: Especificacao; largura: Especificacao; referencia: (f: Fonte) => number }) {
+  // Proporção real limitada para caber no quadro (um porta-aviões tem ~4:1; um tanque, ~2:1).
+  const razao = Math.min(Math.max(comprimento.valor / largura.valor, 1.2), 5);
+  const w = 440;
+  const h = Math.round(w / razao);
+  const x = (600 - w) / 2;
+  const y = (320 - h) / 2;
+  return (
+    <figure className="border border-line bg-surface">
+      <figcaption className="flex justify-between gap-4 border-b border-line px-5 py-3.5 font-mono text-xs tracking-[0.1em] text-muted">
+        <span>PLANTA · VISTA SUPERIOR</span>
+        <span>ESQUEMA GENÉRICO</span>
+      </figcaption>
+      <div className="malha-tatica-fina p-4 md:p-8">
+        <svg
+          viewBox="0 0 600 320"
+          className="h-auto w-full"
+          role="img"
+          aria-label={`Contorno esquemático com comprimento de ${textoSpec(comprimento)} e largura de ${textoSpec(largura)}`}
+        >
+          <rect x={x} y={y} width={w} height={h} fill="none" stroke="var(--accent)" strokeWidth="2" />
+          <g stroke="var(--neutral-bar)" strokeWidth="1" fill="none">
+            <path d={`M${x} ${y + h + 22}h${w}M${x} ${y + h + 14}v16M${x + w} ${y + h + 14}v16`} />
+            <path d={`M${x + w + 22} ${y}v${h}M${x + w + 14} ${y}h16M${x + w + 14} ${y + h}h16`} />
+          </g>
+          <g fontFamily="var(--font-jetbrains), monospace" fontSize="13" fill="var(--text-2)">
+            <text x={300} y={Math.min(y + h + 42, 314)} textAnchor="middle">
+              {textoSpec(comprimento)}
+            </text>
+            <text x={Math.min(x + w + 30, 560)} y={160}>
+              {textoSpec(largura)}
+            </text>
+          </g>
+        </svg>
+      </div>
+      <p className="border-t border-line px-5 py-3 font-mono text-xs text-muted">
+        Comprimento {textoSpec(comprimento)}
+        <RefFonte numero={referencia(comprimento.fonte)} /> · largura {textoSpec(largura)}
+        <RefFonte numero={referencia(largura.fonte)} />
       </p>
     </figure>
   );

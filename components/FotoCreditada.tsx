@@ -26,6 +26,12 @@ export function FotoCreditada({ midia, className = "h-40", sizes = "(min-width: 
       <figcaption className="mt-1.5 font-mono text-[11px] leading-snug text-muted">
         {midia.legenda} · {midia.autor} ·{" "}
         <DetalheFonte fonte={{ nome: midia.licenca, url: midia.licencaUrl ?? midia.fonteUrl }} />
+        {midia.licencaUrl && midia.fonteUrl ? (
+          <>
+            {" · "}
+            <DetalheFonte fonte={{ nome: "página do arquivo", url: midia.fonteUrl }} />
+          </>
+        ) : null}
       </figcaption>
     </figure>
   );

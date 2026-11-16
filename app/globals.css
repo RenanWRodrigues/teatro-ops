@@ -17,6 +17,7 @@
   --text-3: #b5bcb6;
   --muted: #9ba39d; /* cinza mais claro permitido para texto pequeno */
   --neutral-bar: #6b746d; /* barras/linhas não textuais */
+  --line-field: #6b746d; /* borda de campos de formulário: ≥ 3:1 sobre o fundo (WCAG 1.4.11) */
   --accent: #f2a900;
   --accent-hover: #ffc94d;
   --accent-ink: #2a2410; /* texto corrido sobre fundo âmbar */
@@ -40,6 +41,7 @@
   --color-text-3: var(--text-3);
   --color-muted: var(--muted);
   --color-neutral-bar: var(--neutral-bar);
+  --color-line-field: var(--line-field);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
@@ -147,22 +149,51 @@
   }
 }
 
+/* Traços de diagramas de táticas: desenham-se uma vez e ficam (pathLength=1 no SVG). Uma única passagem,
+   com atraso máximo de 2 s, termina antes de 5 s (WCAG 2.2.2: sem animação contínua sem pausa). */
+@keyframes tracar {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@utility anim-tracado {
+  stroke-dasharray: 1;
+  animation: tracar 1.6s ease-out 1 both;
+}
+
+/* Animações decorativas param sozinhas em até 5 s (WCAG 2.2.2); só o ticker é contínuo, e tem pausa. */
 @utility anim-varredura {
   transform-origin: 200px 200px;
   transform-box: view-box;
-  animation: varredura 6s linear infinite;
+  animation: varredura 4.5s linear 1;
 }
 @utility anim-blip {
-  animation: piscar-suave 2.4s ease-in-out infinite;
+  animation: piscar-suave 1.8s ease-in-out 2;
 }
 @utility anim-piscar {
-  animation: piscar 1.2s steps(2) infinite;
+  animation: piscar 1.2s steps(2) 4;
 }
 @utility anim-ticker {
   animation: rolar-ticker 40s linear infinite;
 }
 @utility anim-linha-hud {
-  animation: linha-hud 4s linear infinite;
+  animation: linha-hud 4s linear 1 forwards;
+}
+
+/* Ticker parado (botão de pausa): troca o trilho horizontal pela lista vertical. Fica antes do bloco de
+   movimento reduzido, que faz a mesma troca e precisa vencer a regra padrão ".ticker-lista { display: none }". */
+.ticker-lista {
+  display: none;
+}
+[data-pausado="true"] .ticker-trilho {
+  display: none;
+}
+[data-pausado="true"] .ticker-lista {
+  display: flex;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -170,13 +201,44 @@
   .anim-blip,
   .anim-piscar,
   .anim-ticker,
-  .anim-linha-hud {
+  .anim-linha-hud,
+  .anim-tracado {
     animation: none;
   }
-  .ticker-trilho {
-    overflow-x: auto;
+  .anim-tracado {
+    stroke-dashoffset: 0;
   }
-  .ticker-copia {
+  /* Sem rolagem automática, o ticker vira lista vertical (ver TickerAoVivo). */
+  .ticker-trilho {
     display: none;
+  }
+  .ticker-lista {
+    display: flex;
+  }
+}
+
+/* Em telas estreitas, a lista parada ocupa a largura toda, abaixo da faixa "AO VIVO" e do botão. */
+@media (max-width: 639px) {
+  .ticker[data-pausado="true"] {
+    flex-wrap: wrap;
+  }
+  .ticker[data-pausado="true"] .ticker-lista {
+    flex-basis: 100%;
+    order: 3;
+  }
+  .ticker[data-pausado="true"] > button {
+    margin-left: auto;
+  }
+}
+@media (max-width: 639px) and (prefers-reduced-motion: reduce) {
+  .ticker {
+    flex-wrap: wrap;
+  }
+  .ticker .ticker-lista {
+    flex-basis: 100%;
+    order: 3;
+  }
+  .ticker > button {
+    margin-left: auto;
   }
 }

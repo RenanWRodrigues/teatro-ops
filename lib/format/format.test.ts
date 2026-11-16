@@ -12,6 +12,10 @@ describe("formatarData", () => {
     expect(formatarData("2026-11-14T01:00:00Z")).toBe("13/11/2026");
   });
 
+  it("data sem hora não muda de dia por causa do fuso", () => {
+    expect(formatarData("2026-07-01")).toBe("01/07/2026");
+  });
+
   it("aceita Date e timestamp", () => {
     const d = new Date("2026-01-31T12:00:00Z");
     expect(formatarData(d)).toBe("31/01/2026");
@@ -85,5 +89,13 @@ describe("formatarCarimbo e formatarHora", () => {
   it("devolve travessão para data inválida", () => {
     expect(formatarCarimbo("x")).toBe("—");
     expect(formatarHora("x")).toBe("—");
+  });
+});
+
+describe("formatarDiaHora", () => {
+  it("mostra dia/mês e hora de Brasília, como no aviso de fonte indisponível", async () => {
+    const { formatarDiaHora } = await import("./data");
+    expect(formatarDiaHora("2026-11-16T12:30:00Z")).toBe("16/11 às 09:30");
+    expect(formatarDiaHora("invalida")).toBe("—");
   });
 });

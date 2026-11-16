@@ -1,29 +1,48 @@
 import type { Metadata } from "next";
-import { AbasTopicos } from "@/components/AbasTopicos";
-import { AvisoExemplo } from "@/components/AvisoExemplo";
+import { metadados } from "@/lib/site";
+import { AbasTopicos, type AbaTopico } from "@/components/AbasTopicos";
 import { Cabecalho } from "@/components/Cabecalho";
+import { CarimboAtualizacao } from "@/components/CarimboAtualizacao";
+import { CorpoDossie } from "@/components/CorpoDossie";
+import { FontesNumeradas } from "@/components/FontesNumeradas";
+import { GraficoVolumeTemas } from "@/components/GraficoVolumeTemas";
+import { HumanoNoCircuito } from "@/components/HumanoNoCircuito";
 import { LinhaDoTempo } from "@/components/LinhaDoTempo";
-import { ListaFontes } from "@/components/ListaFontes";
 import { Rodape } from "@/components/Rodape";
 import { RotuloSecao } from "@/components/RotuloSecao";
 import { TituloSecao } from "@/components/TituloSecao";
-import { FONTES_ETICA, FONTES_LINHA_DRONES, LINHA_DRONES, NIVEIS_CONTROLE, TOPICOS_TECNOLOGIA } from "@/lib/fixtures/tecnologia";
+import { obterAtualizacaoNoticias, obterDossiesTecnologia, obterFeedsTecnologia, obterHumanoNoCircuito, obterLinhaDoTempoDrones, obterVolumeSemanalTecnologia } from "@/lib/dados";
+import { FILTROS_TOPICO, type IdTopico } from "@/lib/tecnologia/topicos";
 
-export const metadata: Metadata = {
-  title: "IA e drones — guerra tecnológica",
-  description: "Como inteligência artificial, drones e guerra eletrônica mudaram o custo, a velocidade e a ética do combate moderno.",
-};
+export const metadata: Metadata = metadados({
+  titulo: "IA e drones — guerra tecnológica",
+  descricao: "Como inteligência artificial, drones e guerra eletrônica mudaram o custo, a velocidade e a ética do combate moderno.",
+  caminho: "/tecnologia",
+});
 
-export default function Page() {
+export default async function Page() {
+  const [feeds, atualizadoEm, volume] = await Promise.all([obterFeedsTecnologia(), obterAtualizacaoNoticias(), obterVolumeSemanalTecnologia()]);
+  const dossies = obterDossiesTecnologia();
+  const linha = obterLinhaDoTempoDrones();
+  const onu = obterHumanoNoCircuito();
+  const topicos: AbaTopico[] = (Object.keys(FILTROS_TOPICO) as IdTopico[]).map((id) => {
+    const d = dossies[id];
+    return {
+      id,
+      rotulo: FILTROS_TOPICO[id].rotulo,
+      titulo: d?.titulo ?? FILTROS_TOPICO[id].rotulo,
+      resumo: d?.resumo ?? null,
+      corpo: d ? <CorpoDossie dossie={d} /> : null,
+    };
+  });
   return (
     <>
       <Cabecalho ativo="tecnologia" />
-      <AvisoExemplo />
       <main id="conteudo" tabIndex={-1}>
         {/* HUD */}
         <section className="border-b border-line">
           <div className="placeholder-listrado relative flex min-h-[560px] flex-col justify-end overflow-hidden md:min-h-[640px]">
-            <span className="absolute top-16 right-[72px] hidden font-mono text-xs tracking-[0.1em] text-muted md:block">
+            <span aria-hidden="true" className="absolute top-16 right-[72px] hidden font-mono text-xs tracking-[0.1em] text-muted md:block">
               [VÍDEO DE FUNDO · VISTA AÉREA DE DRONE, P&amp;B]
             </span>
             <div aria-hidden="true" className="anim-linha-hud absolute inset-x-0 top-10 h-0.5 bg-accent opacity-35" />
@@ -70,49 +89,54 @@ export default function Page() {
         <section aria-label="Explorar tópicos" className="border-b border-line">
           <div className="container-ops py-16 md:py-[88px]">
             <RotuloSecao>Explorar tópicos</RotuloSecao>
-            <AbasTopicos topicos={TOPICOS_TECNOLOGIA} />
+            <AbasTopicos topicos={topicos} feeds={feeds} atualizadoEm={atualizadoEm} />
+          </div>
+        </section>
+
+        {/* INDICADORES */}
+        <section aria-labelledby="titulo-indicadores" className="border-b border-line">
+          <div className="container-ops py-16 md:py-[88px]">
+            <RotuloSecao>Indicadores</RotuloSecao>
+            <TituloSecao id="titulo-indicadores" className="mt-3.5">
+              Notícias por semana
+            </TituloSecao>
+            <p className="mt-5 max-w-[720px] text-base leading-relaxed text-text-2">
+              Quantas notícias coletadas pelo TEATRO//OPS foram classificadas em cada tema, por semana (de segunda a
+              domingo, UTC). Mede a cobertura da imprensa captada pela coleta, não a quantidade de ataques ou de sistemas
+              em uso. Uma notícia pode entrar em mais de um tema.
+            </p>
+            <GraficoVolumeTemas volume={volume} className="mt-10" />
+            <p className="mt-6 font-mono text-xs leading-relaxed text-muted">
+              Fonte:{" "}
+              <a href="https://www.gdeltproject.org/" className="underline underline-offset-2 hover:text-accent" rel="noopener noreferrer" target="_blank">
+                Projeto GDELT
+                <span className="sr-only"> (abre em nova aba)</span>
+              </a>{" "}
+              (arquivos GKG; uso livre com citação), coletado e classificado pelo TEATRO//OPS. A
+              coleta começou em novembro de 2026 e roda de forma irregular no plano gratuito do GitHub Actions; semanas
+              com menos coletas mostram volumes menores.
+            </p>
+            <CarimboAtualizacao data={atualizadoEm} className="mt-2" />
           </div>
         </section>
 
         {/* LINHA DO TEMPO */}
-        <section aria-labelledby="titulo-linha" className="border-b border-line bg-surface">
-          <div className="container-ops py-16 md:py-[88px]">
-            <RotuloSecao>Linha do tempo</RotuloSecao>
-            <TituloSecao id="titulo-linha" className="mt-3.5 mb-12">
-              A ascensão dos drones
-            </TituloSecao>
-            <LinhaDoTempo eventos={LINHA_DRONES} variante="grade" />
-            <ListaFontes fontes={FONTES_LINHA_DRONES} className="mt-4" />
-          </div>
-        </section>
+        {linha ? (
+          <section aria-labelledby="titulo-linha" className="border-b border-line bg-surface">
+            <div className="container-ops py-16 md:py-[88px]">
+              <RotuloSecao>Linha do tempo</RotuloSecao>
+              <TituloSecao id="titulo-linha" className="mt-3.5 mb-12">
+                A ascensão dos drones
+              </TituloSecao>
+              <LinhaDoTempo eventos={linha.eventos} variante="grade" prefixoRef="ref-linha" />
+              <h3 className="mt-8 font-mono text-xs tracking-[0.14em] text-accent uppercase">Fontes</h3>
+              <FontesNumeradas fontes={linha.fontes} prefixo="ref-linha" className="mt-3" />
+            </div>
+          </section>
+        ) : null}
 
         {/* ÉTICA */}
-        <section aria-labelledby="titulo-etica">
-          <div className="container-ops flex flex-wrap items-center gap-12 py-16 md:py-[88px]">
-            <div className="min-w-0 flex-[1_1_520px]">
-              <RotuloSecao>Ética e direito</RotuloSecao>
-              <TituloSecao id="titulo-etica" className="mt-3.5">
-                Humano no circuito?
-              </TituloSecao>
-              <p className="mt-5 max-w-[620px] text-lg leading-[1.65] text-text-2">
-                Na ONU, países discutem há anos regras para sistemas de armas autônomas letais. A pergunta central: quanto
-                controle humano deve existir sobre a decisão de usar força?
-              </p>
-              <ListaFontes fontes={FONTES_ETICA} className="mt-4" />
-            </div>
-            <dl className="flex min-w-0 flex-[1_1_400px] flex-col gap-3 font-mono text-sm">
-              {NIVEIS_CONTROLE.map((n) => (
-                <div
-                  key={n.sigla}
-                  className={`flex flex-wrap items-baseline gap-x-4 gap-y-1 border px-[22px] py-[18px] ${n.alerta ? "border-alert" : "border-line-strong"}`}
-                >
-                  <dt className={n.alerta ? "text-alert-text" : "text-accent"}>{n.sigla}</dt>
-                  <dd>{n.texto}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
+        {onu ? <HumanoNoCircuito dados={onu} /> : null}
       </main>
       <Rodape />
     </>

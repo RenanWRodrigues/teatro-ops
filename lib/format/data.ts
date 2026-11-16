@@ -35,8 +35,12 @@ function partes(formatador: Intl.DateTimeFormat, data: Date) {
   return mapa;
 }
 
-/** Ex.: 14/11/2026 */
+/** Ex.: 14/11/2026. Data sem hora ("2026-07-01") é exibida como está, sem conversão de fuso. */
 export function formatarData(entrada: EntradaData): string {
+  if (typeof entrada === "string") {
+    const so = /^(\d{4})-(\d{2})-(\d{2})$/.exec(entrada.trim());
+    if (so) return `${so[3]}/${so[2]}/${so[1]}`;
+  }
   const data = paraDate(entrada);
   if (!data) return DATA_INDISPONIVEL;
   const p = partes(formatadorData, data);
@@ -57,6 +61,14 @@ export function formatarCarimbo(entrada: EntradaData): string {
   if (!data) return DATA_INDISPONIVEL;
   const p = partes(formatadorDataHora, data);
   return `${p.day}/${p.month}/${p.year} às ${p.hour}h${p.minute}`;
+}
+
+/** "16/11 às 09:30" (horário de Brasília), para avisos curtos de dado defasado. */
+export function formatarDiaHora(entrada: EntradaData): string {
+  const data = paraDate(entrada);
+  if (!data) return DATA_INDISPONIVEL;
+  const p = partes(formatadorDataHora, data);
+  return `${p.day}/${p.month} às ${p.hour}:${p.minute}`;
 }
 
 /** Hora curta "11:20" no horário de Brasília. */

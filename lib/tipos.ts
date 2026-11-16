@@ -67,11 +67,14 @@ export type Equipamento = ComExemplo & {
   resumo?: { texto: string; fonte: Fonte };
   estatisticas?: { rotulo: string; spec: Especificacao; realce?: boolean }[];
   ficha?: ItemFicha[];
-  planta?: { comprimento: Especificacao; envergadura: Especificacao };
+  /** `envergadura` é a largura quando `forma` = "casco" (tanques, navios). */
+  planta?: { forma?: "aeronave" | "casco"; comprimento: Especificacao; envergadura: Especificacao };
   variantes?: Variante[];
   galeria?: Midia[];
   operadores?: string[];
   fontes?: Fonte[];
+  /** Todas as especificações numéricas com fonte, por chave (comparador). */
+  numericas?: { chave: string; rotulo: string; spec: Especificacao }[];
 };
 
 export type Intensidade = "alta" | "tensao" | "cessar-fogo";
@@ -87,6 +90,43 @@ export type Conflito = ComExemplo & {
   coordenadas?: [number, number];
 };
 
+/** Conflito curado com os números do período que justificam a intensidade (UCDP). */
+export type ConflitoDetalhe = {
+  slug: string;
+  nome: string;
+  regiao: string;
+  paises: string[];
+  /** null = abaixo do limiar de 25 mortes estimadas no trimestre, ou sem dados ainda. */
+  intensidade: Intensidade | null;
+  resumo: string | null;
+  fontes: Fonte[];
+  coordenadas?: [number, number];
+  periodoInicio: string | null;
+  periodoFim: string | null;
+  eventos: number;
+  mortes: number;
+  mortesMin: number;
+  mortesMax: number;
+  /** Curadoria existe, mas a coleta do UCDP ainda não gravou números. */
+  semDados?: boolean;
+};
+
+/** Ponto agregado para as camadas do mapa (nunca posição precisa). */
+export type PontoMapa = { lat: number; lon: number; valor: number; rotulo: string };
+
+export type EventoPublico = {
+  data: string;
+  local: string | null;
+  pais: string;
+  tipo: string | null;
+  atores: string[];
+  mortes: number | null;
+  mortesMin: number | null;
+  mortesMax: number | null;
+};
+
+export type SemanaEventos = { semana: string; eventos: number; mortes: number };
+
 export type Manchete = ComExemplo & {
   regiao: string;
   /** Título em pt-BR; com tradução pendente, o título original (ver `idiomaOriginal`). */
@@ -98,16 +138,45 @@ export type Manchete = ComExemplo & {
   /** ISO 8601; `null` em placeholders. */
   publicadoEm: string | null;
   fonte: Fonte;
+  /** Agregador que nos entregou o link (ex.: GDELT), exibido como "via" com link e licença. */
+  via?: Fonte;
 };
 
-export type EventoLinhaDoTempo = { marco: string; descricao: string; atual?: boolean };
+export type EventoLinhaDoTempo = {
+  marco: string;
+  descricao: string;
+  atual?: boolean;
+  /** Chamadas [n] para a lista numerada de fontes exibida abaixo da linha do tempo. */
+  fontes?: number[];
+};
 
-export type TopicoTecnologia = {
-  id: string;
-  rotulo: string;
+/** Notícias recentes de uma aba de /tecnologia e o critério que as selecionou (Fase 8). */
+export type FeedTopico = {
+  criterio: string;
+  noticias: (Manchete & { resumo: string | null })[];
+};
+
+/** Decisão ou comunicado oficial de governo (monitor de governos, Fase 6). */
+export type Decisao = {
+  id: number;
+  /** ISO 3166-1 alfa-2 do país que publicou. */
+  pais: string;
+  orgao: string;
+  tipo: "ordem_executiva" | "lei" | "sancao" | "comunicado" | "acordo" | "exercicio_militar" | "orcamento" | "outro";
+  /** Título em pt-BR; com tradução pendente, o título original (ver `idiomaOriginal`). */
   titulo: string;
-  texto: string;
-  pontos: { chave: string; valor: string }[];
-  debate: string;
-  fontes: Fonte[];
+  /** Título como a fonte publicou (exibido a um clique quando há tradução: CC BY exige indicar alterações). */
+  tituloOriginal: string;
+  traducaoPendente: boolean;
+  idiomaOriginal: string | null;
+  /** Texto próprio por regra (temas), nunca texto do documento. */
+  resumo: string | null;
+  urlOficial: string;
+  publicadoEm: string;
+  temas: string[];
+  /** Publicado por agência estatal: a interface exibe o selo "Mídia estatal". */
+  estatal: boolean;
+  fonte: Fonte;
+  /** Canal intermediário de coleta que exige crédito (ex.: GDELT para a Xinhua). */
+  via?: Fonte;
 };

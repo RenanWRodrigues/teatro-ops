@@ -2,15 +2,15 @@ import Link from "next/link";
 import type { Manchete } from "@/lib/tipos";
 import { TickerAoVivo } from "./TickerAoVivo";
 
-export type SecaoNav = "conflitos" | "arsenal" | "taticas" | "tecnologia" | "arquivo";
+export type SecaoNav = "conflitos" | "governos" | "arsenal" | "taticas" | "tecnologia" | "arquivo";
 
-// Conflitos, Táticas e Arquivo apontam para âncoras da home até as rotas próprias existirem (Fases 5 e 9).
 const NAV: { id: SecaoNav; rotulo: string; href: string }[] = [
-  { id: "conflitos", rotulo: "Conflitos", href: "/#conflitos" },
+  { id: "conflitos", rotulo: "Conflitos", href: "/conflitos" },
+  { id: "governos", rotulo: "Governos", href: "/governos" },
   { id: "arsenal", rotulo: "Arsenal", href: "/arsenal" },
-  { id: "taticas", rotulo: "Táticas", href: "/#taticas" },
+  { id: "taticas", rotulo: "Táticas", href: "/taticas" },
   { id: "tecnologia", rotulo: "IA e drones", href: "/tecnologia" },
-  { id: "arquivo", rotulo: "Arquivo", href: "/#arquivo" },
+  { id: "arquivo", rotulo: "Arquivo", href: "/arquivo" },
 ];
 
 type ItemTrilha = { rotulo: string; href?: string };
@@ -89,8 +89,8 @@ export function Cabecalho({ ativo, trilha, comAcoes, ticker }: Props) {
         {comAcoes ? (
           <div className="flex items-center gap-3">
             <Link
-              href="/arsenal#busca"
-              aria-label="Buscar no arsenal"
+              href="/busca"
+              aria-label="Buscar no site"
               className="flex size-11 items-center justify-center border border-line-panel text-text hover:border-accent hover:text-accent"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

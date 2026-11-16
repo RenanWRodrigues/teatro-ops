@@ -44,7 +44,7 @@ type Props = {
   className?: string;
 };
 
-/** "Fonte: ACLED · CC BY 4.0 · coletado em 14/11/2026", com links quando houver URL. */
+/** "Fonte: UCDP · CC BY 4.0 · coletado em 14/11/2026", com links quando houver URL. */
 export function CreditoFonte({ fonte, prefixo = "Fonte", className = "" }: Props) {
   return (
     <span className={`font-mono text-xs text-muted ${className}`}>

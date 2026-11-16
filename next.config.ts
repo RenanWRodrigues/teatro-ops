@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
   partialPrefetching: false,
   images: {
     // Só fotos de licença livre (CLAUDE.md §1.4). Novos domínios entram junto com o adaptador da fonte.
-    remotePatterns: [{ protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/commons/**" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/commons/**" },
+      // Miniaturas do Commons (a API devolve `thumburl` neste host desde 2026).
+      { protocol: "https", hostname: "thumb.wikimedia.org", pathname: "/wikipedia/commons/thumb/**" },
+    ],
   },
   turbopack: {
     rules: {

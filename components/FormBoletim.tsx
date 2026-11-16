@@ -22,7 +22,7 @@ export function FormBoletim() {
         required
         autoComplete="email"
         placeholder="seu@email.com"
-        className="h-14 min-w-0 flex-[1_1_260px] border border-line-strong bg-surface-3 px-[18px] font-mono text-[15px] text-text placeholder:text-muted"
+        className="h-14 min-w-0 flex-[1_1_260px] border border-line-field bg-surface-3 px-[18px] font-mono text-[15px] text-text placeholder:text-muted"
       />
       <button
         type="submit"

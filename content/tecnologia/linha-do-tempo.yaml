@@ -1,0 +1,106 @@
+# Linha do tempo "A ascensão dos drones" em /tecnologia (Fase 8, item 3).
+# Cada marco cita ao menos uma fonte [n]; toda fonte listada é citada. Validado por lib/tecnologia/linha-do-tempo.ts.
+# Só vai ao ar com status: publicado (aprovação do editor).
+status: publicado
+revisao: aprovada pelo editor em 16/11/2026
+atualizado_em: 2026-11-16
+marcos:
+  - marco: "1918"
+    descricao: Nos EUA, o torpedo aéreo não tripulado Kettering “Bug”, inventado em 1917, é testado em voo. Menos de 50 foram fabricados, e ele nunca foi usado em combate.
+    fontes: [1]
+  - marco: "1935"
+    descricao: O Reino Unido passa a usar o Queen Bee, avião radiocontrolado que servia de alvo no treino de artilharia antiaérea. Segundo o Imperial War Museum, o nome teria inspirado o termo “drone” (zangão, em inglês).
+    fontes: [2]
+  - marco: "1982"
+    descricao: No Vale do Bekaa, no Líbano, Israel usa aeronaves remotamente pilotadas para localizar as defesas antiaéreas sírias e como iscas, levando os operadores sírios a disparar mísseis contra elas.
+    fontes: [3]
+  - marco: "1995"
+    descricao: O Predator, dos EUA, ainda em fase de demonstração, tem seu primeiro uso operacional na campanha aérea da OTAN na Bósnia.
+    fontes: [4]
+  - marco: "2001"
+    descricao: O Predator passa a levar mísseis Hellfire. Após os atentados de 11 de Setembro, é enviado ao exterior e usado no Afeganistão contra alvos em solo; o exemplar 3034, hoje no Museu Nacional do Ar e Espaço dos EUA, foi o primeiro do tipo a ser armado e usado em ataques.
+    fontes: [5, 6]
+  - marco: "2017"
+    descricao: O Estado Islâmico atinge o pico de uso de drones comerciais adaptados, montados com peças compradas no varejo, durante as batalhas de Mossul e Raqqa.
+    fontes: [7]
+  - marco: "2020"
+    descricao: Na guerra de Nagorno-Karabakh, drones e munições de espera do Azerbaijão ficam no centro do conflito, segundo o CSIS, que alerta para não exagerar suas capacidades.
+    fontes: [8]
+  - marco: "2024"
+    descricao: O Ministério da Defesa da Ucrânia afirma ter entregado mais de 1,2 milhão de drones às suas forças entre janeiro e novembro. Os números não são auditados de forma independente.
+    fontes: [9]
+  - marco: "2025"
+    atual: true
+    descricao: Segundo o RUSI, diante da interferência eletrônica, Rússia e Ucrânia já usam também drones guiados por cabo de fibra óptica.
+    fontes: [10]
+fontes:
+  - n: 1
+    nome: Museu Nacional da Força Aérea dos EUA
+    titulo: "Kettering Aerial Torpedo “Bug”"
+    idioma: en
+    url: https://www.nationalmuseum.af.mil/Visit/Museum-Exhibits/Fact-Sheets/Display/Article/198095/kettering-aerial-torpedo-bug/
+    data: sem data
+    verificacao: confirmado por busca em 16/11/2026; o site bloqueia acesso automatizado
+  - n: 2
+    nome: Imperial War Museum
+    titulo: "A Brief History of Drones"
+    idioma: en
+    url: https://www.iwm.org.uk/history/a-brief-history-of-drones
+    data: sem data
+    verificacao: confirmado por busca em 16/11/2026; o site bloqueia acesso automatizado
+  - n: 3
+    nome: Sir Richard Williams Foundation (Australian Aviation)
+    titulo: "On Target: Eighty to nil — Israel and the first networked air war (Alan Stephens)"
+    idioma: en
+    url: https://www.williamsfoundation.org.au/amp/on-target-eighty-to-nil-israel-and-the-first-networked-air-war
+    data: 2018-05-31
+    verificacao: página aberta em 16/11/2026
+  - n: 4
+    nome: Air & Space Forces Magazine
+    titulo: "This Day in Airpower: August 30, 1995"
+    idioma: en
+    url: https://www.airandspaceforces.com/this-day-in-airpower/august-30-1995/
+    data: sem data
+    verificacao: página aberta em 16/11/2026
+  - n: 5
+    nome: Air & Space Forces Magazine
+    titulo: "How the Predator Grew Teeth (Walter J. Boyne)"
+    idioma: en
+    url: https://www.airandspaceforces.com/article/0709predator/
+    data: 2009-07-01
+    verificacao: página aberta em 16/11/2026
+  - n: 6
+    nome: Museu Nacional do Ar e Espaço dos EUA (Smithsonian)
+    titulo: "After a Tragedy in 2002, Special Forces Soldiers Learned That Armed Drones Are a Combat Necessity (Richard Whittle)"
+    idioma: en
+    url: https://airandspace.si.edu/air-and-space-quarterly/issue-16/afghanistan_predators
+    data: 2025-09-17
+    verificacao: página aberta em 16/11/2026
+  - n: 7
+    nome: Combating Terrorism Center at West Point
+    titulo: "The Islamic State and Drones: Supply, Scale, and Future Threats (Don Rassler)"
+    idioma: en
+    url: https://ctc.westpoint.edu/islamic-state-drones-supply-scale-future-threats/
+    data: 2018-07
+    verificacao: confirmado por busca em 16/11/2026
+  - n: 8
+    nome: CSIS
+    titulo: "The Air and Missile War in Nagorno-Karabakh: Lessons for the Future of Strike and Defense (Shaan Shaikh e Wes Rumbaugh)"
+    idioma: en
+    url: https://www.csis.org/analysis/air-and-missile-war-nagorno-karabakh-lessons-future-strike-and-defense
+    data: 2020-12-08
+    verificacao: página aberta em 16/11/2026
+  - n: 9
+    nome: Ministério da Defesa da Ucrânia
+    titulo: "The Ministry of Defence has delivered over 1.2 million drones to the Defence Forces"
+    idioma: en
+    url: https://mod.gov.ua/en/news/the-ministry-of-defence-has-delivered-over-1-2-million-drones-to-the-defence-forces-by-the-end-of-december-an-additional-100-000-will-be-provided
+    data: 2024-12-11
+    verificacao: conteúdo confirmado por busca e por veículos que repercutiram o anúncio (Ukrinform, Militarnyi); o site bloqueia acesso automatizado
+  - n: 10
+    nome: RUSI
+    titulo: "Emergent Approaches to Combined Arms Manoeuvre in Ukraine (Jack Watling)"
+    idioma: en
+    url: https://www.rusi.org/explore-our-research/publications/insights-papers/emergent-approaches-combined-arms-manoeuvre-ukraine
+    data: 2025-10-23
+    verificacao: página aberta em 16/11/2026

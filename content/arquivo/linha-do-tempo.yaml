@@ -1,0 +1,139 @@
+# Linha do tempo histórica de /arquivo (Fase 9, item 2), de 1914 a hoje.
+# Mesmo formato e validação de content/tecnologia/linha-do-tempo.yaml (lib/tecnologia/linha-do-tempo.ts):
+# cada marco cita ao menos uma fonte [n], e toda fonte listada é citada.
+# Os números do UCDP (1946 e 2025) vêm de content/arquivo/ucdp-series.json; atualize-os junto com a série.
+status: publicado
+revisao: aprovada pelo editor em 16/11/2026
+atualizado_em: 2026-11-16
+marcos:
+  - marco: "1914"
+    descricao: Começa a Primeira Guerra Mundial, em 28 de julho de 1914. Ela dura até o armistício de 11 de novembro de 1918, e as estimativas de mortos vão de 15 a 22 milhões.
+    fontes: [1]
+  - marco: "1939"
+    descricao: A invasão da Polônia pela Alemanha nazista, em 1º de setembro de 1939, inicia a Segunda Guerra Mundial. A guerra termina em 1945, depois dos bombardeios atômicos de Hiroshima e Nagasaki; as estimativas de mortos vão de 60 a 75 milhões, a maioria civis.
+    fontes: [2]
+  - marco: "1945"
+    descricao: A Organização das Nações Unidas (ONU) passa a existir em 24 de outubro de 1945, depois que 29 países ratificam sua Carta.
+    fontes: [3]
+  - marco: "1946"
+    descricao: Começa a série do UCDP/PRIO sobre conflitos armados com participação de Estado, usada nos gráficos abaixo. Naquele ano, 17 conflitos estavam ativos.
+    fontes: [11]
+  - marco: "1950"
+    descricao: A Coreia do Norte ataca a Coreia do Sul em 25 de junho de 1950, e o Conselho de Segurança da ONU condena a invasão. O armistício de 27 de julho de 1953 encerra os combates, mas nenhum tratado de paz pôs fim formal à guerra.
+    fontes: [4]
+  - marco: "1955"
+    descricao: Começa, por volta de 1955, a Guerra do Vietnã, entre o Vietnã do Norte e o Vietnã do Sul, que tinha os Estados Unidos como principal aliado. A guerra termina com a queda de Saigon, em 30 de abril de 1975.
+    fontes: [5]
+  - marco: "1962"
+    descricao: Na Crise dos Mísseis de Cuba, em outubro de 1962, Estados Unidos e União Soviética se enfrentam por causa de mísseis nucleares soviéticos em Cuba — o momento da Guerra Fria em que as duas potências mais se aproximaram de uma guerra nuclear.
+    fontes: [6]
+  - marco: "1991"
+    descricao: Depois da queda do Muro de Berlim, em novembro de 1989, a União Soviética se dissolve em dezembro de 1991.
+    fontes: [7]
+  - marco: "2001"
+    descricao: Depois dos atentados de 11 de Setembro, começa em 7 de outubro de 2001 a guerra no Afeganistão. Ela vai até 30 de agosto de 2021 e termina com o Talibã no poder.
+    fontes: [8]
+  - marco: "2022"
+    descricao: A Rússia invade a Ucrânia em 24 de fevereiro de 2022, ampliando um conflito iniciado em 2014.
+    fontes: [9]
+  - marco: "2023"
+    descricao: Um ataque liderado pelo Hamas contra Israel, em 7 de outubro de 2023, dá início à guerra em Gaza. Israel responde com uma campanha de bombardeios e, a partir de 27 de outubro, com uma invasão terrestre da Faixa de Gaza.
+    fontes: [10]
+  - marco: "2025"
+    atual: true
+    descricao: O UCDP registra 65 conflitos com participação de Estado, o maior número da série iniciada em 1946; 13 deles passaram de mil mortes em combate no ano.
+    fontes: [11]
+fontes:
+  - n: 1
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "World War I"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/World_War_I
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 2
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "World War II"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/World_War_II
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 3
+    nome: Departamento de Estado dos EUA — Office of the Historian
+    titulo: "The United Nations, 1945"
+    idioma: en
+    url: https://history.state.gov/milestones/1937-1945/un
+    data: sem data
+    verificacao: página aberta em 16/11/2026
+  - n: 4
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "Korean War"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/Korean_War
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 5
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "Vietnam War"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/Vietnam_War
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 6
+    nome: Departamento de Estado dos EUA — Office of the Historian
+    titulo: "The Cuban Missile Crisis, October 1962"
+    idioma: en
+    url: https://history.state.gov/milestones/1961-1968/cuban-missile-crisis
+    data: sem data
+    verificacao: página aberta em 16/11/2026
+  - n: 7
+    nome: Departamento de Estado dos EUA — Office of the Historian
+    titulo: "The Collapse of the Soviet Union"
+    idioma: en
+    url: https://history.state.gov/milestones/1989-1992/collapse-soviet-union
+    data: sem data
+    verificacao: página aberta em 16/11/2026
+  - n: 8
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "War in Afghanistan (2001–2021)"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/War_in_Afghanistan_(2001%E2%80%932021)
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 9
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "Russian invasion of Ukraine"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/Russian_invasion_of_Ukraine
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 10
+    nome: Wikipédia em inglês (CC BY-SA 4.0)
+    titulo: "Gaza war"
+    idioma: en
+    url: https://en.wikipedia.org/wiki/Gaza_war
+    data: consultada em 16/11/2026
+    verificacao: página aberta em 16/11/2026
+    licenca: CC BY-SA 4.0
+    licenca_url: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR
+  - n: 11
+    nome: Uppsala Conflict Data Program (UCDP)
+    titulo: "UCDP/PRIO Armed Conflict Dataset, versão 26.1"
+    idioma: en
+    url: https://ucdp.uu.se/downloads/
+    data: 2026
+    verificacao: dados baixados e agregados pelo TEATRO//OPS em 16/11/2026 (content/arquivo/ucdp-series.json)
+    licenca: CC BY 4.0
+    licenca_url: https://creativecommons.org/licenses/by/4.0/deed.pt_BR

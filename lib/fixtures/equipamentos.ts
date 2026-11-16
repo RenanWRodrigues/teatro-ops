@@ -106,13 +106,3 @@ export function categoriasComItens(lista: Equipamento[] = EQUIPAMENTOS_EXEMPLO):
   return (Object.keys(CATEGORIAS) as Categoria[]).filter((c) => lista.some((e) => e.categoria === c));
 }
 
-/** [EXEMPLO] Valores do comparador da home (referência visual Main.dc.html). */
-export const COMPARACAO_EXEMPLO = {
-  a: "F-35A",
-  b: "Su-57",
-  linhas: [
-    { rotulo: "Velocidade máx.", a: spec(1.6, "mach"), b: spec(2.0, "mach", { aproximado: true }) },
-    { rotulo: "Comprimento", a: spec(15.7, "m"), b: spec(20.1, "m") },
-    { rotulo: "Envergadura", a: spec(10.7, "m"), b: spec(14.1, "m") },
-  ],
-};

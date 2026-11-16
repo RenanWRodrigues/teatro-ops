@@ -1,0 +1,955 @@
+{
+  "versao": "26.1",
+  "coletado_em": "2026-11-16T13:59:31.032Z",
+  "arquivos": {
+    "acd": "https://ucdp.uu.se/downloads/ucdpprio/ucdp-prio-acd-261-csv.zip",
+    "brd": "https://ucdp.uu.se/downloads/brd/ucdp-brd-conf-261-csv.zip"
+  },
+  "conflitos": [
+    {
+      "ano": 1946,
+      "total": 17,
+      "guerras": 7,
+      "extrassistemico": 5,
+      "interestatal": 2,
+      "intraestatal": 8,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1947,
+      "total": 14,
+      "guerras": 10,
+      "extrassistemico": 5,
+      "interestatal": 0,
+      "intraestatal": 9,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1948,
+      "total": 20,
+      "guerras": 13,
+      "extrassistemico": 5,
+      "interestatal": 3,
+      "intraestatal": 12,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1949,
+      "total": 21,
+      "guerras": 8,
+      "extrassistemico": 5,
+      "interestatal": 3,
+      "intraestatal": 13,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1950,
+      "total": 18,
+      "guerras": 8,
+      "extrassistemico": 5,
+      "interestatal": 2,
+      "intraestatal": 11,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1951,
+      "total": 14,
+      "guerras": 6,
+      "extrassistemico": 4,
+      "interestatal": 2,
+      "intraestatal": 8,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1952,
+      "total": 14,
+      "guerras": 5,
+      "extrassistemico": 5,
+      "interestatal": 2,
+      "intraestatal": 7,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1953,
+      "total": 16,
+      "guerras": 7,
+      "extrassistemico": 7,
+      "interestatal": 1,
+      "intraestatal": 8,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1954,
+      "total": 15,
+      "guerras": 4,
+      "extrassistemico": 6,
+      "interestatal": 1,
+      "intraestatal": 8,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1955,
+      "total": 13,
+      "guerras": 4,
+      "extrassistemico": 6,
+      "interestatal": 0,
+      "intraestatal": 7,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1956,
+      "total": 17,
+      "guerras": 6,
+      "extrassistemico": 6,
+      "interestatal": 2,
+      "intraestatal": 9,
+      "internacionalizado": 0
+    },
+    {
+      "ano": 1957,
+      "total": 17,
+      "guerras": 2,
+      "extrassistemico": 6,
+      "interestatal": 1,
+      "intraestatal": 9,
+      "internacionalizado": 1
+    },
+    {
+      "ano": 1958,
+      "total": 18,
+      "guerras": 6,
+      "extrassistemico": 5,
+      "interestatal": 1,
+      "intraestatal": 11,
+      "internacionalizado": 1
+    },
+    {
+      "ano": 1959,
+      "total": 16,
+      "guerras": 5,
+      "extrassistemico": 3,
+      "interestatal": 0,
+      "intraestatal": 12,
+      "internacionalizado": 1
+    },
+    {
+      "ano": 1960,
+      "total": 15,
+      "guerras": 4,
+      "extrassistemico": 1,
+      "interestatal": 0,
+      "intraestatal": 11,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1961,
+      "total": 21,
+      "guerras": 9,
+      "extrassistemico": 2,
+      "interestatal": 1,
+      "intraestatal": 16,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1962,
+      "total": 20,
+      "guerras": 7,
+      "extrassistemico": 3,
+      "interestatal": 2,
+      "intraestatal": 13,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1963,
+      "total": 20,
+      "guerras": 7,
+      "extrassistemico": 2,
+      "interestatal": 2,
+      "intraestatal": 13,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1964,
+      "total": 25,
+      "guerras": 7,
+      "extrassistemico": 4,
+      "interestatal": 3,
+      "intraestatal": 14,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1965,
+      "total": 27,
+      "guerras": 8,
+      "extrassistemico": 4,
+      "interestatal": 3,
+      "intraestatal": 17,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1966,
+      "total": 28,
+      "guerras": 7,
+      "extrassistemico": 4,
+      "interestatal": 2,
+      "intraestatal": 19,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1967,
+      "total": 33,
+      "guerras": 11,
+      "extrassistemico": 4,
+      "interestatal": 5,
+      "intraestatal": 22,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1968,
+      "total": 26,
+      "guerras": 7,
+      "extrassistemico": 3,
+      "interestatal": 1,
+      "intraestatal": 20,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1969,
+      "total": 29,
+      "guerras": 9,
+      "extrassistemico": 3,
+      "interestatal": 5,
+      "intraestatal": 17,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1970,
+      "total": 26,
+      "guerras": 8,
+      "extrassistemico": 3,
+      "interestatal": 2,
+      "intraestatal": 16,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1971,
+      "total": 29,
+      "guerras": 10,
+      "extrassistemico": 3,
+      "interestatal": 2,
+      "intraestatal": 20,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1972,
+      "total": 26,
+      "guerras": 6,
+      "extrassistemico": 3,
+      "interestatal": 2,
+      "intraestatal": 17,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1973,
+      "total": 26,
+      "guerras": 7,
+      "extrassistemico": 3,
+      "interestatal": 3,
+      "intraestatal": 17,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1974,
+      "total": 28,
+      "guerras": 6,
+      "extrassistemico": 2,
+      "interestatal": 4,
+      "intraestatal": 20,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1975,
+      "total": 30,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 24,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1976,
+      "total": 32,
+      "guerras": 8,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 29,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1977,
+      "total": 36,
+      "guerras": 8,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 29,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1978,
+      "total": 38,
+      "guerras": 14,
+      "extrassistemico": 0,
+      "interestatal": 4,
+      "intraestatal": 29,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1979,
+      "total": 41,
+      "guerras": 10,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 34,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1980,
+      "total": 41,
+      "guerras": 9,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 30,
+      "internacionalizado": 8
+    },
+    {
+      "ano": 1981,
+      "total": 42,
+      "guerras": 13,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 33,
+      "internacionalizado": 7
+    },
+    {
+      "ano": 1982,
+      "total": 44,
+      "guerras": 15,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 37,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1983,
+      "total": 43,
+      "guerras": 14,
+      "extrassistemico": 0,
+      "interestatal": 4,
+      "intraestatal": 33,
+      "internacionalizado": 6
+    },
+    {
+      "ano": 1984,
+      "total": 42,
+      "guerras": 15,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 34,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1985,
+      "total": 38,
+      "guerras": 13,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 32,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1986,
+      "total": 44,
+      "guerras": 12,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 36,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1987,
+      "total": 47,
+      "guerras": 15,
+      "extrassistemico": 0,
+      "interestatal": 5,
+      "intraestatal": 37,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1988,
+      "total": 39,
+      "guerras": 16,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 32,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1989,
+      "total": 41,
+      "guerras": 10,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 34,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1990,
+      "total": 49,
+      "guerras": 14,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 44,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1991,
+      "total": 53,
+      "guerras": 13,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 49,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1992,
+      "total": 51,
+      "guerras": 14,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 45,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 1993,
+      "total": 44,
+      "guerras": 9,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 38,
+      "internacionalizado": 6
+    },
+    {
+      "ano": 1994,
+      "total": 50,
+      "guerras": 10,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 47,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1995,
+      "total": 41,
+      "guerras": 9,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 38,
+      "internacionalizado": 2
+    },
+    {
+      "ano": 1996,
+      "total": 41,
+      "guerras": 10,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 36,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 1997,
+      "total": 39,
+      "guerras": 9,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 34,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 1998,
+      "total": 40,
+      "guerras": 12,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 32,
+      "internacionalizado": 6
+    },
+    {
+      "ano": 1999,
+      "total": 40,
+      "guerras": 12,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 32,
+      "internacionalizado": 6
+    },
+    {
+      "ano": 2000,
+      "total": 40,
+      "guerras": 12,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 34,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 2001,
+      "total": 38,
+      "guerras": 9,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 31,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 2002,
+      "total": 33,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 29,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 2003,
+      "total": 33,
+      "guerras": 6,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 28,
+      "internacionalizado": 3
+    },
+    {
+      "ano": 2004,
+      "total": 33,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 29,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 2005,
+      "total": 33,
+      "guerras": 5,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 28,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 2006,
+      "total": 33,
+      "guerras": 6,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 28,
+      "internacionalizado": 5
+    },
+    {
+      "ano": 2007,
+      "total": 35,
+      "guerras": 4,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 31,
+      "internacionalizado": 4
+    },
+    {
+      "ano": 2008,
+      "total": 39,
+      "guerras": 5,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 31,
+      "internacionalizado": 7
+    },
+    {
+      "ano": 2009,
+      "total": 37,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 30,
+      "internacionalizado": 7
+    },
+    {
+      "ano": 2010,
+      "total": 31,
+      "guerras": 4,
+      "extrassistemico": 0,
+      "interestatal": 0,
+      "intraestatal": 23,
+      "internacionalizado": 8
+    },
+    {
+      "ano": 2011,
+      "total": 37,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 27,
+      "internacionalizado": 9
+    },
+    {
+      "ano": 2012,
+      "total": 33,
+      "guerras": 6,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 23,
+      "internacionalizado": 9
+    },
+    {
+      "ano": 2013,
+      "total": 39,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 28,
+      "internacionalizado": 10
+    },
+    {
+      "ano": 2014,
+      "total": 46,
+      "guerras": 13,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 28,
+      "internacionalizado": 17
+    },
+    {
+      "ano": 2015,
+      "total": 54,
+      "guerras": 11,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 32,
+      "internacionalizado": 21
+    },
+    {
+      "ano": 2016,
+      "total": 54,
+      "guerras": 12,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 34,
+      "internacionalizado": 18
+    },
+    {
+      "ano": 2017,
+      "total": 54,
+      "guerras": 10,
+      "extrassistemico": 0,
+      "interestatal": 1,
+      "intraestatal": 30,
+      "internacionalizado": 23
+    },
+    {
+      "ano": 2018,
+      "total": 52,
+      "guerras": 6,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 31,
+      "internacionalizado": 19
+    },
+    {
+      "ano": 2019,
+      "total": 57,
+      "guerras": 7,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 29,
+      "internacionalizado": 26
+    },
+    {
+      "ano": 2020,
+      "total": 57,
+      "guerras": 8,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 27,
+      "internacionalizado": 27
+    },
+    {
+      "ano": 2021,
+      "total": 54,
+      "guerras": 5,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 26,
+      "internacionalizado": 26
+    },
+    {
+      "ano": 2022,
+      "total": 56,
+      "guerras": 8,
+      "extrassistemico": 0,
+      "interestatal": 3,
+      "intraestatal": 31,
+      "internacionalizado": 22
+    },
+    {
+      "ano": 2023,
+      "total": 59,
+      "guerras": 9,
+      "extrassistemico": 0,
+      "interestatal": 2,
+      "intraestatal": 36,
+      "internacionalizado": 21
+    },
+    {
+      "ano": 2024,
+      "total": 59,
+      "guerras": 11,
+      "extrassistemico": 0,
+      "interestatal": 4,
+      "intraestatal": 36,
+      "internacionalizado": 19
+    },
+    {
+      "ano": 2025,
+      "total": 65,
+      "guerras": 13,
+      "extrassistemico": 0,
+      "interestatal": 8,
+      "intraestatal": 35,
+      "internacionalizado": 22
+    }
+  ],
+  "mortes": [
+    {
+      "ano": 1989,
+      "estimativa": 55667,
+      "minimo": 51133,
+      "maximo": 85681
+    },
+    {
+      "ano": 1990,
+      "estimativa": 80297,
+      "minimo": 77085,
+      "maximo": 97820
+    },
+    {
+      "ano": 1991,
+      "estimativa": 70355,
+      "minimo": 68111,
+      "maximo": 91419
+    },
+    {
+      "ano": 1992,
+      "estimativa": 53410,
+      "minimo": 49968,
+      "maximo": 78170
+    },
+    {
+      "ano": 1993,
+      "estimativa": 44954,
+      "minimo": 43928,
+      "maximo": 67762
+    },
+    {
+      "ano": 1994,
+      "estimativa": 38523,
+      "minimo": 37239,
+      "maximo": 58171
+    },
+    {
+      "ano": 1995,
+      "estimativa": 36755,
+      "minimo": 35696,
+      "maximo": 52212
+    },
+    {
+      "ano": 1996,
+      "estimativa": 28903,
+      "minimo": 28460,
+      "maximo": 35089
+    },
+    {
+      "ano": 1997,
+      "estimativa": 40389,
+      "minimo": 37191,
+      "maximo": 62033
+    },
+    {
+      "ano": 1998,
+      "estimativa": 40238,
+      "minimo": 38147,
+      "maximo": 52246
+    },
+    {
+      "ano": 1999,
+      "estimativa": 81444,
+      "minimo": 80033,
+      "maximo": 104048
+    },
+    {
+      "ano": 2000,
+      "estimativa": 78674,
+      "minimo": 76413,
+      "maximo": 91469
+    },
+    {
+      "ano": 2001,
+      "estimativa": 23623,
+      "minimo": 21247,
+      "maximo": 38799
+    },
+    {
+      "ano": 2002,
+      "estimativa": 21157,
+      "minimo": 19106,
+      "maximo": 29330
+    },
+    {
+      "ano": 2003,
+      "estimativa": 23265,
+      "minimo": 22831,
+      "maximo": 33593
+    },
+    {
+      "ano": 2004,
+      "estimativa": 19716,
+      "minimo": 19210,
+      "maximo": 26777
+    },
+    {
+      "ano": 2005,
+      "estimativa": 12437,
+      "minimo": 12026,
+      "maximo": 15579
+    },
+    {
+      "ano": 2006,
+      "estimativa": 20287,
+      "minimo": 19063,
+      "maximo": 28904
+    },
+    {
+      "ano": 2007,
+      "estimativa": 19381,
+      "minimo": 18392,
+      "maximo": 25488
+    },
+    {
+      "ano": 2008,
+      "estimativa": 28867,
+      "minimo": 28014,
+      "maximo": 37231
+    },
+    {
+      "ano": 2009,
+      "estimativa": 36006,
+      "minimo": 32655,
+      "maximo": 44916
+    },
+    {
+      "ano": 2010,
+      "estimativa": 21652,
+      "minimo": 20599,
+      "maximo": 28584
+    },
+    {
+      "ano": 2011,
+      "estimativa": 25636,
+      "minimo": 24476,
+      "maximo": 34219
+    },
+    {
+      "ano": 2012,
+      "estimativa": 74155,
+      "minimo": 71759,
+      "maximo": 85523
+    },
+    {
+      "ano": 2013,
+      "estimativa": 93495,
+      "minimo": 88947,
+      "maximo": 108348
+    },
+    {
+      "ano": 2014,
+      "estimativa": 116005,
+      "minimo": 111002,
+      "maximo": 131428
+    },
+    {
+      "ano": 2015,
+      "estimativa": 104479,
+      "minimo": 100175,
+      "maximo": 120100
+    },
+    {
+      "ano": 2016,
+      "estimativa": 90764,
+      "minimo": 86126,
+      "maximo": 106083
+    },
+    {
+      "ano": 2017,
+      "estimativa": 72137,
+      "minimo": 69368,
+      "maximo": 81999
+    },
+    {
+      "ano": 2018,
+      "estimativa": 55166,
+      "minimo": 52121,
+      "maximo": 64955
+    },
+    {
+      "ano": 2019,
+      "estimativa": 52676,
+      "minimo": 48642,
+      "maximo": 61722
+    },
+    {
+      "ano": 2020,
+      "estimativa": 73139,
+      "minimo": 66910,
+      "maximo": 89187
+    },
+    {
+      "ano": 2021,
+      "estimativa": 199816,
+      "minimo": 194530,
+      "maximo": 225723
+    },
+    {
+      "ano": 2022,
+      "estimativa": 284981,
+      "minimo": 255298,
+      "maximo": 378706
+    },
+    {
+      "ano": 2023,
+      "estimativa": 138917,
+      "minimo": 132011,
+      "maximo": 224509
+    },
+    {
+      "ano": 2024,
+      "estimativa": 155038,
+      "minimo": 131580,
+      "maximo": 195831
+    },
+    {
+      "ano": 2025,
+      "estimativa": 153643,
+      "minimo": 141388,
+      "maximo": 237196
+    }
+  ],
+  "ignoradas": 0
+}

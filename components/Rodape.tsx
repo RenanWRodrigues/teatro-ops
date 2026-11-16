@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 type Props = {
@@ -12,7 +13,14 @@ export function Rodape({ nota }: Props) {
         <p>
           {nota ?? "TEATRO//OPS · conteúdo informativo baseado em inteligência de fontes abertas (OSINT)"}
         </p>
-        {/* Links "Metodologia" e "Fontes" voltam quando /metodologia e /fontes existirem (Fase 9). */}
+        <nav aria-label="Transparência" className="flex gap-6">
+          <Link href="/metodologia" className="inline-flex min-h-11 items-center hover:text-accent">
+            Metodologia
+          </Link>
+          <Link href="/fontes" className="inline-flex min-h-11 items-center hover:text-accent">
+            Fontes
+          </Link>
+        </nav>
       </div>
     </footer>
   );

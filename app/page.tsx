@@ -11,21 +11,16 @@ import { hrefEquipamento } from "@/components/CardEquipamento";
 import { DiagramaTatica } from "@/components/DiagramaTatica";
 import { FormBoletim } from "@/components/FormBoletim";
 import { LinhaDoTempo } from "@/components/LinhaDoTempo";
-import { ListaFontes } from "@/components/ListaFontes";
 import { MapaConflitos } from "@/components/MapaConflitos";
 import { PainelRadar } from "@/components/PainelRadar";
 import { Rodape } from "@/components/Rodape";
 import { RotuloSecao } from "@/components/RotuloSecao";
 import { TituloSecao } from "@/components/TituloSecao";
-import { obterConflitosEmFoco, obterEquipamentos, obterManchetes, obterMonitor, obterNoticiasConflito } from "@/lib/dados";
-import { COMPARACAO_EXEMPLO } from "@/lib/fixtures/equipamentos";
+import { obterConflitosEmFoco, obterEquipamentos, obterManchetes, obterMonitor, obterLinhaDoTempoArquivo, obterNoticiasConflito, obterTaticas } from "@/lib/dados";
+import { melhorParComparavel } from "@/lib/arsenal/comparar";
 import {
-  ARQUIVO_HISTORICO,
   EIXOS,
-  FONTES_ARQUIVO,
-  FONTES_TATICAS,
   FRENTES_TECNOLOGIA,
-  TATICAS,
 } from "@/lib/fixtures/home";
 import type { Categoria } from "@/lib/tipos";
 
@@ -53,13 +48,15 @@ export default async function Home() {
   const chamadas = destaque?.chamadas ?? (destaque?.destaque ? [destaque.destaque] : []);
 
   const [principal, ...demais] = CATEGORIAS_HOME;
+  // Comparador da vitrine: só com fichas reais (sem banco, a seção mostra o convite para /arsenal/comparar).
+  const par = equipamentos.exemplo ? null : melhorParComparavel(equipamentos.dados);
+  // O aviso [EXEMPLO] só aparece se algum bloco ainda vier das fixtures (banco ausente ou vazio).
+  const temExemplo = conflitos.exemplo || manchetes.exemplo || equipamentos.exemplo || monitor.exemplo;
 
   return (
     <>
       <Cabecalho comAcoes ticker={manchetes.dados} />
-      {/* Comparador, táticas, arquivo e faixa de tecnologia ainda são [EXEMPLO] (Fases 7–9):
-          o aviso continua na home mesmo com conflitos e manchetes vindos do banco. */}
-      <AvisoExemplo />
+      {temExemplo ? <AvisoExemplo /> : null}
       <main id="conteudo" tabIndex={-1}>
         {/* HERO */}
         <section className="malha-tatica border-b border-line">
@@ -78,7 +75,7 @@ export default async function Home() {
                 frente da guerra: inteligência artificial e drones.
               </p>
               <div className="mt-10 flex flex-wrap gap-3.5">
-                <BotaoPrimario href="/#conflitos" seta>
+                <BotaoPrimario href="/conflitos" seta>
                   Abrir mapa de conflitos
                 </BotaoPrimario>
                 <BotaoSecundario href="/arsenal">Explorar arsenal</BotaoSecundario>
@@ -114,13 +111,16 @@ export default async function Home() {
                 </TituloSecao>
                 <CarimboAtualizacao data={monitor.dados.atualizadoEm} className="mt-4" />
               </div>
+              <Link href="/conflitos" className={LINK_SECAO}>
+                VER TODOS OS CONFLITOS →
+              </Link>
             </div>
             <div className="flex flex-wrap gap-6">
-              <MapaConflitos conflitos={conflitos.exemplo ? [] : conflitos.dados} className="h-[360px] flex-[2_1_640px] md:h-[520px]" />
+              <MapaConflitos conflitos={conflitos.exemplo ? [] : conflitos.dados} prefixoLink="/conflitos/" className="h-[360px] flex-[2_1_640px] md:h-[520px]" />
               <div className="flex min-w-0 flex-[1_1_340px] flex-col border border-line">
                 {/* Conflitos curados (Fase 5) › notícias reais do tema "conflitos" › placeholders [EXEMPLO]. */}
                 {!conflitos.exemplo || noticiasConflito.length === 0
-                  ? conflitos.dados.map((c) => <CardConflito key={c.slug} conflito={c} />)
+                  ? conflitos.dados.map((c) => <CardConflito key={c.slug} conflito={c} href={conflitos.exemplo ? undefined : `/conflitos/${c.slug}`} />)
                   : noticiasConflito.map((n) => <CardNoticia key={n.url} noticia={n} />)}
               </div>
             </div>
@@ -176,16 +176,24 @@ export default async function Home() {
             <div className="mt-5 flex flex-wrap border border-line bg-bg">
               <div className="flex-[1_1_320px] border-b border-line p-6 md:border-r md:border-b-0 md:p-10">
                 <p className="font-mono text-xs tracking-[0.14em] text-accent">COMPARADOR</p>
-                <p className="mt-3 font-display text-[44px] leading-[0.95] font-extrabold uppercase">
-                  {COMPARACAO_EXEMPLO.a} <span className="text-muted" aria-label="versus">×</span> {COMPARACAO_EXEMPLO.b}
+                {par ? (
+                  <p className="mt-3 font-display text-[44px] leading-[0.95] font-extrabold uppercase [overflow-wrap:anywhere]">
+                    {par.a.nome} <span className="text-muted" aria-hidden="true">×</span><span className="sr-only">versus</span> {par.b.nome}
+                  </p>
+                ) : null}
+                <p className="mt-4 text-[15px] leading-relaxed text-text-2">
+                  Escolha dois equipamentos e compare lado a lado. Valores aproximados de fontes abertas, com a fonte de cada
+                  número na ficha.
                 </p>
-                <p className="mt-4 text-[15px] leading-relaxed text-muted">
-                  Escolha dois equipamentos e compare lado a lado. Valores aproximados de fontes abertas.
-                </p>
+                <Link href={par ? `/arsenal/comparar?a=${par.a.slug}&b=${par.b.slug}` : "/arsenal/comparar"} className={`mt-4 ${LINK_SECAO}`}>
+                  {par ? "VER A COMPARAÇÃO COMPLETA →" : "ABRIR O COMPARADOR →"}
+                </Link>
               </div>
-              <div className="min-w-0 flex-[2_1_520px] p-6 md:p-10">
-                <BarraComparacao rotuloA={COMPARACAO_EXEMPLO.a} rotuloB={COMPARACAO_EXEMPLO.b} linhas={COMPARACAO_EXEMPLO.linhas} />
-              </div>
+              {par ? (
+                <div className="min-w-0 flex-[2_1_520px] p-6 md:p-10">
+                  <BarraComparacao rotuloA={par.a.nome} rotuloB={par.b.nome} linhas={par.linhas} />
+                </div>
+              ) : null}
             </div>
           </div>
         </section>
@@ -198,15 +206,24 @@ export default async function Home() {
               Táticas explicadas
             </TituloSecao>
             <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-px border border-line bg-line">
-              {TATICAS.map((t) => (
-                <li key={t.titulo} className="flex flex-col gap-4 bg-bg p-6 md:p-8">
-                  <DiagramaTatica tipo={t.diagrama} />
-                  <h3 className="font-display text-[28px] leading-none font-bold uppercase">{t.titulo}</h3>
-                  <p className="text-[15px] leading-[1.55] text-muted">{t.texto}</p>
-                </li>
-              ))}
+              {obterTaticas()
+                .slice(0, 4)
+                .map((t) => (
+                  <li key={t.id} className="relative flex flex-col gap-4 bg-bg p-6 md:p-8">
+                    <DiagramaTatica tipo={t.diagrama} />
+                    <h3 className="font-display text-[28px] leading-none font-bold uppercase">
+                      <Link href={`/taticas/${t.id}`} className="after:absolute after:inset-0 hover:text-accent">
+                        {t.titulo}
+                      </Link>
+                    </h3>
+                    <p className="text-[15px] leading-[1.55] text-text-2">{t.resumo}</p>
+                  </li>
+                ))}
             </ul>
-            <ListaFontes fontes={FONTES_TATICAS} className="mt-4" />
+            <p className="mt-4 font-mono text-xs text-muted">Cada texto traz as fontes numeradas no rodapé.</p>
+            <Link href="/taticas" className={`mt-2 ${LINK_SECAO}`}>
+              VER TODAS AS TÁTICAS →
+            </Link>
           </div>
         </section>
 
@@ -249,8 +266,15 @@ export default async function Home() {
             <TituloSecao id="titulo-arquivo" className="mt-3.5 mb-14">
               Um século de guerra
             </TituloSecao>
-            <LinhaDoTempo eventos={ARQUIVO_HISTORICO} />
-            <ListaFontes fontes={FONTES_ARQUIVO} className="mt-8" />
+            <LinhaDoTempo
+              eventos={(obterLinhaDoTempoArquivo()?.eventos ?? [])
+                .filter((e) => ["1914", "1939", "1962", "1991", "2022", "2025"].includes(e.marco))
+                .map((e) => ({ ...e, fontes: undefined }))}
+            />
+            <p className="mt-8 font-mono text-xs text-muted">Fontes de cada marco na página do arquivo.</p>
+            <Link href="/arquivo" className={`mt-2 ${LINK_SECAO}`}>
+              VER O ARQUIVO COMPLETO →
+            </Link>
           </div>
         </section>
 

@@ -1,0 +1,96 @@
+# Seção "Humano no circuito?" em /tecnologia (Fase 8, item 4): andamento das discussões na ONU
+# sobre sistemas de armas autônomas letais. Textos aceitam **negrito**, *itálico* e chamadas [n].
+# Validado por lib/tecnologia/humano-no-circuito.ts. Só vai ao ar com status: publicado.
+# Atualize `situacao_em` e o andamento quando a Conferência de Revisão da CCW divulgar o resultado.
+status: publicado
+revisao: aprovada pelo editor em 16/11/2026
+atualizado_em: 2026-11-16
+situacao_em: 2026-11-16
+introducao: >-
+  Na definição do Comitê Internacional da Cruz Vermelha (CICV), armas autônomas são as que selecionam e aplicam força contra alvos sem intervenção humana:
+  depois de ativadas por uma pessoa, é o próprio sistema que dispara o ataque, a partir do que seus sensores captam [1].
+  Na ONU, a pergunta central é quanto controle e julgamento humanos devem existir sobre a decisão de usar força.
+niveis:
+  - sigla: NO CIRCUITO
+    texto: O sistema só seleciona alvos e usa força com um comando humano [2].
+  - sigla: SOBRE O CIRCUITO
+    texto: O sistema seleciona alvos e usa força sob a supervisão de um operador, que pode intervir e cancelar [2].
+  - sigla: FORA DO CIRCUITO
+    alerta: true
+    texto: O sistema seleciona alvos e usa força sem nenhuma ação ou interação humana [2].
+nota_niveis: Classificação proposta em 2012 pela Human Rights Watch e pela Clínica Internacional de Direitos Humanos de Harvard; não é uma definição oficial da ONU [2].
+andamento:
+  - data: 2023-12-22
+    texto: A Assembleia Geral da ONU aprova a primeira resolução sobre armas autônomas letais (78/241), por 152 votos a 4 (Belarus, Índia, Mali e Rússia), com 11 abstenções. O texto pede ao secretário-geral um relatório com a visão dos países [3].
+  - data: 2025-12-01
+    texto: A Assembleia aprova nova resolução sobre o tema (80/57), por 164 votos a 6 (Belarus, Burundi, Coreia do Norte, Estados Unidos, Israel e Rússia), com 7 abstenções [4].
+  - data: 2026-08-25
+    texto: O secretário-geral da ONU, António Guterres, e a presidente do CICV, Mirjana Spoljarić, renovam o apelo de 2023 por um instrumento juridicamente vinculante, com proibições e restrições claras [5].
+  - data: 2026-09-05
+    texto: Em Genebra, o Grupo de Especialistas Governamentais da Convenção sobre Certas Armas Convencionais (CCW) aprova por consenso seu relatório 2024–2026, com um conjunto de elementos para um futuro instrumento, sem definir se ele será juridicamente vinculante [6].
+  - data: 2026-11-16
+    atual: true
+    texto: Começa a Sétima Conferência de Revisão da CCW, de 16 a 20 de novembro, que decide, por consenso, se os países abrem negociações [7].
+posicoes:
+  - Mais de 70 países, entre eles a Suíça, apoiam negociar um instrumento juridicamente vinculante; Estados Unidos e Rússia preferem diretrizes nacionais a regras internacionais obrigatórias [7].
+  - Bélgica, França, Alemanha e Singapura propõem manter as conversas na CCW, com um código de conduta não vinculante como possível primeiro passo para um acordo obrigatório [7].
+  - O CICV defende duas camadas de regras — proibir as armas autônomas imprevisíveis ou feitas para atacar pessoas diretamente e restringir as demais, por tipo de alvo, área, duração e escala de uso [8].
+  - Críticos apontam que o relatório dos especialistas deixou de fora conceitos como ética, confiabilidade, previsibilidade e explicabilidade [7].
+  - Sem consenso, as alternativas citadas são seguir discutindo na CCW, levar o tema à Assembleia Geral ou negociar fora da convenção, como ocorreu com os tratados sobre minas antipessoais e munições de fragmentação (cluster) [7].
+fontes:
+  - n: 1
+    nome: Comitê Internacional da Cruz Vermelha (CICV)
+    titulo: "ICRC position on autonomous weapon systems"
+    idioma: en
+    url: https://www.icrc.org/en/document/icrc-position-autonomous-weapon-systems
+    data: 2021-05-12
+    verificacao: página aberta em 16/11/2026
+  - n: 2
+    nome: Human Rights Watch e Clínica Internacional de Direitos Humanos de Harvard
+    titulo: "Losing Humanity: The Case against Killer Robots (Bonnie Docherty)"
+    idioma: en
+    url: https://www.hrw.org/report/2012/11/19/losing-humanity/case-against-killer-robots
+    data: 2012-11-19
+    verificacao: página aberta em 16/11/2026
+  - n: 3
+    nome: Human Rights Watch
+    titulo: "Killer Robots: UN Vote Should Spur Action on Treaty"
+    idioma: en
+    url: https://www.hrw.org/news/2024/01/03/killer-robots-un-vote-should-spur-action-treaty
+    data: 2024-01-03
+    verificacao: página aberta em 16/11/2026; placar conferido também na Biblioteca Digital da ONU (por busca)
+  - n: 4
+    nome: UN Project (base de votações da Assembleia Geral)
+    titulo: "A/RES/80/57 — Lethal autonomous weapons systems"
+    idioma: en
+    url: https://un-project.org/votes/resolution/A-RES-80-57/
+    data: 2025-12-01
+    verificacao: página aberta em 16/11/2026
+  - n: 5
+    nome: Comitê Internacional da Cruz Vermelha (CICV)
+    titulo: "Renewed call by the UN Secretary-General and the ICRC President to adopt rules on autonomous weapons"
+    idioma: en
+    url: https://www.icrc.org/en/statement/renewed-call-un-secretary-general-and-icrc-president-adopt-rules-autonomous-weapons
+    data: 2026-08-25
+    verificacao: página aberta em 16/11/2026
+  - n: 6
+    nome: Opinio Juris
+    titulo: "Symposium on the CCW GGE LAWS: The End of the Beginning (Jessica Dorsey, Rain Liivoja, Netta Goussac, Sally Longworth e Anna Andersson)"
+    idioma: en
+    url: https://opiniojuris.org/2026/10/05/symposium-on-the-ccw-gge-laws-the-end-of-the-beginning-an-introduction/
+    data: 2026-10-05
+    verificacao: página aberta em 16/11/2026
+  - n: 7
+    nome: SWI swissinfo.ch
+    titulo: "Pressure mounts on states to regulate autonomous weapons (Annegret Mathari)"
+    idioma: en
+    url: https://www.swissinfo.ch/eng/international-geneva/pressure-mounts-on-states-to-regulate-autonomous-weapons/92319268
+    data: 2026-11-16
+    verificacao: página aberta em 16/11/2026
+  - n: 8
+    nome: Comitê Internacional da Cruz Vermelha (CICV)
+    titulo: "Advocacy paper: A key opportunity to prevent the development of unacceptable autonomous weapons"
+    idioma: en
+    url: https://www.icrc.org/en/article/advocacy-paper-key-opportunity-prevent-development-unacceptable-autonomous-weapons
+    data: 2026-06-17
+    verificacao: página aberta em 16/11/2026
