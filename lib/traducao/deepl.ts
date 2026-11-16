@@ -34,6 +34,16 @@ export function escaparParaXml(texto: string): string {
     .join("");
 }
 
+/**
+ * Texto pronto para o DeepL: escapado e dentro de uma marca raiz <t>. Sem a raiz, um texto que COMEÇA com
+ * <keep> vira um documento XML cuja raiz é o <keep>, e o DeepL descarta o resto: "<keep>OTAN</keep>'s Black
+ * Sea Dilemma…" voltava só "OTAN" (verificado em 16/11/2026).
+ */
+export const envolverParaDeepL = (texto: string) => `<t>${escaparParaXml(texto)}</t>`;
+
+/** Desfaz `envolverParaDeepL` na resposta: tira a marca raiz e as entidades XML. */
+export const desembrulharDeDeepL = (texto: string) => desescaparXml(texto.trim().replace(/^<t>/, "").replace(/<\/t>$/, ""));
+
 /** Desfaz as entidades XML que o DeepL devolve no modo tag_handling=xml. */
 export function desescaparXml(texto: string): string {
   return texto
@@ -61,6 +71,12 @@ export function criarClienteDeepL(chave: string, fetchImpl: typeof fetch = fetch
       return u.character_limit - u.character_count;
     },
 
+    /** Uso do mês: caracteres consumidos e limite do plano. */
+    async uso(): Promise<{ usados: number; limite: number }> {
+      const u = await chamar("/usage", esquemaUso);
+      return { usados: u.character_count, limite: u.character_limit };
+    },
+
     /**
      * Traduz para PT-BR. `idiomaOrigem` (ISO 639-1) é opcional: sem ele, o DeepL detecta.
      * Usa tag_handling=xml para preservar <keep>…</keep>.
@@ -70,7 +86,7 @@ export function criarClienteDeepL(chave: string, fetchImpl: typeof fetch = fetch
       for (let i = 0; i < textos.length; i += LOTE_MAXIMO) {
         const lote = textos.slice(i, i + LOTE_MAXIMO);
         const corpo: Record<string, unknown> = {
-          text: lote.map(escaparParaXml),
+          text: lote.map(envolverParaDeepL),
           target_lang: "PT-BR",
           tag_handling: "xml",
           ignore_tags: ["keep"],
@@ -79,7 +95,7 @@ export function criarClienteDeepL(chave: string, fetchImpl: typeof fetch = fetch
         if (opcoes.glossarioId && opcoes.idiomaOrigem) corpo.glossary_id = opcoes.glossarioId;
         const r = await chamar("/translate", esquemaTraducao, { method: "POST", body: JSON.stringify(corpo) });
         saida.push(
-          ...r.translations.map((t) => ({ texto: desescaparXml(t.text), idiomaDetectado: t.detected_source_language.toLowerCase() })),
+          ...r.translations.map((t) => ({ texto: desembrulharDeDeepL(t.text), idiomaDetectado: t.detected_source_language.toLowerCase() })),
         );
       }
       return saida;

@@ -1,0 +1,35 @@
+# Equipamentos do arsenal (skill ficha-equipamento). Os dados vêm do Wikidata, da Wikipedia e do Commons;
+# aqui ficam só a identificação (QID conferido) e o rótulo editorial do selo.
+#
+# classe: rótulo curto do selo, baseado nas classes do item no Wikidata (P279).
+# familia: QID da família (ex.: F-35 para o F-35A), conferido à mão; só dela se herdam dados que faltam no item.
+# termos: como o equipamento aparece em títulos de notícia (busca das "notícias relacionadas"; evite palavras ambíguas).
+# variantes: QIDs a listar na ficha (opcional; padrão: subclasses diretas da família ou do item, sem propostas).
+
+equipamentos:
+  # QID conferido em 15/11/2026: Q17519093 "Lockheed Martin F-35A Lightning II" (variante CTOL; família Q29261,
+  # classes "caças de quinta geração" e "caça multiuso").
+  - slug: f-35a-lightning-ii
+    nome: F-35A Lightning II
+    categoria: cacas
+    classe: Caça · 5ª geração
+    qid: Q17519093
+    familia: Q29261
+    termos: ["F-35"]
+    variantes: [Q17519093, Q17519101, Q17519103]
+
+  # QIDs abaixo conferidos em 15/11/2026 pela busca do Wikidata (rótulo e descrição em inglês entre aspas).
+  - { slug: su-57, nome: Su-57, categoria: cacas, classe: Caça · 5ª geração, qid: Q194455, termos: ["Su-57"] }                       # "Sukhoi Su-57 — fighter aircraft family"
+  - { slug: rafale, nome: Rafale, categoria: cacas, classe: Caça multimissão, qid: Q190973, termos: ["Rafale"] }                       # "Dassault Rafale — French multi-role combat aircraft"
+  - { slug: gripen-e-f-39, nome: Gripen E / F-39, categoria: cacas, classe: Caça multimissão, qid: Q18079497, familia: Q150088, termos: ["Gripen", "F-39"] }  # "JAS 39E Gripen" (F-39 = designação brasileira)
+  - { slug: leopard-2a7, nome: Leopard 2A7, categoria: tanques, classe: Carro de combate principal, qid: Q105687650, familia: Q151968, termos: ["Leopard 2"] }
+  - { slug: m1a2-abrams, nome: M1A2 Abrams, categoria: tanques, classe: Carro de combate principal, qid: Q125017767, familia: Q173684, termos: ["Abrams"] }
+  - { slug: t-90m, nome: T-90M, categoria: tanques, classe: Carro de combate principal, qid: Q123490387, familia: Q192757, termos: ["T-90"] }
+  - { slug: uss-gerald-r-ford, nome: USS Gerald R. Ford, categoria: embarcacoes, classe: Porta-aviões nuclear, qid: Q1351895, termos: ["Gerald R. Ford", "Gerald Ford"] }
+  - { slug: type-055, nome: Type 055, categoria: embarcacoes, classe: Destróier de mísseis guiados, qid: Q15729915, termos: ["Type 055", "Tipo 055"] }
+  - { slug: classe-riachuelo, nome: Classe Riachuelo, categoria: embarcacoes, classe: Submarino convencional, qid: Q56352021, termos: ["Riachuelo"] }
+  - { slug: b-21-raider, nome: B-21 Raider, categoria: avioes, classe: Bombardeiro furtivo, qid: Q22960692, termos: ["B-21"] }
+  - { slug: kc-390-millennium, nome: KC-390 Millennium, categoria: avioes, classe: Transporte e reabastecimento, qid: Q975281, termos: ["KC-390", "C-390"] } # "Embraer C-390 Millennium"
+  - { slug: m142-himars, nome: M142 HIMARS, categoria: armamento, classe: Lançador múltiplo de foguetes, qid: Q2495802, termos: ["HIMARS"] }
+  - { slug: bayraktar-tb2, nome: Bayraktar TB2, categoria: drones, classe: Drone armado · MALE, qid: Q17501733, termos: ["Bayraktar", "TB2"] }
+  - { slug: mq-9-reaper, nome: MQ-9 Reaper, categoria: drones, classe: Drone armado · MALE, qid: Q816695, termos: ["MQ-9"] }

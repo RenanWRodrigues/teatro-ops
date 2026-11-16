@@ -20,6 +20,8 @@ export type LinhaNoticia = {
   temas: string[];
   regiao: string | null;
   publicado_em: string;
+  lat: number | null;
+  lon: number | null;
 };
 
 const ROTULO_TEMA: Record<string, string> = {
@@ -41,8 +43,12 @@ const ROTULO_TEMA: Record<string, string> = {
 export function resumoPorRegra(n: Pick<NoticiaNormalizada, "dominio" | "publicadoEm" | "regiao" | "temas">): string {
   const frase1 = `Notícia publicada por ${n.dominio} em ${formatarData(n.publicadoEm)} e indexada pelo GDELT.`;
   const temas = n.temas.map((t) => ROTULO_TEMA[t] ?? t);
-  const partes = [n.regiao ? `região: ${n.regiao}` : null, temas.length ? `temas: ${temas.join(", ")}` : null].filter(Boolean);
-  return partes.length ? `${frase1} Classificação automática — ${partes.join("; ")}.` : frase1;
+  const partes = [n.regiao ? `região: ${n.regiao}` : null, temas.length ? `${temas.length === 1 ? "tema" : "temas"}: ${temas.join(", ")}` : null].filter(
+    (p): p is string => Boolean(p),
+  );
+  if (!partes.length) return frase1;
+  const frase2 = partes.join("; ");
+  return `${frase1} ${frase2.charAt(0).toUpperCase()}${frase2.slice(1)}.`;
 }
 
 async function hashesJaGravados(db: SupabaseClient, hashes: string[]): Promise<Set<string>> {
@@ -107,6 +113,8 @@ export async function processarNoticias(
       temas: c.temas,
       regiao: c.regiao,
       publicado_em: n.publicadoEm,
+      lat: n.lat ?? null,
+      lon: n.lon ?? null,
     };
   });
 

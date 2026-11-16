@@ -11,6 +11,7 @@ import {
   dataGkg,
   limparTitulo,
   lerTsv,
+  localPrincipal,
   normalizarLinha,
   tituloDaLinha,
 } from "./index";
@@ -30,6 +31,14 @@ describe("consultas do YAML aplicadas ao título", () => {
     const conflitos = compilarConsulta("(war OR airstrike OR ceasefire)");
     expect(casa(conflitos, "Ceasefire holds in the south")).toBe(true);
     expect(casa(conflitos, "Warriors win the final")).toBe(false);
+  });
+
+  it("a consulta de drones do YAML pega plurais, FPV e defesa antidrone", () => {
+    const drones = consultas.incluir.find(([chave]) => chave === "drones")![1];
+    expect(casa(drones, "Russian drones hit Kyiv overnight")).toBe(true);
+    expect(casa(drones, "Army fields new FPV interceptors")).toBe(true);
+    expect(casa(drones, "Pentagon awards counter-UAS contract")).toBe(true);
+    expect(casa(drones, "Monotone droning speech")).toBe(false);
   });
 });
 
@@ -81,7 +90,7 @@ describe("amostra real do GKG", () => {
 });
 
 describe("adaptador com rede simulada", () => {
-  it("lê o lastupdate, baixa os zips da janela e pula arquivo ausente", async () => {
+  it("lê o lastupdate, baixa os zips da janela, pula arquivo ausente e guarda só as linhas das consultas", async () => {
     const zip = zipSync({ "20261114191500.gkg.csv": strToU8(AMOSTRA) });
     const pedidos: string[] = [];
     const fetchImpl = (async (url: string) => {
@@ -95,7 +104,25 @@ describe("adaptador com rede simulada", () => {
     const adaptador = criarAdaptadorGkg({ ...config, limite: "100 req / s" }, fetchImpl);
     const brutas = await adaptador.buscar(new Date("2026-11-14T19:00:00Z"));
     expect(pedidos.filter((p) => p.endsWith(".zip"))).toHaveLength(2);
-    expect(brutas).toHaveLength(19);
+    // 19 linhas no arquivo; só as 2 que passam pelas consultas ficam na memória.
+    expect(brutas).toHaveLength(2);
+    expect(brutas.every((l) => normalizarLinha(l, consultas) !== null)).toBe(true);
+  });
+});
+
+describe("local principal (camada de cobertura de mídia)", () => {
+  it("país mais citado e, nele, o local mais específico, arredondado a ~11 km", () => {
+    const porTitulo = (inicio: string) => linhas.find((l) => tituloDaLinha(l)?.startsWith(inicio))!;
+    // Linha 1: cita Rússia uma vez e o Irã quatro vezes → Isfahan (primeira cidade iraniana).
+    expect(localPrincipal(porTitulo("Iran says IAEA"))).toEqual({ lat: 32.7, lon: 51.7 });
+    // Gaza: o GKG codifica "Gaza" e "Gaza City" sob Israel (3 menções × 2 da Faixa) → Cidade de Gaza.
+    expect(localPrincipal(porTitulo("Israeli drone strike kills 2 Palestinians in Gaza"))).toEqual({ lat: 31.4, lon: 34.3 });
+  });
+
+  it("sem locais com coordenada → null", () => {
+    const l = [...linhas[0]!];
+    l[9] = "";
+    expect(localPrincipal(l)).toBeNull();
   });
 });
 

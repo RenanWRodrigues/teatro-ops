@@ -25,6 +25,7 @@ conflitos:
   - id: gdelt-gkg
     nome: GDELT GKG 2.0 (arquivos de 15 min)
     url: https://data.gdeltproject.org/gdeltv2/
+    verificar: http://data.gdeltproject.org/gdeltv2/lastupdate.txt
     tipo: dataset
     auth: nenhuma
     limite: "1 req / s"
@@ -33,9 +34,10 @@ conflitos:
     job: noticias
     consultas:
       conflitos: '(war OR airstrike OR offensive OR ceasefire OR shelling)'
-      drones: '(drone OR UAV OR "loitering munition" OR "drone strike")'
+      # Termos casam a palavra inteira: plurais entram à parte ("drone" não casa "drones").
+      drones: '(drone OR drones OR UAV OR UAVs OR FPV OR "loitering munition" OR "loitering munitions" OR "drone strike" OR "counter-UAS" OR "C-UAS")'
       ia: '("artificial intelligence" OR "AI") (military OR defense OR weapon)'
-      guerra_eletronica: '("electronic warfare" OR jamming OR "GPS spoofing")'
+      guerra_eletronica: '("electronic warfare" OR jamming OR jammer OR jammers OR "GPS spoofing")'
     # Títulos com estes termos são descartados (falsos positivos medidos em 14/11/2026).
     excluir: '("trade war" OR "price war" OR "culture war" OR "Civil War" OR "World War" OR "War Cemetery" OR "War Cemetary" OR "Star Wars" OR "war movie" OR "offensive line" OR "offensive player" OR "offensive coordinator" OR "light show" OR Episode OR "TV series" OR thriller OR "box office" OR "TV & Radio")'
     # Além do termo no título, o GDELT precisa ter marcado a notícia com ao menos um destes temas.
@@ -51,7 +53,7 @@ conflitos:
     licenca: "Livre com citação"
     categoria: pesquisa
     job: noticias
-    status: a_verificar
+    status: quebrada   # 15/11/2026: HTTP 404 no endpoint /api/v2/geo/geo; a camada "cobertura de mídia" usa as coordenadas do gdelt-gkg
 
   - id: acled
     nome: ACLED
@@ -64,6 +66,29 @@ conflitos:
     categoria: pesquisa
     job: eventos
     status: a_verificar
+
+  # API do UCDP exige token (HTTP 401 em 14/11/2026); os arquivos de download não.
+  - id: ucdp-candidato
+    nome: UCDP Candidate GED (versão preliminar mensal)
+    url: https://ucdp.uu.se/downloads/
+    tipo: dataset
+    auth: nenhuma
+    limite: "1 req / s"
+    licenca: CC BY 4.0
+    categoria: pesquisa
+    job: eventos
+    status: ativa      # 15/11/2026: coleta real ok (GEDEvent_v26_01_26_09.csv, 16.633 eventos gravados)
+
+  - id: ucdp-series
+    nome: UCDP/PRIO Armed Conflict Dataset e UCDP Battle-Related Deaths (séries anuais)
+    url: https://ucdp.uu.se/downloads/
+    tipo: dataset
+    auth: nenhuma
+    limite: "1 req / s"
+    licenca: CC BY 4.0
+    categoria: pesquisa
+    job: arquivo       # sem job agendado: versão anual, gerada por pnpm arquivo:ucdp em content/arquivo/ucdp-series.json
+    status: ativa      # 16/11/2026: coleta real ok (v26.1: conflitos 1946–2025, mortes em combate 1989–2025)
 
   - id: ucdp
     nome: UCDP — Uppsala Conflict Data Program
@@ -85,7 +110,7 @@ conflitos:
     licenca: "Termos ReliefWeb; conteúdo pertence às fontes originais"
     categoria: humanitaria
     job: eventos
-    status: a_verificar
+    status: a_verificar   # 15/11/2026: HTTP 400 "Missing appname parameter"; aguardando appname aprovado
 
   - id: nasa-firms
     nome: NASA FIRMS
@@ -103,17 +128,19 @@ governos:
   - id: fr-eua
     nome: Federal Register (EUA)
     url: https://www.federalregister.gov/api/v1/documents.json
+    pagina: https://www.federalregister.gov/
     tipo: api
     auth: nenhuma
     licenca: Domínio público (governo dos EUA)
     categoria: oficial
     pais: US
     job: governos
-    status: a_verificar
+    status: ativa      # 15/11/2026: coleta real ok (65 de 113 documentos em 30 dias passaram no filtro)
 
   - id: congress-eua
     nome: Congress.gov API
     url: https://api.congress.gov/v3/
+    pagina: https://www.congress.gov/
     tipo: api
     auth: chave (api.data.gov)
     env: [CONGRESS_GOV_API_KEY]
@@ -123,27 +150,31 @@ governos:
     job: governos
     status: a_verificar
 
-  - { id: defesa-eua,      nome: Departamento de Defesa dos EUA,  pagina: https://www.defense.gov/News/,              feed: null, tipo: rss, categoria: oficial, pais: US, job: governos, licenca: Domínio público,  status: a_verificar }
-  - { id: estado-eua,      nome: Departamento de Estado dos EUA,  pagina: https://www.state.gov/press-releases/,      feed: null, tipo: rss, categoria: oficial, pais: US, job: governos, licenca: Domínio público,  status: a_verificar }
-  - { id: kremlin,         nome: Presidência da Rússia (Kremlin), pagina: http://en.kremlin.ru/events/president/news, feed: null, tipo: rss, categoria: oficial, pais: RU, job: governos, licenca: CC BY 4.0,       status: a_verificar }
-  - { id: governo-russia,  nome: Governo da Rússia,               pagina: http://government.ru/en/news/,             feed: "http://government.ru/en/all/rss/", tipo: rss, categoria: oficial, pais: RU, job: governos, licenca: verificar, status: a_verificar }
-  - { id: mre-russia,      nome: MRE da Rússia,                   pagina: https://mid.ru/en/,                        feed: null, tipo: rss, categoria: oficial, pais: RU, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: mre-china,       nome: MRE da China,                    pagina: https://www.fmprc.gov.cn/eng/,             feed: null, tipo: rss, categoria: oficial, pais: CN, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: defesa-china,    nome: Ministério da Defesa da China,   pagina: http://eng.mod.gov.cn/,                    feed: null, tipo: rss, categoria: oficial, pais: CN, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: xinhua,          nome: Xinhua (mídia estatal),          pagina: https://english.news.cn/,                  feed: null, tipo: rss, categoria: estatal, pais: CN, job: governos, licenca: "título + link", status: a_verificar }
-  - { id: presidencia-ira, nome: Presidência do Irã,              pagina: https://president.ir/en,                   feed: null, tipo: rss, categoria: oficial, pais: IR, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: irna,            nome: IRNA (mídia estatal),            pagina: https://en.irna.ir/,                       feed: null, tipo: rss, categoria: estatal, pais: IR, job: governos, licenca: "título + link", status: a_verificar }
-  - { id: pm-israel,       nome: Gabinete do PM de Israel,        pagina: https://www.gov.il/en/departments/prime_ministers_office, feed: null, tipo: rss, categoria: oficial, pais: IL, job: governos, licenca: verificar, status: a_verificar }
-  - { id: idf,             nome: Forças de Defesa de Israel,      pagina: https://www.idf.il/en/,                    feed: null, tipo: rss, categoria: oficial, pais: IL, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: presidencia-ua,  nome: Presidência da Ucrânia,          pagina: https://www.president.gov.ua/en/news,      feed: null, tipo: rss, categoria: oficial, pais: UA, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: defesa-ua,       nome: Ministério da Defesa da Ucrânia, pagina: https://mod.gov.ua/en,                     feed: null, tipo: rss, categoria: oficial, pais: UA, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: governo-de,      nome: Governo Federal da Alemanha,     pagina: https://www.bundesregierung.de/breg-en,    feed: null, tipo: rss, categoria: oficial, pais: DE, job: governos, licenca: verificar,        status: a_verificar }
-  - { id: defesa-de,       nome: Ministério da Defesa da Alemanha,pagina: https://www.bmvg.de/en,                    feed: null, tipo: rss, categoria: oficial, pais: DE, job: governos, licenca: verificar,        status: a_verificar }
+  # Descoberta de feeds em 15/11/2026 (Fase 6). Sem feed utilizável → quebrada/desativada, com o motivo.
+  - { id: defesa-eua,      nome: Departamento de Guerra dos EUA (Departamento de Defesa),  pagina: https://www.war.gov/News/Releases/, feed: "https://www.war.gov/DesktopModules/ArticleCS/RSS.ashx?ContentType=9&Site=945&max=50", tipo: rss, categoria: oficial, pais: US, job: governos, licenca: Domínio público, status: ativa }
+  - { id: estado-eua,      nome: Departamento de Estado dos EUA,  pagina: https://www.state.gov/press-releases/,      feed: null, tipo: rss, categoria: oficial, pais: US, job: governos, licenca: Domínio público,  status: quebrada }   # HTTP 403 para robôs; atos do Estado chegam pelo fr-eua
+  - { id: kremlin,         nome: Presidência da Rússia (Kremlin), pagina: http://en.kremlin.ru/events/president/news, feed: "http://en.kremlin.ru/events/president/news/feed", tipo: rss, categoria: oficial, pais: RU, job: governos, licenca: CC BY 4.0, status: ativa }
+  - { id: governo-russia,  nome: Governo da Rússia,               pagina: http://government.ru/en/news/,             feed: "http://government.ru/en/all/rss/", tipo: rss, categoria: oficial, pais: RU, job: governos, licenca: CC BY 4.0, fuso: "+03:00", status: ativa }
+  - { id: mre-russia,      nome: Ministério das Relações Exteriores da Rússia, pagina: https://mid.ru/en/,                        feed: null, tipo: rss, categoria: oficial, pais: RU, job: governos, licenca: a confirmar,        status: desativada }  # feed existe (/en/rss.php), mas o robots.txt proíbe /*rss
+  - { id: mre-china,       nome: Ministério das Relações Exteriores da China, pagina: https://www.fmprc.gov.cn/eng/,             feed: null, tipo: rss, categoria: oficial, pais: CN, job: governos, licenca: a confirmar,        status: quebrada }   # sem RSS; GDELT não indexa o domínio
+  - { id: defesa-china,    nome: Ministério da Defesa da China,   pagina: http://eng.mod.gov.cn/,                    feed: null, tipo: rss, categoria: oficial, pais: CN, job: governos, licenca: a confirmar,        status: quebrada }   # sem RSS; GDELT não indexa o domínio
+  # Xinhua: o feed RSS público parou em 2018; usamos os arquivos GKG do GDELT filtrados pelo domínio (aprovado em 15/11/2026).
+  - { id: xinhua,          nome: Xinhua (mídia estatal),          orgao: Xinhua, pagina: https://english.news.cn/, url: "https://data.gdeltproject.org/gdeltv2/", verificar: "http://data.gdeltproject.org/gdeltv2/lastupdate.txt", dominios: [news.cn, xinhuanet.com], tipo: dataset, categoria: estatal, pais: CN, job: governos, limite: "1 req / s", licenca: "direitos do órgão; exibimos só título e link", status: ativa }
+  - { id: presidencia-ira, nome: Presidência do Irã,              pagina: https://president.ir/en,                   feed: "https://president.ir/en/rss/all", tipo: rss, categoria: oficial, pais: IR, job: governos, licenca: "direitos do órgão; exibimos só título e link", fuso: "+03:30", status: ativa }
+  - { id: irna,            nome: IRNA (mídia estatal),            orgao: IRNA, pagina: https://en.irna.ir/,          feed: "https://en.irna.ir/rss", tipo: rss, categoria: estatal, pais: IR, job: governos, licenca: "direitos do órgão; exibimos só título e link", status: ativa }
+  - { id: pm-israel,       nome: Gabinete do Primeiro-Ministro de Israel, pagina: https://www.gov.il/en/departments/prime_ministers_office, feed: null, tipo: rss, categoria: oficial, pais: IL, job: governos, licenca: a confirmar, status: quebrada }   # HTTP 403 para robôs
+  - { id: idf,             nome: Forças de Defesa de Israel,      pagina: https://www.idf.il/en/,                    feed: null, tipo: rss, categoria: oficial, pais: IL, job: governos, licenca: a confirmar,        status: quebrada }   # proteção anti-robô (Incapsula), sem RSS
+  - { id: presidencia-ua,  nome: Presidência da Ucrânia,          pagina: https://www.president.gov.ua/en/news,      feed: null, tipo: rss, categoria: oficial, pais: UA, job: governos, licenca: a confirmar,        status: quebrada }   # HTTP 403 para robôs
+  - { id: defesa-ua,       nome: Ministério da Defesa da Ucrânia, pagina: https://mod.gov.ua/en,                     feed: null, tipo: rss, categoria: oficial, pais: UA, job: governos, licenca: a confirmar,        status: quebrada }   # HTTP 403 para robôs
+  - { id: governo-de,      nome: Governo Federal da Alemanha,     pagina: https://www.bundesregierung.de/breg-de/service/newsletter-und-abos/rss-newsfeed, feed: "https://www.bundesregierung.de/service/rss/breg-de/1151244/feed.xml", tipo: rss, categoria: oficial, pais: DE, idioma: de, job: governos, licenca: "direitos do órgão; exibimos só título e link", status: ativa }
+  - { id: defesa-de,       nome: Ministério da Defesa da Alemanha, pagina: https://www.bmvg.de/de/rss,               feed: "https://www.bmvg.de/service/rss/de/17680/feed", tipo: rss, categoria: oficial, pais: DE, idioma: de, job: governos, licenca: "direitos do órgão; exibimos só título e link", status: ativa }
 
 arsenal:
-  - { id: wikidata,   nome: Wikidata,              url: https://query.wikidata.org/sparql,            tipo: api, auth: nenhuma, limite: "1 req / s", licenca: CC0,           categoria: enciclopedia, job: arsenal, status: a_verificar }
-  - { id: wikipedia-pt, nome: Wikipedia em português, url: https://pt.wikipedia.org/api/rest_v1/,     tipo: api, auth: nenhuma, licenca: CC BY-SA 4.0,  categoria: enciclopedia, job: arsenal, status: a_verificar }
-  - { id: commons,    nome: Wikimedia Commons,     url: https://commons.wikimedia.org/w/api.php,      tipo: api, auth: nenhuma, licenca: "varia por arquivo", categoria: enciclopedia, job: arsenal, status: a_verificar }
+  # 15/11/2026: wikidata, wikipedia-pt e commons ativas (15 fichas, 80 fotos livres); atualizadas juntas no job semanal "arsenal".
+  - { id: wikidata,   nome: Wikidata,              url: https://query.wikidata.org/sparql, verificar: "https://query.wikidata.org/sparql?query=ASK%7B%7D&format=json", tipo: api, auth: nenhuma, limite: "1 req / s", licenca: CC0,           categoria: enciclopedia, job: arsenal, status: ativa }
+  - { id: wikipedia-pt, nome: Wikipédia em português, url: https://pt.wikipedia.org/api/rest_v1/,     tipo: api, auth: nenhuma, licenca: CC BY-SA 4.0,  categoria: enciclopedia, job: arsenal, status: ativa }
+  - { id: wikipedia-en, nome: Wikipédia em inglês (resumo traduzido quando não há artigo em português), url: https://en.wikipedia.org/api/rest_v1/, tipo: api, auth: nenhuma, licenca: CC BY-SA 4.0, categoria: enciclopedia, status: ativa }   # usada pelo cadastro do arsenal (lib/arsenal/cadastro.ts); sem job próprio
+  - { id: commons,    nome: Wikimedia Commons,     url: https://commons.wikimedia.org/w/api.php,      tipo: api, auth: nenhuma, licenca: "varia por arquivo", categoria: enciclopedia, job: arsenal, status: ativa }
   - { id: dvids,      nome: DVIDS (DoD dos EUA),   url: https://api.dvidshub.net/,                    tipo: api, auth: chave, env: [DVIDS_API_KEY], licenca: "geralmente domínio público; conferir cada item", categoria: oficial, job: arsenal, status: a_verificar }
   - { id: sipri-at,   nome: SIPRI Arms Transfers,  url: https://www.sipri.org/databases/armstransfers, tipo: dataset, auth: nenhuma, licenca: "uso com citação", categoria: pesquisa, job: manual, status: a_verificar }
 

@@ -1,0 +1,488 @@
+{
+ "coletado_em": "2026-11-15T13:55:45.218Z",
+ "declaracoes": [
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P495",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P495",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P495",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P495",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q30",
+   "valorPt": "Estados Unidos",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Estados Unidos"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q7240",
+   "valorPt": "Lockheed Martin",
+   "prop": "http://www.wikidata.org/entity/P176",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Lockheed Martin"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q7240",
+   "valorPt": "Lockheed Martin",
+   "prop": "http://www.wikidata.org/entity/P176",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Lockheed Martin"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q7240",
+   "valorPt": "Lockheed Martin",
+   "prop": "http://www.wikidata.org/entity/P176",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Lockheed Martin"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q7240",
+   "valorPt": "Lockheed Martin",
+   "prop": "http://www.wikidata.org/entity/P176",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Lockheed Martin"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q165862",
+   "valorPt": "Força Aérea Real",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real",
+   "parte": "http://www.wikidata.org/entity/Q17519101",
+   "parteLabel": "Lockheed Martin F-35B Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q165862",
+   "valorPt": "Força Aérea Real",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real",
+   "parte": "http://www.wikidata.org/entity/Q17519101",
+   "parteLabel": "Lockheed Martin F-35B Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q483229",
+   "valorPt": "Força Aérea da Coreia do Sul",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea da Coreia do Sul"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q580556",
+   "valorPt": "Real Força Aérea Neerlandesa",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Real Força Aérea Neerlandesa"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q823635",
+   "valorPt": "Força Aérea Real Australiana",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real Australiana"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q823635",
+   "valorPt": "Força Aérea Real Australiana",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real Australiana"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q823635",
+   "valorPt": "Força Aérea Real Australiana",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real Australiana"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q823635",
+   "valorPt": "Força Aérea Real Australiana",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real Australiana"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q172771",
+   "valorPt": "Marinha Real",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Marinha Real Britânica",
+   "parte": "http://www.wikidata.org/entity/Q17519101",
+   "parteLabel": "Lockheed Martin F-35B Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q172771",
+   "valorPt": "Marinha Real Britânica",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Marinha Real Britânica",
+   "parte": "http://www.wikidata.org/entity/Q17519101",
+   "parteLabel": "Lockheed Martin F-35B Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q381576",
+   "valorPt": "Força Aérea Italiana",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Italiana"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q431059",
+   "valorPt": "Força Aérea Real Dinamarquesa",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Real Dinamarquesa"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q462211",
+   "valorPt": "Força Aérea Israelense",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Israelense"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q462211",
+   "valorPt": "Força Aérea Israelense",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Israelense"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q1137453",
+   "valorPt": "Força Aérea da Noruega",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea da Noruega"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q1137453",
+   "valorPt": "Força Aérea da Noruega",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea da Noruega",
+   "parte": "http://www.wikidata.org/entity/Q17519093",
+   "parteLabel": "Lockheed Martin F-35A Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q830305",
+   "valorPt": "Força Aérea de Autodefesa do Japão",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea de Autodefesa do Japão"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q830305",
+   "valorPt": "Força Aérea de Autodefesa do Japão",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea de Autodefesa do Japão"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q830305",
+   "valorPt": "Força Aérea de Autodefesa do Japão",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea de Autodefesa do Japão",
+   "parte": "http://www.wikidata.org/entity/Q17519093",
+   "parteLabel": "Lockheed Martin F-35A Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q830305",
+   "valorPt": "Força Aérea de Autodefesa do Japão",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea de Autodefesa do Japão",
+   "parte": "http://www.wikidata.org/entity/Q17519093",
+   "parteLabel": "Lockheed Martin F-35A Lightning II"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q918504",
+   "valorPt": "Força Aérea Polaca",
+   "prop": "http://www.wikidata.org/entity/P137",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Força Aérea Polaca"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q1368421",
+   "prop": "http://www.wikidata.org/entity/P516",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Pratt & Whitney F135"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q1368421",
+   "prop": "http://www.wikidata.org/entity/P516",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Pratt & Whitney F135"
+  },
+  {
+   "valor": "http://www.wikidata.org/entity/Q1627738",
+   "prop": "http://www.wikidata.org/entity/P176",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Lockheed Martin Aeronautics"
+  },
+  {
+   "valor": "1200",
+   "prop": "http://www.wikidata.org/entity/P2052",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "1200",
+   "unidadeEn": "mile per hour"
+  },
+  {
+   "valor": "1.6",
+   "prop": "http://www.wikidata.org/entity/P2052",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "1.6",
+   "unidadeEn": "Mach number"
+  },
+  {
+   "valor": "35",
+   "prop": "http://www.wikidata.org/entity/P2050",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "35",
+   "unidadeEn": "foot"
+  },
+  {
+   "valor": "51",
+   "prop": "http://www.wikidata.org/entity/P2043",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "51",
+   "unidadeEn": "foot"
+  },
+  {
+   "valor": "610",
+   "prop": "http://www.wikidata.org/entity/P1092",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "610",
+   "unidadeEn": "1"
+  },
+  {
+   "valor": "104000000",
+   "prop": "http://www.wikidata.org/entity/P2130",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "104000000",
+   "parte": "http://www.wikidata.org/entity/Q17519101",
+   "parteLabel": "Lockheed Martin F-35B Lightning II",
+   "unidadeEn": "United States dollar"
+  },
+  {
+   "valor": "10.7",
+   "prop": "http://www.wikidata.org/entity/P2050",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "10.7",
+   "unidadeEn": "metre"
+  },
+  {
+   "valor": "116000000",
+   "prop": "http://www.wikidata.org/entity/P2130",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "116000000",
+   "parte": "http://www.wikidata.org/entity/Q17519103",
+   "parteLabel": "Lockheed Martin F-35C Lightning II",
+   "unidadeEn": "United States dollar"
+  },
+  {
+   "valor": "15.7",
+   "prop": "http://www.wikidata.org/entity/P2043",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "15.7",
+   "unidadeEn": "metre"
+  },
+  {
+   "valor": "4.38",
+   "prop": "http://www.wikidata.org/entity/P2048",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "4.38",
+   "unidadeEn": "metre"
+  },
+  {
+   "valor": "1975",
+   "prop": "http://www.wikidata.org/entity/P2052",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "1975",
+   "unidadeEn": "kilometre per hour"
+  },
+  {
+   "valor": "http://commons.wikimedia.org/wiki/Special:FilePath/F-35%20Demo%20Team%20%26%20Thunderbirds%20-%20Aviation%20Nation%202019.jpg",
+   "prop": "http://www.wikidata.org/entity/P18",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "http://commons.wikimedia.org/wiki/Special:FilePath/F-35%20Demo%20Team%20%26%20Thunderbirds%20-%20Aviation%20Nation%202019.jpg"
+  },
+  {
+   "valor": "http://commons.wikimedia.org/wiki/Special:FilePath/F-35%20at%20Edwards.jpg",
+   "prop": "http://www.wikidata.org/entity/P18",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "http://commons.wikimedia.org/wiki/Special:FilePath/F-35%20at%20Edwards.jpg"
+  },
+  {
+   "valor": "Lockheed Martin F-35 Lightning II",
+   "prop": "http://www.wikidata.org/entity/P373",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "Lockheed Martin F-35 Lightning II"
+  },
+  {
+   "valor": "2006-12-15T00:00:00Z",
+   "prop": "http://www.wikidata.org/entity/P606",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "2006-12-15T00:00:00Z",
+   "precisao": "11"
+  },
+  {
+   "valor": "2015-07-31T00:00:00Z",
+   "prop": "http://www.wikidata.org/entity/P729",
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "2015-07-31T00:00:00Z",
+   "precisao": "11"
+  },
+  {
+   "valor": "F-35A Lightning II",
+   "prop": "http://www.wikidata.org/entity/P373",
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "rank": "http://wikiba.se/ontology#NormalRank",
+   "valorLabel": "F-35A Lightning II"
+  }
+ ],
+ "metadados": [
+  {
+   "ent": "http://www.wikidata.org/entity/Q29261",
+   "wikiEn": "https://en.wikipedia.org/wiki/Lockheed_Martin_F-35_Lightning_II",
+   "wikiPt": "https://pt.wikipedia.org/wiki/Lockheed_Martin_F-35_Lightning_II",
+   "descEn": "American stealth multirole fighter aircraft",
+   "papel": "pai",
+   "descPt": "caça multiúso furtivo de quinta geração americano"
+  },
+  {
+   "ent": "http://www.wikidata.org/entity/Q17519093",
+   "descEn": "land-based conventional take-off and landing variant (using a traditional airport or airbase runway) of the F-35 from Lockheed Martin",
+   "papel": "item",
+   "rotuloEn": "Lockheed Martin F-35A Lightning II"
+  }
+ ],
+ "variantes": [
+  {
+   "v": "http://www.wikidata.org/entity/Q17519093",
+   "rotuloEn": "Lockheed Martin F-35A Lightning II",
+   "descEn": "land-based conventional take-off and landing variant (using a traditional airport or airbase runway) of the F-35 from Lockheed Martin"
+  },
+  {
+   "v": "http://www.wikidata.org/entity/Q17519103",
+   "rotuloEn": "Lockheed Martin F-35C Lightning II",
+   "descEn": "CATOBAR-equiped conventional aircraft carrier variant of the F-35 from Lockheed Martin"
+  },
+  {
+   "v": "http://www.wikidata.org/entity/Q17519101",
+   "rotuloEn": "Lockheed Martin F-35B Lightning II",
+   "descEn": "short take-off and vertical landing (STOVL) variant of the F-35 from Lockheed Martin"
+  },
+  {
+   "v": "http://www.wikidata.org/entity/Q17519119",
+   "rotuloEn": "CF-35 Lightning II",
+   "descEn": "proposed F-35 Canadian-service model by Lockheed Martin"
+  },
+  {
+   "v": "http://www.wikidata.org/entity/Q17519117",
+   "rotuloEn": "F-35I Adir",
+   "descEn": "Israeli-service F-35 model by Lockheed Martin"
+  },
+  {
+   "v": "http://www.wikidata.org/entity/Q134493789",
+   "rotuloEn": "Lockheed Martin F-35 Lightning II in service",
+   "descEn": "multi-role combat aircraft family used by military forces worldwide"
+  }
+ ]
+}

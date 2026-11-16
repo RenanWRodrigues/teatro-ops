@@ -1,0 +1,42 @@
+# Curadoria de conflitos do TEATRO//OPS (aprovada em 14/11/2026).
+#
+# Critério de inclusão: conflito com eventos no UCDP Candidate GED no último trimestre com dados
+# e ao menos 25 mortes estimadas no trimestre. Ficam fora países em que a violência registrada é
+# quase toda entre grupos criminosos (< 25 mortes no trimestre em conflitos com o Estado).
+#
+# A INTENSIDADE NÃO É DEFINIDA AQUI: é recalculada a cada coleta do UCDP (job "eventos") sobre os
+# últimos 3 meses com dados — alta: >= 250 mortes estimadas (ritmo de 1.000/ano, limiar de "guerra"
+# do UCDP); tensão: 25–249 (piso de "conflito armado" do UCDP). "Cessar-fogo" só com fonte editorial.
+#
+# ucdp: regras para ligar eventos ao conflito — país como o UCDP escreve e, opcionalmente, os
+# `conflict_new_id` aceitos naquele país (sem `conflitos` = todos os eventos do país).
+
+conflitos:
+  - { slug: russia-ucrania, nome: "Rússia–Ucrânia", paises: [UA, RU], regiao: Europa Oriental, ucdp: [{ pais: Ukraine }, { pais: "Russia (Soviet Union)", conflitos: [13243] }] }
+  - { slug: iemen, nome: "Guerra no Iêmen", paises: [YE], regiao: Oriente Médio, ucdp: [{ pais: "Yemen (North Yemen)" }, { pais: Saudi Arabia, conflitos: [230] }] }
+  - { slug: nigeria, nome: "Violência armada na Nigéria", paises: [NG], regiao: África Subsaariana, ucdp: [{ pais: Nigeria }] }
+  - { slug: paquistao, nome: "Insurgências no Paquistão", paises: [PK], regiao: Ásia Central e do Sul, ucdp: [{ pais: Pakistan }] }
+  - { slug: etiopia, nome: "Conflitos na Etiópia", paises: [ET], regiao: África Subsaariana, ucdp: [{ pais: Ethiopia }] }
+  - { slug: sudao, nome: "Guerra no Sudão", paises: [SD], regiao: África Subsaariana, ucdp: [{ pais: Sudan }] }
+  - { slug: colombia, nome: "Conflito armado na Colômbia", paises: [CO], regiao: Américas, ucdp: [{ pais: Colombia }] }
+  - { slug: somalia, nome: "Conflito na Somália", paises: [SO], regiao: África Subsaariana, ucdp: [{ pais: Somalia }] }
+  - { slug: rd-congo, nome: "Conflito no leste da RD Congo", paises: [CD], regiao: África Subsaariana, ucdp: [{ pais: "DR Congo (Zaire)" }] }
+  - { slug: mali, nome: "Conflito no Mali", paises: [ML], regiao: África Subsaariana, ucdp: [{ pais: Mali }] }
+  - { slug: israel-palestina, nome: "Israel–Palestina (Gaza)", paises: [IL, PS], regiao: Oriente Médio, ucdp: [{ pais: Israel }] }
+  - { slug: mianmar, nome: "Guerra civil em Mianmar", paises: [MM], regiao: Indo-Pacífico, ucdp: [{ pais: "Myanmar (Burma)" }] }
+  - { slug: burkina-faso, nome: "Conflito em Burkina Faso", paises: [BF], regiao: África Subsaariana, ucdp: [{ pais: Burkina Faso }] }
+  - { slug: niger, nome: "Conflito no Níger", paises: [NE], regiao: África Subsaariana, ucdp: [{ pais: Niger }] }
+  - { slug: haiti, nome: "Violência armada no Haiti", paises: [HT], regiao: Américas, ucdp: [{ pais: Haiti }] }
+  - { slug: siria, nome: "Conflito na Síria", paises: [SY], regiao: Oriente Médio, ucdp: [{ pais: Syria }] }
+  - { slug: afeganistao, nome: "Conflito no Afeganistão", paises: [AF], regiao: Ásia Central e do Sul, ucdp: [{ pais: Afghanistan }] }
+  - { slug: sudao-do-sul, nome: "Violência no Sudão do Sul", paises: [SS], regiao: África Subsaariana, ucdp: [{ pais: South Sudan }] }
+  - { slug: ira, nome: "Irã", paises: [IR], regiao: Oriente Médio, ucdp: [{ pais: Iran }] }
+  - { slug: camaroes, nome: "Conflitos em Camarões", paises: [CM], regiao: África Subsaariana, ucdp: [{ pais: Cameroon }] }
+  - { slug: israel-libano, nome: "Israel–Líbano", paises: [IL, LB], regiao: Oriente Médio, ucdp: [{ pais: Lebanon }] }
+  - { slug: mocambique, nome: "Insurgência em Moçambique (Cabo Delgado)", paises: [MZ], regiao: África Subsaariana, ucdp: [{ pais: Mozambique }] }
+  - { slug: india, nome: "Conflitos internos na Índia", paises: [IN], regiao: Ásia Central e do Sul, ucdp: [{ pais: India }] }
+  - { slug: iraque, nome: "Iraque", paises: [IQ], regiao: Oriente Médio, ucdp: [{ pais: Iraq, conflitos: [205, 259, 77, 16905] }] }
+  - { slug: indonesia-papua, nome: "Conflito em Papua (Indonésia)", paises: [ID], regiao: Indo-Pacífico, ucdp: [{ pais: Indonesia }] }
+  - { slug: chade, nome: "Violência no Chade", paises: [TD], regiao: África Subsaariana, ucdp: [{ pais: Chad }] }
+  - { slug: filipinas, nome: "Insurgências nas Filipinas", paises: [PH], regiao: Indo-Pacífico, ucdp: [{ pais: Philippines }] }
+  - { slug: rca, nome: "Conflito na República Centro-Africana", paises: [CF], regiao: África Subsaariana, ucdp: [{ pais: Central African Republic }] }

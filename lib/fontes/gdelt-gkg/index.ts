@@ -12,11 +12,14 @@ import { casa, compilarConsulta, type Consulta } from "./consultas";
 
 export const ID = "gdelt-gkg";
 const BASE = "https://data.gdeltproject.org/gdeltv2";
-/** Teto de arquivos por execução (12 × 15 min = 3 h; ~3 MB cada). */
-const MAX_ARQUIVOS = 12;
+/**
+ * Teto de arquivos por execução (96 × 15 min = 24 h; ~3 MB cada). A janela normal é curta, mas o cron
+ * gratuito do GitHub atrasa horas: a execução seguinte recupera o intervalo perdido (lib/ingestao/janela.ts).
+ */
+export const MAX_ARQUIVOS = 96;
 
 /** Colunas do GKG 2.1 usadas (índices a partir de 0). */
-const COL = { data: 1, colecao: 2, dominio: 3, url: 4, temas: 7, extras: 26 } as const;
+export const COL = { data: 1, colecao: 2, dominio: 3, url: 4, temas: 7, locais: 9, extras: 26 } as const;
 
 const TEMA_DA_CONSULTA: Record<string, string> = {
   conflitos: "conflitos",
@@ -89,6 +92,32 @@ export function compilarConsultas(config: Pick<FonteYaml, "consultas" | "excluir
 /** Temas V1 do GKG ("ARMEDCONFLICT;KILL;TAX_WEAPONS_DRONE;…"), sem os deslocamentos. */
 export const temasDaLinha = (l: LinhaGkg) => (l[COL.temas] ?? "").split(";").map((t) => t.split(",")[0]!).filter(Boolean);
 
+/** Especificidade do tipo de local do GKG: 3/4 = cidade, 2/5 = estado/província, 1 = país. */
+const ESPECIFICIDADE: Record<string, number> = { "3": 3, "4": 3, "2": 2, "5": 2, "1": 1 };
+
+/**
+ * Principal local da notícia: o país mais citado nos locais do GKG e, dentro dele, o local mais
+ * específico (cidade › província › país). Coordenada arredondada a 1 casa (~11 km).
+ */
+export function localPrincipal(l: LinhaGkg): { lat: number; lon: number } | null {
+  const locais = (l[COL.locais] ?? "")
+    .split(";")
+    .map((s) => s.split("#"))
+    .filter((p) => p.length >= 6 && p[4] !== "" && p[5] !== "")
+    .map(([tipo, , pais, , lat, lon]) => ({ tipo: tipo!, pais: pais!, lat: Number(lat), lon: Number(lon) }))
+    .filter((x) => Number.isFinite(x.lat) && Number.isFinite(x.lon) && Math.abs(x.lat) <= 90 && Math.abs(x.lon) <= 180);
+  if (locais.length === 0) return null;
+  const contagem = new Map<string, number>();
+  for (const x of locais) contagem.set(x.pais, (contagem.get(x.pais) ?? 0) + 1);
+  // Empate: vale o país citado primeiro (Map preserva a ordem de inserção).
+  const pais = [...contagem.entries()].reduce((a, b) => (b[1] > a[1] ? b : a))[0];
+  const melhor = locais
+    .filter((x) => x.pais === pais)
+    .reduce((a, b) => ((ESPECIFICIDADE[b.tipo] ?? 0) > (ESPECIFICIDADE[a.tipo] ?? 0) ? b : a));
+  const r1 = (n: number) => Math.round(n * 10) / 10;
+  return { lat: r1(melhor.lat), lon: r1(melhor.lon) };
+}
+
 /** `null` = descartar: sem título, título curto, URL inválida ou fora de todas as consultas. */
 export function normalizarLinha(l: LinhaGkg, consultas: ConsultasCompiladas): NoticiaNormalizada | null {
   if (l.length <= COL.extras || l[COL.colecao] !== "1") return null; // 1 = web
@@ -107,6 +136,7 @@ export function normalizarLinha(l: LinhaGkg, consultas: ConsultasCompiladas): No
     return null;
   }
   const c = classificar(titulo, temasConsulta);
+  const local = localPrincipal(l);
   return {
     hash: hashUrl(url),
     url,
@@ -118,6 +148,8 @@ export function normalizarLinha(l: LinhaGkg, consultas: ConsultasCompiladas): No
     temas: c.temas,
     regiao: c.regiao,
     publicadoEm: dataGkg(l[COL.data]!),
+    lat: local?.lat ?? null,
+    lon: local?.lon ?? null,
   };
 }
 
@@ -127,30 +159,45 @@ export function criarAdaptadorGkg(config: FonteYaml, fetchImpl: typeof fetch = f
 
   return {
     id: ID,
-    async buscar(desde) {
-      await aguardar();
-      const indice = await (await fetchComRetry(`${BASE}/lastupdate.txt`, { fetchImpl })).text();
-      const ultimo = /\/(\d{14})\.gkg\.csv\.zip/.exec(indice)?.[1];
-      if (!ultimo) throw new Error(`lastupdate.txt sem arquivo GKG: ${indice.slice(0, 200)}`);
-
-      const linhas: LinhaGkg[] = [];
-      const erros: string[] = [];
-      const carimbos = carimbosDaJanela(ultimo, desde);
-      for (const c of carimbos) {
-        await aguardar();
-        try {
-          const r = await fetchComRetry(`${BASE}/${c}.gkg.csv.zip`, { fetchImpl, tentativas: 2 });
-          const arquivos = unzipSync(new Uint8Array(await r.arrayBuffer()));
-          for (const conteudo of Object.values(arquivos)) linhas.push(...lerTsv(strFromU8(conteudo)));
-        } catch (e) {
-          erros.push(`${c}: ${(e as Error).message}`);
-        }
-      }
-      if (erros.length === carimbos.length) throw new Error(`nenhum arquivo GKG baixado — ${erros.slice(0, 3).join(" | ")}`);
-      for (const e of erros) console.warn(`[${ID}] arquivo pulado: ${e}`);
-      return linhas;
-    },
+    // Só as linhas que passam pelas consultas ficam na memória (o pipeline normaliza de novo, é barato).
+    buscar: (desde) => baixarGkg(desde, aguardar, fetchImpl, (l) => normalizarLinha(l, consultas) !== null),
     normalizar: (l) => normalizarLinha(l, consultas),
     hash: (n) => n.hash,
   };
+}
+
+/**
+ * Baixa e lê os arquivos GKG de 15 min desde `desde` (também usado pela fonte xinhua, filtrada por domínio).
+ * `manter` filtra cada arquivo assim que é lido: com até 96 arquivos (~800 linhas cada), guardar todas as
+ * linhas brutas pesaria na memória do runner.
+ */
+export async function baixarGkg(
+  desde: Date,
+  aguardar: () => Promise<void>,
+  fetchImpl: typeof fetch = fetch,
+  manter: (l: LinhaGkg) => boolean = () => true,
+): Promise<LinhaGkg[]> {
+  await aguardar();
+  const indice = await (await fetchComRetry(`${BASE}/lastupdate.txt`, { fetchImpl })).text();
+  const ultimo = /\/(\d{14})\.gkg\.csv\.zip/.exec(indice)?.[1];
+  if (!ultimo) throw new Error(`lastupdate.txt sem arquivo GKG: ${indice.slice(0, 200)}`);
+
+  const linhas: LinhaGkg[] = [];
+  const erros: string[] = [];
+  const carimbos = carimbosDaJanela(ultimo, desde);
+  for (const c of carimbos) {
+    await aguardar();
+    try {
+      const r = await fetchComRetry(`${BASE}/${c}.gkg.csv.zip`, { fetchImpl, tentativas: 2 });
+      const arquivos = unzipSync(new Uint8Array(await r.arrayBuffer()));
+      for (const conteudo of Object.values(arquivos)) {
+        for (const l of lerTsv(strFromU8(conteudo))) if (manter(l)) linhas.push(l);
+      }
+    } catch (e) {
+      erros.push(`${c}: ${(e as Error).message}`);
+    }
+  }
+  if (erros.length === carimbos.length) throw new Error(`nenhum arquivo GKG baixado — ${erros.slice(0, 3).join(" | ")}`);
+  for (const e of erros) console.warn(`[${ID}] arquivo pulado: ${e}`);
+  return linhas;
 }

@@ -2,7 +2,22 @@
 // Uso: pnpm env:verificar   (lê o .env.local)
 import { existsSync, readFileSync } from "node:fs";
 
-const NOMES = ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY", "DEEPL_API_KEY"] as const;
+const NOMES = [
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "DEEPL_API_KEY",
+  // Fontes da Fase 5 (conflitos e mapa)
+  "ACLED_EMAIL",
+  "ACLED_PASSWORD",
+  "RELIEFWEB_APPNAME",
+  "UCDP_ACCESS_TOKEN",
+  "NASA_FIRMS_MAP_KEY",
+  // Fase 6–7
+  "CONGRESS_GOV_API_KEY",
+  "DVIDS_API_KEY",
+  "WIKIMEDIA_USER_AGENT",
+] as const;
 
 function forma(v: string | undefined): string {
   if (v === undefined) return "não definida";

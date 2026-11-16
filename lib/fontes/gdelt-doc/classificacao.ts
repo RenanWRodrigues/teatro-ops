@@ -71,7 +71,7 @@ const PAISES: [string, CodigoRegiao, string[]][] = [
 
 // [tema, termos]. "conflitos" vem da consulta; estes complementam pelo título.
 const TEMAS: [string, string[]][] = [
-  ["drones", ["drone", "drones", "UAV", "loitering munition", "munição de espera", "Shahed", "FPV", "quadcopter"]],
+  ["drones", ["drone", "drones", "UAV", "UAVs", "loitering munition", "munição de espera", "Shahed", "FPV", "quadcopter", "counter-UAS", "C-UAS", "antidrone", "antidrones"]],
   ["ia", ["artificial intelligence", "AI", "machine learning", "algorithm", "inteligência artificial", "IA", "algoritmo"]],
   ["guerra-eletronica", ["electronic warfare", "jamming", "jammer", "spoofing", "GPS interference", "guerra eletrônica", "interferência"]],
   ["naval", ["navy", "naval", "warship", "frigate", "destroyer", "submarine", "aircraft carrier", "Black Sea Fleet", "marinha", "fragata", "submarino", "porta-aviões", "destróier"]],

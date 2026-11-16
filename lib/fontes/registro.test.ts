@@ -15,8 +15,9 @@ describe("lerRegistroFontes", () => {
       status: "quebrada",
     });
     expect(fontes.find((f) => f.id === "gdelt-gkg")?.status).toBe("ativa");
-    // Fonte só com página (feed ainda não descoberto) usa a página como url_base.
-    expect(fontes.find((f) => f.id === "kremlin")?.url_base).toBe("http://en.kremlin.ru/events/president/news");
+    // Fonte com feed usa o feed como url_base; só com página (sem feed utilizável), a página.
+    expect(fontes.find((f) => f.id === "kremlin")?.url_base).toBe("http://en.kremlin.ru/events/president/news/feed");
+    expect(fontes.find((f) => f.id === "estado-eua")?.url_base).toBe("https://www.state.gov/press-releases/");
     expect(ignoradas).toContainEqual({ id: "imprensa-exemplo", motivo: "placeholder [preencher]" });
     // Serviços de tradução não viram fonte exibida.
     expect(fontes.some((f) => f.id === "deepl")).toBe(false);

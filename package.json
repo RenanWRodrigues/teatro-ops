@@ -20,10 +20,17 @@
     "env:verificar": "tsx --env-file-if-exists=.env.local scripts/verificar-env.ts",
     "ingest:gdelt-doc": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-doc.ts",
     "secrets:sincronizar": "tsx --env-file-if-exists=.env.local scripts/sincronizar-secrets.ts",
-    "ingest:gdelt-gkg": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-gkg.ts"
+    "ingest:gdelt-gkg": "tsx --env-file-if-exists=.env.local scripts/ingestao/gdelt-gkg.ts",
+    "ingest:ucdp-candidato": "tsx --env-file-if-exists=.env.local scripts/ingestao/ucdp-candidato.ts",
+    "ingest:fr-eua": "tsx --env-file-if-exists=.env.local scripts/ingestao/fr-eua.ts",
+    "ingest:xinhua": "tsx --env-file-if-exists=.env.local scripts/ingestao/xinhua.ts",
+    "ingest:governos": "tsx --env-file-if-exists=.env.local scripts/ingestao/governos.ts",
+    "arquivo:ucdp": "tsx scripts/arquivo/ucdp-series.ts",
+    "arsenal:cadastrar": "tsx --env-file-if-exists=.env.local scripts/arsenal/cadastrar.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
+    "fast-xml-parser": "^5.12.1",
     "fflate": "^0.8.3",
     "maplibre-gl": "^6.18.0",
     "next": "16.4.6",

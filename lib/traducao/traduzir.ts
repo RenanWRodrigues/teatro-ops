@@ -38,7 +38,25 @@ export type ResultadoTraducao = {
 };
 
 export const chaveCache = (texto: string, idioma: string | null) => sha256(`${texto}\u0000${idioma ?? "auto"}`);
+
+/**
+ * Tradução que perdeu boa parte do texto (ex.: "OTAN" para uma manchete de 65 caracteres). Traduções para o
+ * português costumam ser do mesmo tamanho ou maiores; abaixo de 40% do original, o item fica pendente
+ * e não entra no cache, para ser tentado de novo.
+ */
+export const traducaoTruncada = (original: string, pt: string) => original.trim().length >= 30 && pt.length < original.trim().length * 0.4;
 export const ehPortugues = (idioma: string | null) => idioma === "pt";
+
+/**
+ * Dependências para o modo seco (--seco): lê o cache, mas não chama o DeepL (que gasta cota mesmo sem
+ * gravar nada) e não grava no cache. LibreTranslate, se configurado, continua: é auto-hospedado, sem cota.
+ * Títulos fora do cache aparecem como "(tradução pendente)" na amostra.
+ */
+export const paraModoSeco = (t: DependenciasTraducao): DependenciasTraducao => ({
+  ...t,
+  deepl: null,
+  cache: { ...t.cache, gravar: async () => {} },
+});
 
 export async function traduzirLote(itens: ItemTraducao[], deps: DependenciasTraducao): Promise<ResultadoTraducao> {
   const log = deps.log ?? (() => {});
@@ -111,6 +129,10 @@ export async function traduzirLote(itens: ItemTraducao[], deps: DependenciasTrad
           caracteresDeepL += textos.reduce((s, t) => s + t.length, 0);
           indices.forEach((i, k) => {
             const pt = deps.travador.destravar(traducoes[k]!.texto).trim();
+            if (traducaoTruncada(itens[i]!.texto, pt)) {
+              log(`DeepL devolveu tradução truncada ("${pt}"); item fica pendente`);
+              return;
+            }
             saidas[i] = { textoPt: pt, motor: "deepl" };
             contar("deepl");
             novasNoCache.push({ hash: chaves[i]!, texto_original: itens[i]!.texto, texto_pt: pt, motor: "deepl" });
@@ -132,6 +154,7 @@ export async function traduzirLote(itens: ItemTraducao[], deps: DependenciasTrad
         const bruto = traducoes[k];
         if (!bruto) return;
         const pt = deps.travador.destravar(bruto).trim();
+        if (traducaoTruncada(itens[i]!.texto, pt)) return;
         saidas[i] = { textoPt: pt, motor: "argos" };
         contar("argos");
         novasNoCache.push({ hash: chaves[i]!, texto_original: itens[i]!.texto, texto_pt: pt, motor: "argos" });

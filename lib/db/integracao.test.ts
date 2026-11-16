@@ -132,7 +132,8 @@ describe.skipIf(!configurado)("Supabase local: consultas reais via PostgREST", (
     expect(linha).toBeDefined();
     expect(paraManchete(linha!)).toMatchObject({
       titulo: "[TESTE] Manchete",
-      fonte: { nome: "exemplo.org, via GDELT", licenca: expect.any(String) },
+      fonte: { nome: "exemplo.org", licenca: expect.any(String) },
+      via: { nome: "GDELT Project" },
     });
   });
 

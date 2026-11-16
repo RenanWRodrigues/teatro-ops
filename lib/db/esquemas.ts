@@ -6,7 +6,10 @@ import { UNIDADES, type Unidade } from "@/lib/format";
 import {
   CATEGORIAS,
   type Conflito,
+  type ConflitoDetalhe,
+  type Decisao,
   type Equipamento,
+  type EventoPublico,
   type Especificacao,
   type Fonte,
   type Intensidade,
@@ -27,8 +30,9 @@ export const esquemaFonteJson = z.object({
   coletado_em: dataHora.nullable().optional(),
 });
 
+// Registros antigos gravaram "Wikipedia" sem acento; a tela sempre mostra "Wikipédia".
 const paraFonte = (f: z.infer<typeof esquemaFonteJson>): Fonte => ({
-  nome: f.nome,
+  nome: f.nome.replace(/^Wikipedia\b/, "Wikipédia"),
   url: f.url ?? null,
   licenca: f.licenca,
   licencaUrl: f.licenca_url,
@@ -87,6 +91,7 @@ export const ROTULOS_SPEC: Record<string, string> = {
   largura: "Largura",
   massa_vazio: "Massa vazia",
   massa_max: "Massa máx. de decolagem",
+  massa: "Massa",
   deslocamento: "Deslocamento",
   motor: "Motor",
   combustivel_interno: "Combustível interno",
@@ -98,7 +103,9 @@ export const ROTULOS_SPEC: Record<string, string> = {
   limite_g: "Limite G",
   armamento_principal: "Armamento principal",
   canhao: "Canhão",
+  calibre: "Calibre",
   pontos_carga: "Pontos de carga",
+  total_produzido: "Total produzido",
   custo_unitario: "Custo unitário",
 };
 
@@ -125,7 +132,10 @@ export const esquemaLinhaEquipamento = z.object({
 export type LinhaEquipamento = z.infer<typeof esquemaLinhaEquipamento>;
 
 export const esquemaLinhaMidia = z.object({
+  equipamento_slug: z.string().optional(),
   url: z.url(),
+  /** Miniatura de 960 px gerada pelo Commons: é a exibida (o original pode ter vários MB). */
+  miniatura_url: z.url().nullable().optional(),
   legenda_pt: z.string().nullable(),
   autor: z.string().nullable(),
   licenca: z.string().min(1),
@@ -168,22 +178,24 @@ export function paraEquipamento(linha: LinhaEquipamento, midias: LinhaMidia[] = 
 
   const comprimento = numerica("comprimento");
   const envergadura = numerica("envergadura");
+  const largura = numerica("largura");
   const velocidade = numerica("velocidade_max");
 
-  // O resumo só aparece com fonte: a Wikipedia em português (CC BY-SA 4.0) ou a 1ª fonte registrada.
+  // O resumo só aparece com fonte: a Wikipédia em português (CC BY-SA 4.0) ou, sem artigo em português,
+  // o artigo da Wikipédia em inglês de onde ele foi traduzido. Nunca o Wikidata (CC0), que não tem resumo.
   const fonteResumo: Fonte | undefined = linha.wikipedia_pt
     ? {
-        nome: "Wikipedia em português",
+        nome: "Wikipédia em português",
         url: urlWikipediaPt(linha.wikipedia_pt),
         licenca: "CC BY-SA 4.0",
         licencaUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR",
         coletadoEm: linha.atualizado_em,
       }
-    : linha.fontes[0];
+    : (linha.fontes.find((f) => /^Wikip[eé]dia/.test(f.nome)) ?? linha.fontes[0]);
 
   const galeria: Midia[] = midias.map((m) => ({
     legenda: m.legenda_pt ?? linha.nome,
-    url: m.url,
+    url: m.miniatura_url ?? m.url,
     autor: m.autor ?? "autor não identificado",
     licenca: m.licenca,
     licencaUrl: m.licenca_url ?? undefined,
@@ -203,11 +215,22 @@ export function paraEquipamento(linha: LinhaEquipamento, midias: LinhaMidia[] = 
     resumo: linha.resumo_pt && fonteResumo ? { texto: linha.resumo_pt, fonte: fonteResumo } : undefined,
     estatisticas,
     ficha,
-    planta: comprimento && envergadura ? { comprimento, envergadura } : undefined,
-    variantes: linha.variantes,
+    // Planta: silhueta de aeronave (comprimento × envergadura) ou casco/chassi (comprimento × largura).
+    planta:
+      comprimento && envergadura
+        ? { forma: "aeronave", comprimento, envergadura }
+        : comprimento && largura
+          ? { forma: "casco", comprimento, envergadura: largura }
+          : undefined,
+    // A variante cadastrada é destacada na lista do programa ("F-35A Lightning II" entre A, B e C).
+    variantes: linha.variantes.map((v) => ({ ...v, atual: v.nome === linha.nome || linha.nome.startsWith(`${v.nome} `) })),
     galeria,
     operadores: linha.operadores,
     fontes: linha.fontes,
+    numericas: Object.keys(ROTULOS_SPEC).flatMap((chave) => {
+      const spec = numerica(chave);
+      return spec ? [{ chave, rotulo: ROTULOS_SPEC[chave] ?? chave, spec }] : [];
+    }),
   };
 }
 
@@ -217,6 +240,13 @@ export const esquemaLinhaConflito = z.object({
   slug: z.string().min(1),
   nome_pt: z.string().min(1),
   regiao: z.string().min(1),
+  paises: z.array(z.string()).catch([]),
+  periodo_inicio: z.string().nullable().catch(null),
+  periodo_fim: z.string().nullable().catch(null),
+  eventos_periodo: z.number().int().nullable().catch(null),
+  mortes_estimadas: z.number().int().nullable().catch(null),
+  mortes_min: z.number().int().nullable().catch(null),
+  mortes_max: z.number().int().nullable().catch(null),
   intensidade: z.enum(["alta", "tensao", "cessar_fogo", "encerrado"]).nullable(),
   resumo_pt: z.string().nullable(),
   lon: z.number().nullable(),
@@ -230,6 +260,51 @@ const INTENSIDADE: Record<"alta" | "tensao" | "cessar_fogo", Intensidade> = {
   tensao: "tensao",
   cessar_fogo: "cessar-fogo",
 };
+
+/** Conflito completo para /conflitos (inclui os abaixo do limiar, com intensidade null). */
+export function paraConflitoDetalhe(l: LinhaConflito): ConflitoDetalhe {
+  return {
+    slug: l.slug,
+    nome: l.nome_pt,
+    regiao: l.regiao,
+    paises: l.paises,
+    intensidade: l.intensidade && l.intensidade !== "encerrado" ? INTENSIDADE[l.intensidade] : null,
+    resumo: l.resumo_pt,
+    fontes: l.fontes,
+    coordenadas: l.lon !== null && l.lat !== null ? [l.lon, l.lat] : undefined,
+    periodoInicio: l.periodo_inicio,
+    periodoFim: l.periodo_fim,
+    eventos: l.eventos_periodo ?? 0,
+    mortes: l.mortes_estimadas ?? 0,
+    mortesMin: l.mortes_min ?? 0,
+    mortesMax: l.mortes_max ?? 0,
+  };
+}
+
+export const esquemaAgregadoEvento = z.object({
+  conflito_slug: z.string().nullable(),
+  lat: z.number(),
+  lon: z.number(),
+  eventos: z.number().int(),
+  mortes_estimadas: z.number().int(),
+});
+
+export const esquemaCobertura = z.object({ lat: z.number(), lon: z.number(), noticias: z.number().int() });
+
+export const esquemaSemana = z.object({ semana: z.string(), eventos: z.number().int(), mortes_estimadas: z.number().int() });
+
+export function paraEventoPublico(l: LinhaEventoPublico): EventoPublico {
+  return {
+    data: l.data,
+    local: l.local,
+    pais: l.pais,
+    tipo: l.tipo_evento,
+    atores: l.atores ?? [],
+    mortes: l.mortes_estimadas,
+    mortesMin: l.mortes_min,
+    mortesMax: l.mortes_max,
+  };
+}
 
 /** `null` para conflitos encerrados ou sem classificação (não entram em "Conflitos em foco"). */
 export function paraConflito(l: LinhaConflito): Conflito | null {
@@ -261,8 +336,13 @@ export const esquemaLinhaManchete = z.object({
 });
 export type LinhaManchete = z.infer<typeof esquemaLinhaManchete>;
 
-/** Agregadores: o veículo é a fonte exibida; o agregador aparece como "via". */
-const AGREGADORES: Record<string, string> = { "GDELT DOC 2.0 API": "GDELT", "GDELT GKG 2.0 (arquivos de 15 min)": "GDELT" };
+/** Só data e temas, para contar notícias por semana (/tecnologia, Fase 8). */
+export const esquemaLinhaTemas = z.object({ publicado_em: dataHora, temas: z.array(z.string()) });
+export type LinhaTemas = z.infer<typeof esquemaLinhaTemas>;
+
+/** Agregadores: o veículo é a fonte exibida; o agregador aparece como "via", com link e licença (config/fontes.yaml). */
+const VIA_GDELT: Fonte = { nome: "GDELT Project", url: "https://www.gdeltproject.org/", licenca: "uso livre com citação" };
+const AGREGADORES: Record<string, Fonte> = { "GDELT DOC 2.0 API": VIA_GDELT, "GDELT GKG 2.0 (arquivos de 15 min)": VIA_GDELT };
 
 export function paraManchete(l: LinhaManchete): Manchete {
   const veiculo = new URL(l.url).hostname.replace(/^www\./, "");
@@ -275,11 +355,12 @@ export function paraManchete(l: LinhaManchete): Manchete {
     url: l.url,
     publicadoEm: l.publicado_em,
     fonte: {
-      nome: via ? `${veiculo}, via ${via}` : l.fontes.nome,
+      nome: via ? veiculo : l.fontes.nome,
       url: l.url,
       licenca: via ? "título e link; resumo próprio" : l.fontes.licenca,
       coletadoEm: l.coletado_em,
     },
+    ...(via ? { via } : {}),
   };
 }
 
@@ -316,6 +397,7 @@ export type LinhaFonteBanco = z.infer<typeof esquemaLinhaFonte>;
 
 export const esquemaLinhaDecisao = z.object({
   id: z.number(),
+  fonte_id: z.string(),
   pais: z.string(),
   orgao: z.string(),
   tipo: z.enum(["ordem_executiva", "lei", "sancao", "comunicado", "acordo", "exercicio_militar", "orcamento", "outro"]),
@@ -325,9 +407,48 @@ export const esquemaLinhaDecisao = z.object({
   url_oficial: z.url(),
   publicado_em: dataHora,
   coletado_em: dataHora,
-  fontes: z.object({ nome: z.string(), licenca: z.string() }),
+  temas: z.array(z.string()).default([]),
+  idioma_original: z.string().nullable().default(null),
+  fontes: z.object({ nome: z.string(), licenca: z.string(), categoria: z.string(), url_base: z.string() }),
 });
 export type LinhaDecisao = z.infer<typeof esquemaLinhaDecisao>;
+
+/** Fontes de governo coletadas por um intermediário que exige citação e link. */
+const VIA_DECISAO: Record<string, Fonte> = {
+  xinhua: { nome: "GDELT Project", url: "https://www.gdeltproject.org/", licenca: "uso livre com citação" },
+};
+
+/** Licenças com texto público para linkar (atribuição exigida pela própria licença). */
+const URL_LICENCA: Record<string, string> = {
+  "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/deed.pt_BR",
+};
+
+export function paraDecisao(l: LinhaDecisao): Decisao {
+  return {
+    id: l.id,
+    pais: l.pais,
+    orgao: l.orgao,
+    tipo: l.tipo,
+    titulo: l.titulo_pt ?? l.titulo_original,
+    tituloOriginal: l.titulo_original,
+    traducaoPendente: l.titulo_pt === null,
+    idiomaOriginal: l.idioma_original,
+    resumo: l.resumo_pt,
+    urlOficial: l.url_oficial,
+    publicadoEm: l.publicado_em,
+    temas: l.temas,
+    estatal: l.fontes.categoria === "estatal",
+    // O link da fonte é o próprio documento oficial; o nome é o do canal de coleta (feed, Federal Register…).
+    fonte: {
+      nome: l.fontes.nome.replace(/\s*\(mídia estatal\)\s*$/i, ""),
+      url: l.url_oficial,
+      licenca: l.fontes.licenca,
+      licencaUrl: URL_LICENCA[l.fontes.licenca],
+      coletadoEm: l.coletado_em,
+    },
+    via: VIA_DECISAO[l.fonte_id],
+  };
+}
 
 export const esquemaLinhaEventoPublico = z.object({
   id: z.number(),
@@ -342,5 +463,25 @@ export const esquemaLinhaEventoPublico = z.object({
   mortes_estimadas: z.number().int().nullable(),
   notas_pt: z.string().nullable(),
   coletado_em: dataHora,
+  local: z.string().nullable().catch(null),
+  mortes_min: z.number().int().nullable().catch(null),
+  mortes_max: z.number().int().nullable().catch(null),
 });
 export type LinhaEventoPublico = z.infer<typeof esquemaLinhaEventoPublico>;
+
+// ───────────────────────────── Busca (Fase 10) ─────────────────────────────
+
+/** Linha da função SQL `buscar` (migração 0004). */
+export const esquemaResultadoBusca = z.object({
+  tipo: z.enum(["noticia", "decisao", "conflito", "equipamento"]),
+  chave: z.string().min(1),
+  titulo: z.string().min(1),
+  resumo: z.string().nullable(),
+  url: z.url().nullable(),
+  data: dataHora.nullable(),
+  extra: z.string().nullable(),
+  relevancia: z.number(),
+  pendente: z.boolean(),
+  idioma: z.string().nullable(),
+});
+export type ResultadoBusca = z.infer<typeof esquemaResultadoBusca>;

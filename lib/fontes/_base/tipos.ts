@@ -23,6 +23,9 @@ export type NoticiaNormalizada = {
   temas: string[];
   regiao: string | null;
   publicadoEm: string;
+  /** Principal local citado, arredondado a 1 casa (~11 km); null se a fonte não informa. */
+  lat?: number | null;
+  lon?: number | null;
 };
 
 export type ResultadoExecucao = {

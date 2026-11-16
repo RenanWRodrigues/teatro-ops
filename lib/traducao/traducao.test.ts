@@ -25,6 +25,17 @@ describe("glossário", () => {
     expect(travador.destravar(t)).not.toContain("<keep>");
   });
 
+  it("destravar remove letras que o DeepL cola na borda do termo travado (saídas reais de 15/11/2026)", () => {
+    expect(travador.destravar("Seis drones atacaram o radar da e<keep>defesa aérea</keep> dos EUA")).toBe(
+      "Seis drones atacaram o radar da defesa aérea dos EUA",
+    );
+    expect(travador.destravar("O <keep>Departamento de Guerra dos EUA</keep>s renomeia o CDAO")).toBe(
+      "O Departamento de Guerra dos EUA renomeia o CDAO",
+    );
+    // Texto separado por espaço fica intacto.
+    expect(travador.destravar("a <keep>OTAN</keep> e a UE")).toBe("a OTAN e a UE");
+  });
+
   it("não trava palavras soltas (ficam para o glossário do DeepL, que flexiona)", () => {
     expect(travador.travar("A stealth destroyer")).toBe("A stealth destroyer");
     const tsv = glossarioParaTsv(glossario);
@@ -51,6 +62,7 @@ function deeplFalso(restante = 400_000, falhar = false): ClienteDeepL & { chamad
   return {
     chamadas,
     restante: async () => restante,
+    uso: async () => ({ usados: 500_000 - restante, limite: 500_000 }),
     traduzir: vi.fn(async (textos: string[], opcoes: { idiomaOrigem?: string; glossarioId?: string } = {}) => {
       chamadas.push({ textos, opcoes });
       if (falhar) throw new Error("HTTP 456 quota");
@@ -140,5 +152,49 @@ describe("escape XML para o DeepL (tag_handling=xml)", async () => {
   });
   it("desfaz o escape na volta, sem dupla conversão", () => {
     expect(desescaparXml("A&amp;M &lt;3 &amp;lt;")).toBe("A&M <3 &lt;");
+  });
+  it("envolve numa raiz <t>: texto que começa com <keep> não vira a raiz do XML (bug \"OTAN\", 16/11/2026)", async () => {
+    const { envolverParaDeepL, desembrulharDeDeepL } = await import("./deepl");
+    expect(envolverParaDeepL("<keep>OTAN</keep>'s Black Sea & co")).toBe("<t><keep>OTAN</keep>'s Black Sea &amp; co</t>");
+    // Resposta real do DeepL para o texto envolvido.
+    expect(desembrulharDeDeepL("<t>O dilema da <keep>OTAN</keep> no Mar Negro &amp; co</t>")).toBe("O dilema da <keep>OTAN</keep> no Mar Negro & co");
+  });
+});
+
+describe("proteções da tradução (16/11/2026)", () => {
+  it("tradução truncada fica pendente e não entra no cache", async () => {
+    const { traducaoTruncada } = await import("./traduzir");
+    const original = "NATO's Black Sea Dilemma: How Far Can The Ukraine War Spill Over?";
+    expect(traducaoTruncada(original, "OTAN")).toBe(true);
+    expect(traducaoTruncada(original, "O dilema da OTAN no Mar Negro: até onde a guerra na Ucrânia pode se alastrar?")).toBe(false);
+    // Textos curtos não são avaliados ("NATO summit" → "Cúpula da OTAN").
+    expect(traducaoTruncada("NATO summit", "OTAN")).toBe(false);
+
+    const cache = cacheEmMemoria();
+    const deepl = { ...deeplFalso(), traduzir: async () => [{ texto: "<keep>OTAN</keep>", idiomaDetectado: "en" }] };
+    const r = await traduzirLote([{ texto: original, idioma: "en" }], deps({ cache, deepl }));
+    expect(r.saidas).toEqual([{ textoPt: null, motor: null }]);
+    expect(r.motores).toEqual({ pendente: 1 });
+    expect(cache.gravados).toEqual([]);
+  });
+
+  it("modo seco: usa o cache, não chama o DeepL e não grava", async () => {
+    const { chaveCache, paraModoSeco } = await import("./traduzir");
+    const cache = cacheEmMemoria({ [chaveCache("Hello", "en")]: "Olá" });
+    const deepl = deeplFalso();
+    const r = await traduzirLote(
+      [
+        { texto: "Hello", idioma: "en" },
+        { texto: "Drones hit the port", idioma: "en" },
+      ],
+      paraModoSeco(deps({ cache, deepl })),
+    );
+    expect(r.saidas).toEqual([
+      { textoPt: "Olá", motor: "cache" },
+      { textoPt: null, motor: null },
+    ]);
+    expect(deepl.chamadas).toEqual([]);
+    expect(r.caracteresDeepL).toBe(0);
+    expect(cache.gravados).toEqual([]);
   });
 });

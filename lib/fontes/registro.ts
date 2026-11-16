@@ -17,6 +17,8 @@ export const esquemaFonteYaml = z.object({
   url: urlOuNulo,
   pagina: urlOuNulo,
   feed: urlOuNulo,
+  /** URL leve para a verificação diária, quando `feed`/`url` não servem para um GET simples (ex.: pasta, SPARQL). */
+  verificar: urlOuNulo,
   tipo: z.enum(["api", "rss", "dataset", "scrape"]),
   categoria: z.enum(["estatal", "oficial", "imprensa", "pesquisa", "humanitaria", "enciclopedia"]),
   licenca: z.string().min(1),
@@ -32,6 +34,14 @@ export const esquemaFonteYaml = z.object({
   excluir: z.string().optional(),
   /** GKG: temas do GDELT exigidos (ao menos um) além do termo no título. */
   temas_gdelt: z.array(z.string()).optional(),
+  /** Governos: nome do órgão exibido em cada item (padrão: `nome`). */
+  orgao: z.string().optional(),
+  /** Idioma do feed (ISO 639-1); padrão "en". */
+  idioma: z.string().length(2).optional(),
+  /** Fuso para datas sem fuso no feed (ex.: "+03:30"); padrão UTC. */
+  fuso: z.string().regex(/^[+-]\d{2}:\d{2}$/).optional(),
+  /** GDELT GKG: só itens publicados nestes domínios (ex.: ["news.cn"]). */
+  dominios: z.array(z.string()).optional(),
 });
 
 export type FonteYaml = z.infer<typeof esquemaFonteYaml>;

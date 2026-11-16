@@ -89,7 +89,7 @@ describe("normalização do GDELT", () => {
   it("resumo próprio cita fonte e data, sem copiar o artigo", () => {
     expect(
       resumoPorRegra({ dominio: "exemplo.org", publicadoEm: "2026-11-14T09:15:00Z", regiao: "Europa Oriental", temas: ["drones"] }),
-    ).toBe("Notícia publicada por exemplo.org em 14/11/2026 e indexada pelo GDELT. Classificação automática — região: Europa Oriental; temas: drones.");
+    ).toBe("Notícia publicada por exemplo.org em 14/11/2026 e indexada pelo GDELT. Região: Europa Oriental; tema: drones.");
   });
 });
 

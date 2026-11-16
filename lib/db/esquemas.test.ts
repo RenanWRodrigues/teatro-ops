@@ -64,9 +64,9 @@ describe("paraEquipamento", () => {
     expect(e.destaque).toBe("Mach 1,6");
   });
 
-  it("atribui o resumo à Wikipedia em português com licença CC BY-SA", () => {
+  it("atribui o resumo à Wikipédia em português com licença CC BY-SA", () => {
     expect(e.resumo?.fonte).toMatchObject({
-      nome: "Wikipedia em português",
+      nome: "Wikipédia em português",
       url: "https://pt.wikipedia.org/wiki/Ca%C3%A7a_de_exemplo",
       licenca: "CC BY-SA 4.0",
     });
@@ -123,7 +123,8 @@ describe("paraManchete", () => {
       titulo: "[EXEMPLO] Título",
       traducaoPendente: false,
       publicadoEm: "2026-11-13T10:00:00Z",
-      fonte: { nome: "exemplo.org, via GDELT", url: "https://www.exemplo.org/n" },
+      fonte: { nome: "exemplo.org", url: "https://www.exemplo.org/n" },
+      via: { nome: "GDELT Project", url: "https://www.gdeltproject.org/" },
     });
   });
 
@@ -137,5 +138,20 @@ describe("validarLinhas", () => {
   it("separa linhas válidas e conta as inválidas", () => {
     const r = validarLinhas(esquemaLinhaManchete, [{ url: "não é url" }, {}]);
     expect(r).toEqual({ validas: [], invalidas: 2 });
+  });
+});
+
+describe("paraEquipamento sem artigo em português", () => {
+  it("credita o resumo traduzido à Wikipédia em inglês, nunca ao Wikidata", () => {
+    const linha = esquemaLinhaEquipamento.parse({
+      ...linhaEquipamento,
+      wikipedia_pt: null,
+      fontes: [
+        { nome: "Wikidata", url: "https://www.wikidata.org/wiki/Q1", licenca: "CC0" },
+        { nome: "Wikipedia em inglês (traduzido automaticamente)", url: "https://en.wikipedia.org/wiki/X", licenca: "CC BY-SA 4.0" },
+      ],
+    });
+    const e = paraEquipamento(linha, []);
+    expect(e.resumo?.fonte).toMatchObject({ nome: "Wikipédia em inglês (traduzido automaticamente)", licenca: "CC BY-SA 4.0" });
   });
 });

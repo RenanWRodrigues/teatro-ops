@@ -4,37 +4,8 @@
 
 export type EntradaGlossario = { en: string; pt: string; observacao?: string };
 
-/** Parser de CSV simples com suporte a aspas ("" escapa aspas). */
-export function lerCsv(texto: string): string[][] {
-  const linhas: string[][] = [];
-  let campo = "";
-  let linha: string[] = [];
-  let entreAspas = false;
-  const t = texto.replace(/^﻿/, "");
-  for (let i = 0; i < t.length; i++) {
-    const c = t[i];
-    if (entreAspas) {
-      if (c === '"' && t[i + 1] === '"') {
-        campo += '"';
-        i++;
-      } else if (c === '"') entreAspas = false;
-      else campo += c;
-    } else if (c === '"') entreAspas = true;
-    else if (c === ",") {
-      linha.push(campo);
-      campo = "";
-    } else if (c === "\n" || c === "\r") {
-      if (c === "\r" && t[i + 1] === "\n") i++;
-      linha.push(campo);
-      if (linha.some((x) => x.trim() !== "")) linhas.push(linha);
-      linha = [];
-      campo = "";
-    } else campo += c;
-  }
-  linha.push(campo);
-  if (linha.some((x) => x.trim() !== "")) linhas.push(linha);
-  return linhas;
-}
+export { lerCsv } from "@/lib/fontes/_base/csv";
+import { lerCsv } from "@/lib/fontes/_base/csv";
 
 export function lerGlossario(csv: string): EntradaGlossario[] {
   const [cabecalho, ...linhas] = lerCsv(csv);
@@ -78,7 +49,13 @@ export function criarTravador(glossario: EntradaGlossario[]): Travador {
         .join("");
     },
     destravar(texto) {
-      return texto.replace(/<\/?keep>/g, "");
+      // O DeepL às vezes cola uma letra solta na borda do termo travado ("da e<keep>defesa aérea</keep>",
+      // "<keep>Departamento de Guerra dos EUA</keep>s"). O termo travado é sempre uma expressão completa em
+      // pt-BR, então até 2 letras grudadas na borda, sem espaço, são artefato e saem.
+      return texto
+        .replace(/(^|[\s("“'‘])\p{L}{1,2}<keep>/gu, "$1<keep>")
+        .replace(/<\/keep>\p{L}{1,2}(?=$|[\s,.;:!?)"”'’])/gu, "</keep>")
+        .replace(/<\/?keep>/g, "");
     },
   };
 }
