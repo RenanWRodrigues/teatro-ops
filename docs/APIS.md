@@ -56,6 +56,9 @@ Prioridade: fonte oficial do governo → agência estatal (marcada como tal) →
 
 Orçamento de tradução: ~6.000 títulos/mês cabem no DeepL Free (≈80 caracteres cada). Cache por hash do texto é obrigatório (`traducoes_cache`).
 
+- **Raiz XML obrigatória (16/11/2026)**: com `tag_handling=xml`, um texto que começa com termo travado (`<keep>OTAN</keep>'s Black Sea…`) tinha o `<keep>` lido como raiz do documento, e o DeepL devolvia só "OTAN". Todo texto vai agora dentro de `<t>…</t>` (`envolverParaDeepL` em `lib/traducao/deepl.ts`). Proteção extra: tradução com menos de 40% do tamanho do original (originais ≥ 30 caracteres) fica pendente e não entra no cache. Conferido no banco: nenhum título truncado tinha sido gravado.
+- **Modo seco** (`--seco`): lê o cache, mas não chama o DeepL nem grava no cache; a amostra mostra "(tradução pendente)" para o que não estiver em cache. `--seco --traduzir` chama o DeepL mesmo assim (gasta cota).
+
 ## 5. Infraestrutura gratuita
 
 | Serviço | Uso | Atenção |
@@ -78,6 +81,7 @@ O estilo usado é `https://tiles.openfreemap.org/styles/dark` (verificado em 14/
 | `@supabase/supabase-js` | Leitura do banco (chave anon) e escrita na ingestão (service_role) | MIT |
 | `zod` | Validação de toda fronteira com dado externo (YAML de fontes, linhas do banco) | MIT |
 | `yaml` | Leitura de `config/fontes.yaml` para gerar o seed | ISC |
+| `fast-xml-parser` | Leitura dos feeds RSS/Atom dos governos (só na ingestão) | MIT |
 | `@electric-sql/pglite` | Postgres em memória para testar migrações e RLS (só desenvolvimento) | Apache-2.0 |
 | Supabase CLI | `pnpm db:migrate` (`supabase db push`) | MIT; gratuito |
 
@@ -87,3 +91,80 @@ O estilo usado é `https://tiles.openfreemap.org/styles/dark` (verificado em 14/
 - **Arquivos GKG 2.0** (`gdelt-gkg`): `https://data.gdeltproject.org/gdeltv2/lastupdate.txt` aponta o arquivo mais recente; um arquivo por 15 min (~3 MB compactado, ~800 notícias, todas com `<PAGE_TITLE>`). Sem chave e sem limite de requisições; usamos 1 req/s por educação. Mesma licença do GDELT (uso livre com citação).
 - **Filtro de relevância** (em `config/fontes.yaml`, ajustável sem código): termo das `consultas` no título **e** ao menos um dos `temas_gdelt` marcados pelo GDELT, menos as `excluir`. Medido em 2 h de dados: 39 → 14 notícias, removendo esportes ("offensive line"), entretenimento ("war movie"), economia ("trade war") e história ("Civil War").
 - O fluxo principal do GKG é de veículos em inglês; o fluxo traduzido (`*.translation.gkg.csv.zip`) pode ser somado depois.
+- **Cron atrasado (16/11/2026)**: o agendamento gratuito do GitHub Actions rodou a cada 4–8 h em vez de 30 min, e a janela fixa de 2 h (teto de 12 arquivos) perdia o intervalo. Agora os jobs `noticias` e `governos` coletam desde o início da última execução sem erro da fonte, menos 30 min de sobreposição, com teto de 24 h (96 arquivos GKG); ver `lib/ingestao/janela.ts`. Cada arquivo é filtrado ao ser lido, para não acumular linhas brutas. Teste em modo seco: janela de 8,5 h, 110 notícias novas, 48 s.
+
+## 8. Fase 5: fontes de conflitos (15/11/2026)
+
+- **UCDP Candidate GED** (`ucdp-candidato`, **ativa**): a API (`ucdpapi.pcr.uu.se`) responde HTTP 401 sem token; os arquivos CSV mensais da página de downloads (`https://ucdp.uu.se/downloads/`) não exigem chave. Arquivo atual: `GEDEvent_v26_01_26_09.csv` (16.633 eventos, jul–set/2026). Licença CC BY 4.0. Dados **preliminares**: o UCDP revisa todo mês, por isso os eventos são atualizados (`upsert` por `hash`) em vez de ignorados. Job `eventos` (diário). A intensidade de cada conflito de `config/conflitos.yaml` é recalculada a cada coleta (alta ≥ 250 mortes estimadas no trimestre; tensão 25–249).
+- **UCDP API** (`ucdp`): só com `UCDP_ACCESS_TOKEN` (pedido por e-mail ao UCDP). Fica `a_verificar`; o CSV cobre a necessidade atual.
+- **GDELT GEO 2.0** (`gdelt-geo`, **quebrada**): `/api/v2/geo/geo` responde HTTP 404. A camada "cobertura de mídia" do mapa usa a coordenada do principal local citado nas notícias do `gdelt-gkg` (arredondada a 1 casa, agregada em células de 1° na view `cobertura_midia`).
+- **ReliefWeb** (`reliefweb`): responde HTTP 400 "Missing appname parameter" sem appname aprovado. Pedido em <https://apidoc.reliefweb.int/parameters#appname>; depois, preencher `RELIEFWEB_APPNAME` e rodar `/nova-fonte reliefweb`.
+- **ACLED** (`acled`): exige conta myACLED (`ACLED_EMAIL`/`ACLED_PASSWORD`). Sem credenciais em 15/11/2026.
+- **NASA FIRMS** (`nasa-firms`, opcional): sem `NASA_FIRMS_MAP_KEY`; não integrada.
+
+## 9. Fase 6: canais oficiais de governos (15/11/2026)
+
+Descoberta feita com uma visita a cada página (link `rel="alternate"`, `/rss`, `/feed`) e checagem do `robots.txt`. Todos os feeds ativos guardam só título, link, data e descrição truncada a 300 caracteres (só para o filtro; nunca exibida nem gravada).
+
+| País | Órgão | Feed / acesso | Funciona? |
+|---|---|---|---|
+| EUA | Federal Register (`fr-eua`) | API JSON sem chave; consultas `type=PRESDOCU` e órgãos `defense-department`, `state-department`, `foreign-assets-control-office` | **ativa** — domínio público |
+| EUA | Congress.gov (`congress-eua`) | API com chave grátis do api.data.gov | aguardando `CONGRESS_GOV_API_KEY` (vazia) |
+| EUA | Departamento de Defesa (`defesa-eua`) | `https://www.war.gov/DesktopModules/ArticleCS/RSS.ashx?ContentType=9&Site=945&max=50` (o site passou a ser war.gov) | **ativa** |
+| EUA | Departamento de Estado (`estado-eua`) | HTTP 403 para robôs (página e feeds) | quebrada — atos do Estado chegam pelo Federal Register |
+| Rússia | Kremlin (`kremlin`) | `http://en.kremlin.ru/events/president/news/feed` (Atom; CC BY 4.0) | **ativa** |
+| Rússia | Governo (`governo-russia`) | `http://government.ru/en/all/rss/` (CC BY 4.0) | **ativa** |
+| Rússia | MRE (`mre-russia`) | feed existe (`/en/rss.php`), mas o `robots.txt` proíbe `/*rss` | desativada |
+| China | MRE (`mre-china`) e Ministério da Defesa (`defesa-china`) | sem RSS; o GDELT não indexa esses domínios (0 itens em 24 h) | quebrada |
+| China | Xinhua (`xinhua`, mídia estatal) | feed RSS parado em 2018; usamos os arquivos GKG do GDELT filtrados por `news.cn`/`xinhuanet.com` (~90 itens/dia antes do filtro) — **aprovado em 15/11/2026** | **ativa** |
+| Irã | Presidência (`presidencia-ira`) | `https://president.ir/en/rss/all` (datas sem fuso: `fuso: "+03:30"`) | **ativa** |
+| Irã | IRNA (`irna`, mídia estatal) | `https://en.irna.ir/rss` | **ativa** |
+| Israel | Gabinete do PM (`pm-israel`) e IDF (`idf`) | HTTP 403 / proteção anti-robô; sem RSS; GDELT sem itens | quebrada |
+| Ucrânia | Presidência (`presidencia-ua`) e Ministério da Defesa (`defesa-ua`) | HTTP 403 para robôs; GDELT sem itens | quebrada |
+| Alemanha | Governo Federal (`governo-de`) | `https://www.bundesregierung.de/service/rss/breg-de/1151244/feed.xml` (comunicados, em alemão) | **ativa** |
+| Alemanha | Ministério da Defesa (`defesa-de`) | `https://www.bmvg.de/service/rss/de/17680/feed` (em alemão) | **ativa** |
+
+- **Licenças dos canais ativos** (iguais às de `config/fontes.yaml`): Federal Register e war.gov, domínio público (governo dos EUA); Kremlin e government.ru, CC BY 4.0 (a interface linka a licença e indica que o título foi traduzido, com o original a um clique); Presidência do Irã, IRNA, Governo Federal e BMVg da Alemanha, "direitos do órgão; exibimos só título e link"; Xinhua, idem, **coletada via GDELT** (citação e link ao GDELT exibidos em cada item).
+- **GDELT com `domain:`**: medido em 24 arquivos GKG (1 por hora): 0 itens de `state.gov`, `mid.ru`, `fmprc.gov.cn`, `mod.gov.cn`, `gov.il`, `idf.il`, `president.gov.ua`, `mod.gov.ua`; só `news.cn` (Xinhua) aparece. Alternativas medidas e **não aprovadas**: Ukrinform (agência estatal da Ucrânia, RSS ok) e Global Times (RSS ok).
+- **Filtro de relevância** (`lib/governos/termos.ts`): termos em inglês e nos idiomas originais; o nome do próprio órgão ("Department of War", "Secretary of Defense") não conta. No Federal Register, documentos não presidenciais precisam de um tema além de "defesa" e avisos administrativos (coleta de informações, comitês, estudos ambientais) saem. Medido em 30 dias: 113 → 43 documentos do Federal Register; 50 → 24 notas do Departamento de Defesa.
+- **Datas**: o Federal Register lista na véspera documentos programados para o dia seguinte; eles só entram na data de publicação.
+- **Custo**: primeira carga (30 dias, 9 fontes) gastou ~9.700 caracteres do DeepL; no ritmo do job de 1 h, a estimativa é de poucos milhares por dia.
+
+## 10. Fase 7: arsenal (15/11/2026)
+
+| Fonte | Uso | Acesso | Licença | Status |
+|---|---|---|---|---|
+| **Wikidata** (`wikidata`) | Especificações (SPARQL), países, operadores, variantes, categoria do Commons | sem chave; `User-Agent` de `WIKIMEDIA_USER_AGENT`; 1 consulta/s | CC0 | **ativa** |
+| **Wikipedia** (`wikipedia-pt`) | Resumo (API REST `page/summary`), pt; sem artigo em pt, o inglês traduzido e marcado | idem | CC BY-SA 4.0 (link do artigo e da licença na ficha) | **ativa** |
+| **Wikimedia Commons** (`commons`) | Até 6 fotos por item, só domínio público/CC0/CC BY/CC BY-SA, com autor e licença | idem | por arquivo | **ativa** |
+| **DVIDS** (`dvids`) | Fotos do DoD | chave grátis (`DVIDS_API_KEY`, vazia) | geralmente domínio público | a_verificar |
+| **SIPRI Arms Transfers** (`sipri-at`) | /arsenal/comercio (agregados TIV) | download manual em armstransfers.sipri.org (sem CSV oficial do registro) | uso não comercial com citação; >10% da base exige autorização; uso comercial exige licença | aguardando arquivo |
+
+- **Regras do cadastro** (`lib/arsenal/cadastro.ts`, `lib/fontes/wikidata/specs.ts`): cada campo com URL da declaração; o dado do item vem primeiro e, se faltar, o da **família declarada à mão** em `config/arsenal.yaml` (citada como "dado da família …"); declarações da família qualificadas para outra variante (P518) não valem; valores divergentes viram intervalo; sem dado, campo vazio.
+- **Consulta SPARQL**: o QID precisa ficar dentro de cada ramo do `UNION` (com `VALUES` de fora, o Blazegraph varreu todos os P279 e estourou o tempo).
+- **Fotos**: escolha prioriza o equipamento (voo, navegação, disparo) e descarta bastidores com pessoas (manutenção, cerimônias); exibida a miniatura de 960 px (`thumb.wikimedia.org`), não o original.
+- **Carga inicial**: 15 fichas, 80 fotos, ~6 mil caracteres do DeepL (descrições, variantes, legendas). Atualização semanal no job `arsenal`.
+
+## 11. Fase 8: notícias de IA e drones (16/11/2026)
+
+- **Sem fonte nova**: as abas de `/tecnologia` leem a tabela `noticias` (coletada pelo `gdelt-gkg`). Filtro de cada aba em `lib/tecnologia/topicos.ts`: tema da ingestão (`drones`, `ia`, `guerra-eletronica`) e, para FPV, enxames e defesa antidrone, termos no título. O critério aparece na própria aba.
+- **Consultas do `gdelt-gkg` ampliadas**: os termos casam a palavra inteira, então "drone" não pegava "drones". A consulta `drones` passou a incluir `drones`, `UAVs`, `FPV`, `loitering munitions`, `counter-UAS` e `C-UAS`; `guerra_eletronica` ganhou `jammer`/`jammers`. Vale só para as coletas novas; o que já estava no banco não é reprocessado.
+- **Volume medido em 16/11/2026** (~2 dias de coleta): defesa antidrone 6 notícias, IA 1, FPV/enxames/guerra eletrônica 0 — as abas vazias mostram aviso e carimbo, sem tela vazia.
+- **Imprensa especializada** (Breaking Defense, The War Zone etc., linha 45 da §3): ainda não integrada; entra como fonte própria via `/nova-fonte` (RSS, só título + link + resumo próprio).
+- **Textos explicativos (item 2, aprovados em 16/11/2026)**: `content/tecnologia/<id>.mdx`, lidos no servidor por `lib/tecnologia/dossie.ts` com `yaml` + Zod, que já são dependências. **Nenhuma biblioteca de MDX foi adicionada** (custo zero, nada a registrar). O leitor aceita só `## seção`, parágrafos, `- listas`, `**negrito**`, `*itálico*` e chamadas `[n]`; recusa JSX, links no corpo, fonte listada e não citada e chamada sem fonte. As fontes ficam no frontmatter (nome, título, URL https, data, como foi verificada) e aparecem numeradas no rodapé de cada aba (`#ref-<id>-n`). Só `status: publicado` vai ao ar.
+- **Linha do tempo dos drones (item 3, aprovada em 16/11/2026)**: `content/tecnologia/linha-do-tempo.yaml`, mesmo esquema de fontes dos textos; cada marco cita ao menos uma fonte e o build falha se faltar. Sem dependência nova.
+- **"Humano no circuito?" (item 4, aprovado em 16/11/2026)**: `content/tecnologia/humano-no-circuito.yaml`, mesmo esquema de fontes; todo trecho (introdução, níveis, andamento, posições) precisa citar fonte e o andamento precisa estar em ordem cronológica, senão o build falha. Situação registrada em 16/11/2026, primeiro dia da 7ª Conferência de Revisão da CCW; atualizar quando o resultado sair. Sem dependência nova.
+- **Indicadores (item 5)**: o roteiro previa o GDELT TimelineVol, que faz parte do `gdelt-doc` (`quebrada`, HTTP 429). No lugar, "Notícias por semana" conta as notícias já gravadas em `noticias` por tema (`drones`, `ia`, `guerra-eletronica`), semanas de segunda a domingo em UTC, últimas 12 semanas, começando na semana da notícia mais antiga. Sem chamada externa nem fonte nova; a página cita o GDELT (licença livre com citação) e avisa que o número mede a cobertura captada pela coleta, não a atividade militar.
+
+## 12. Fase 9: arquivo histórico (16/11/2026)
+
+- **`ucdp-series` (ativa)**: UCDP/PRIO Armed Conflict Dataset e UCDP Battle-Related Deaths Dataset (nível de conflito), baixados de https://ucdp.uu.se/downloads/ sem chave, licença CC BY 4.0. Gratuito. O UCDP pede citar Davies, Pettersson & Öberg (2026), "Organized violence 1989–2025, and violent political protests", *Journal of Peace Research*, e Gleditsch et al. (2002), *Journal of Peace Research* 39(5); as duas referências aparecem em `/arquivo`.
+- **Sem job agendado**: os conjuntos são anuais (versão 26.1 cobre conflitos de 1946 a 2025 e mortes de 1989 a 2025). `pnpm arquivo:ucdp` acha a versão mais recente na página de downloads, baixa os dois zips (≈ 85 KB) e grava as contagens por ano em `content/arquivo/ucdp-series.json`, validado por `lib/arquivo/series.ts` no build. Amostras reais em `lib/fontes/ucdp-series/__fixtures__/`.
+- **Leitura dos números**: contamos conflitos ativos por ano (uma linha do ACD por conflito-ano), por tipo e com 1.000+ mortes ("guerra" na definição do UCDP), e somamos as mortes em combate (estimativa, mínimo e máximo). As séries não cobrem conflitos entre grupos não estatais nem violência unilateral contra civis. Versão 26.1: 65 conflitos em 2025, o maior número desde 1946.
+- **Linha do tempo 1914 → hoje**: `content/arquivo/linha-do-tempo.yaml`; fontes: Office of the Historian (Departamento de Estado dos EUA), Wikipédia em inglês (CC BY-SA) e o próprio UCDP.
+
+## 13. Fase 11: publicação e monitoramento (16/11/2026)
+
+- **Sem serviço novo.** Site na Vercel Hobby (gratuita, não comercial) e coleta no GitHub Actions (repositório público: minutos gratuitos). Passo a passo e variáveis em `docs/PUBLICACAO.md`.
+- **Job `manutencao` (diário)**: verificação das fontes (`lib/manutencao/saude.ts`), limpeza (notícias > 180 dias, execuções > 90 dias), uso do DeepL (`GET /v2/usage`) e alertas como issues do GitHub, com o `GITHUB_TOKEN` do próprio workflow (`issues: write`). Campo novo `verificar` em `config/fontes.yaml`: URL leve para o teste diário (usado no `gdelt-gkg`, no `xinhua` — pasta do GDELT dá 404 — e no `wikidata` — SPARQL sem consulta não responde).
+- **DeepL**: em 16/11/2026, `/v2/usage` informou limite de 1.000.000 caracteres/mês nesta conta (a documentação pública do plano Free fala em 500.000); o alerta usa o limite informado pela API. Uso do mês: 63.854 (6,4%).
