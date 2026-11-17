@@ -134,7 +134,8 @@ pnpm build && pnpm start build de produção local
 pnpm lint | typecheck | test | test:watch | test:e2e
 pnpm ingest:<fonte>      roda um adaptador localmente (existem: gdelt-gkg, gdelt-doc, ucdp-candidato, fr-eua, xinhua, governos)
 pnpm ingest:all          roda todos os adaptadores ativos (run.ts --job todos)
-pnpm arsenal:cadastrar --todos --gravar   cadastra/atualiza as fichas de config/arsenal.yaml
+pnpm arsenal:cadastrar --todos --gravar   cadastra/atualiza as fichas de config/arsenal.yaml (copia as fotos para o Storage)
+pnpm arsenal:espelhar-fotos [--seco]      copia para o bucket `fotos` do Supabase as fotos já gravadas que ainda apontam para o Wikimedia
 node scripts/desempenho/lcp.mjs [url] [rotas]   mede o LCP com 4G lenta e CPU 4× (rode antes pnpm build && pnpm start -p 3200)
 pnpm arquivo:ucdp [--seco]                regenera content/arquivo/ucdp-series.json com a versão anual mais recente do UCDP
 pnpm db:migrate          regenera supabase/seed.sql e aplica migrações + seed no Supabase (projeto linkado)

@@ -39,4 +39,16 @@ describe("carregador de imagens do Wikimedia", () => {
     expect(() => miniaturaWikimedia("https://example.org/foto.jpg", 500)).toThrow(/fora do Wikimedia/);
     expect(carregador({ src: "/og.png", width: 500 })).toBe("/og.png");
   });
+
+  it("devolve a cópia do Storage como está e usa 960 px como reserva do Commons", () => {
+    const copia = "https://upwjywuaehpaamvhvsyu.supabase.co/storage/v1/object/public/fotos/commons/abc-960.jpg";
+    expect(carregador({ src: copia, width: 384 })).toBe(copia);
+    expect(carregador({ src: ORIGINAL, width: 384 })).toMatch(/\/960px-F-35_Demo/);
+    expect(carregador({ src: ORIGINAL, width: 1920 })).toMatch(/\/960px-F-35_Demo/);
+  });
+
+  it("recusa outros buckets e hosts parecidos com o do Supabase", () => {
+    expect(() => carregador({ src: "https://x.supabase.co/storage/v1/object/public/outro/a.jpg", width: 500 })).toThrow(/fora do Wikimedia/);
+    expect(() => carregador({ src: "https://supabase.co.example.org/storage/v1/object/public/fotos/a.jpg", width: 500 })).toThrow(/fora do Wikimedia/);
+  });
 });

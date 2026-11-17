@@ -26,7 +26,8 @@
     "ingest:xinhua": "tsx --env-file-if-exists=.env.local scripts/ingestao/xinhua.ts",
     "ingest:governos": "tsx --env-file-if-exists=.env.local scripts/ingestao/governos.ts",
     "arquivo:ucdp": "tsx scripts/arquivo/ucdp-series.ts",
-    "arsenal:cadastrar": "tsx --env-file-if-exists=.env.local scripts/arsenal/cadastrar.ts"
+    "arsenal:cadastrar": "tsx --env-file-if-exists=.env.local scripts/arsenal/cadastrar.ts",
+    "arsenal:espelhar-fotos": "tsx --env-file-if-exists=.env.local scripts/arsenal/espelhar-fotos.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

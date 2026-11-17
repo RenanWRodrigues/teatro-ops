@@ -65,6 +65,7 @@ Orçamento de tradução: ~6.000 títulos/mês cabem no DeepL Free (≈80 caract
 |---|---|---|
 | GitHub (repositório + Actions) | Código e ingestão agendada | Repositórios públicos têm minutos ilimitados; privados têm cota mensal grátis |
 | Supabase (plano gratuito) | Postgres + API | Projetos grátis pausam após inatividade — a ingestão agendada mantém ativo. Confira o limite de armazenamento atual |
+| Supabase Storage (plano gratuito) | Bucket público `fotos`: cópia de 960 px de cada foto do Commons (`lib/imagens/espelho.ts`), servida ao navegador | 1 GB de arquivos e cota mensal de tráfego no plano grátis; 80 fotos ≈ 10–20 MB. Sem redimensionamento (é recurso pago), por isso um tamanho só. O Wikimedia limita por IP as miniaturas fora do cache (HTTP 429), então o site não as carrega direto de lá |
 | Vercel Hobby | Hospedagem do Next.js | Uso não comercial |
 | Cloudflare Pages | Alternativa de hospedagem | Permite uso comercial; Next.js via adaptador OpenNext |
 | OpenFreeMap | Tiles de mapa | Sem chave |
