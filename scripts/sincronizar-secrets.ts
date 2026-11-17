@@ -9,7 +9,9 @@ const nomes = readFileSync(".env.example", "utf8")
   .split(/\r?\n/)
   .flatMap((l) => /^([A-Z][A-Z0-9_]*)=/.exec(l)?.[1] ?? []);
 
-const shell = process.platform === "win32";
+// Valores públicos que o workflow lê como `vars.*` (não `secrets.*`): vão com `gh variable set`.
+const VARIAVEIS = new Set(["WIKIMEDIA_USER_AGENT"]);
+
 let enviados = 0;
 for (const nome of nomes) {
   const valor = process.env[nome]?.trim();
@@ -21,12 +23,14 @@ for (const nome of nomes) {
     console.log(`  ${nome.padEnd(31)} ⚠ parece um comentário — não enviada`);
     continue;
   }
-  const r = spawnSync("gh", ["secret", "set", nome], { input: valor, shell, encoding: "utf8" });
+  const tipo = VARIAVEIS.has(nome) ? "variable" : "secret";
+  // Sem shell: o gh é um executável, e com shell o Node só concatena os argumentos (DEP0190).
+  const r = spawnSync("gh", [tipo, "set", nome], { input: valor, encoding: "utf8" });
   if (r.status === 0) {
     enviados++;
-    console.log(`  ${nome.padEnd(31)} enviada`);
+    console.log(`  ${nome.padEnd(31)} enviada (${tipo === "variable" ? "variável" : "secret"})`);
   } else {
     console.log(`  ${nome.padEnd(31)} ERRO: ${(r.stderr || "").trim().split("\n")[0]}`);
   }
 }
-console.log(`\n${enviados} secret(s) enviados ao repositório do remoto "origin".`);
+console.log(`\n${enviados} valor(es) enviados ao repositório do remoto "origin".`);
