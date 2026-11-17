@@ -104,7 +104,7 @@ Histórico detalhado de cada fase (arquivos, decisões, revisões): `docs/ROTEIR
 
 Convenções transversais:
 
-- **Leitura de dados**: as páginas leem via `lib/dados.ts` — banco primeiro, fixtures `[EXEMPLO]` de `lib/fixtures/` como reserva quando o banco não está configurado, falha ou está vazio.
+- **Leitura de dados**: as páginas leem via `lib/dados.ts` — banco primeiro, fixtures `[EXEMPLO]` de `lib/fixtures/` como reserva quando o banco não está configurado, falha ou está vazio. Todo caminho de reserva chama `cacheReserva()` (revalida em 5 min), senão uma falha no build fica em cache por horas ou dias. O build de produção na Vercel (`VERCEL_ENV=production`) falha se o Supabase não responder (`lib/db/verificar-build.ts`).
 - **Atribuição na UI**: toda fonte exibida passa por `CreditoFonte`/`ListaFontes`; na ficha, cada valor tem um `RefFonte` `[n]` que leva a `#ref-n`.
 - **Cache do Next 16**: `cacheComponents: true` em `next.config.ts` — a revalidação usa `"use cache"`/`cacheLife`, não `export const revalidate`. Leia `node_modules/next/dist/docs/` antes de usar APIs de cache (ver `AGENTS.md`). `partialPrefetching` está desligado de propósito (ver comentário em `next.config.ts`).
 

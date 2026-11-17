@@ -45,17 +45,29 @@ export type ComOrigem<T> = { dados: T; exemplo: boolean };
 
 const QUINZE_MINUTOS = { stale: 300, revalidate: 900, expire: 86_400 };
 
+/**
+ * Perfil da reserva: banco sem configuração, com erro ou vazio. Chamado no caminho de reserva
+ * de cada função com "use cache" — quando cacheLife é chamado duas vezes, vale o menor tempo.
+ * Sem isso, uma falha no build deixava as fixtures [EXEMPLO] no ar por dias (17/11/2026).
+ * `expire` ≥ 5 min para não virar buraco dinâmico no prerender (docs do cacheLife no Next 16).
+ */
+const RESERVA = { stale: 60, revalidate: 300, expire: 3_600 };
+const cacheReserva = () => cacheLife(RESERVA);
+
 export async function obterEquipamentos(): Promise<ComOrigem<Equipamento[]>> {
   "use cache";
   cacheLife("days");
   cacheTag("equipamentos");
   const [r, m] = await Promise.all([listarEquipamentos(), listarMidias()]);
+  // Fichas sem fotos (consulta das mídias falhou) também se corrigem em minutos.
+  if (!m.ok) cacheReserva();
   if (r.ok && r.dados.length > 0) {
     // Só a 1ª foto de cada equipamento vai para o card (capa); a galeria completa fica na ficha.
     const capas = new Map<string, LinhaMidia>();
     for (const midia of m.ok ? m.dados : []) if (midia.equipamento_slug && !capas.has(midia.equipamento_slug)) capas.set(midia.equipamento_slug, midia);
     return { dados: r.dados.map((l) => paraEquipamento(l, capas.has(l.slug) ? [capas.get(l.slug)!] : [])), exemplo: false };
   }
+  cacheReserva();
   return { dados: EQUIPAMENTOS_EXEMPLO, exemplo: true };
 }
 
@@ -65,9 +77,13 @@ export async function obterEquipamento(categoria: string, slug: string): Promise
   cacheLife("days");
   cacheTag("equipamentos", `equipamento:${slug}`);
   const lista = await obterEquipamentos();
-  if (lista.exemplo) return { dados: buscarEquipamentoExemplo(categoria, slug) ?? null, exemplo: true };
+  if (lista.exemplo) {
+    cacheReserva();
+    return { dados: buscarEquipamentoExemplo(categoria, slug) ?? null, exemplo: true };
+  }
   const r = await buscarEquipamentoBanco(categoria, slug);
   if (!r.ok) {
+    cacheReserva();
     // O catálogo veio do banco, mas a ficha falhou agora: melhor a versão da lista do que um erro cru.
     const daLista = lista.dados.find((e) => e.categoria === categoria && e.slug === slug) ?? null;
     return { dados: daLista, exemplo: false };
@@ -86,6 +102,7 @@ export async function obterConflitosEmFoco(limite = 4): Promise<ComOrigem<Confli
     const ordem = { alta: 0, tensao: 1, "cessar-fogo": 2 } as const;
     return { dados: ativos.sort((a, b) => ordem[a.intensidade] - ordem[b.intensidade]).slice(0, limite), exemplo: false };
   }
+  cacheReserva();
   return { dados: CONFLITOS_EXEMPLO, exemplo: true };
 }
 
@@ -95,6 +112,7 @@ export async function obterManchetes(limite = 10): Promise<ComOrigem<Manchete[]>
   cacheTag("noticias");
   const r = await listarManchetes(limite);
   if (r.ok && r.dados.length > 0) return { dados: r.dados.map(paraManchete), exemplo: false };
+  cacheReserva();
   return { dados: MANCHETES_EXEMPLO, exemplo: true };
 }
 
@@ -106,6 +124,7 @@ export async function obterNoticiasConflito(limite = 4): Promise<NoticiaConflito
   cacheLife(QUINZE_MINUTOS);
   cacheTag("noticias");
   const r = await listarNoticiasPorTema("conflitos", limite);
+  if (!r.ok) cacheReserva();
   return r.ok ? r.dados.map((l) => ({ ...paraManchete(l), resumo: l.resumo_pt })) : [];
 }
 
@@ -125,7 +144,11 @@ export async function obterMonitor(): Promise<ComOrigem<Monitor>> {
   const ativos = conflitos.ok ? conflitos.dados.flatMap((l) => paraConflito(l) ?? []) : [];
   const atualizadoEm = atualizacao.ok ? atualizacao.dados : null;
   // Sem conflitos curados ainda (Fase 5): contadores ficam "—", mas o horário da última coleta é real.
-  if (ativos.length === 0) return { dados: { ...MONITOR_EXEMPLO, atualizadoEm, fonte: null }, exemplo: true };
+  if (!conflitos.ok || !atualizacao.ok) cacheReserva();
+  if (ativos.length === 0) {
+    cacheReserva();
+    return { dados: { ...MONITOR_EXEMPLO, atualizadoEm, fonte: null }, exemplo: true };
+  }
   return {
     dados: {
       altaIntensidade: ativos.filter((c) => c.intensidade === "alta").length,
@@ -171,6 +194,7 @@ export async function obterConflitos(): Promise<ConflitoDetalhe[]> {
   cacheTag("conflitos");
   const r = await listarConflitos();
   if (r.ok && r.dados.length > 0) return r.dados.map(paraConflitoDetalhe);
+  cacheReserva();
   return curadoriaSemDados();
 }
 
@@ -189,6 +213,7 @@ export async function obterCamadasMapa(slug?: string): Promise<CamadasMapa> {
   cacheLife("hours");
   cacheTag("eventos", "noticias");
   const [ev, cob] = await Promise.all([listarEventosAgregados(), listarCoberturaMidia()]);
+  if (!ev.ok || !cob.ok) cacheReserva();
   // Uma célula pode ter eventos de mais de um conflito: soma por célula.
   const celulas = new Map<string, { lat: number; lon: number; eventos: number; mortes: number }>();
   for (const e of ev.ok ? ev.dados : []) {
@@ -234,6 +259,7 @@ export async function obterDetalheConflito(slug: string, paises: string[]): Prom
     listarNoticiasPorPaises(paises, 6),
     ultimaAtualizacao(["eventos", "noticias"]),
   ]);
+  if (!semanas.ok || !eventos.ok || !noticias.ok || !atualizacao.ok) cacheReserva();
   return {
     semanas: semanas.ok ? semanas.dados.map((s) => ({ semana: s.semana, eventos: s.eventos, mortes: s.mortes_estimadas })) : [],
     eventosRecentes: eventos.ok ? eventos.dados.map(paraEventoPublico) : [],
@@ -248,6 +274,7 @@ export async function obterAtualizacaoConflitos(): Promise<string | null> {
   cacheLife(QUINZE_MINUTOS);
   cacheTag("execucoes");
   const r = await ultimaAtualizacao(["eventos", "noticias"]);
+  if (!r.ok) cacheReserva();
   return r.ok ? r.dados : null;
 }
 
@@ -263,6 +290,7 @@ export async function obterDecisoes(): Promise<Decisao[]> {
   cacheTag("decisoes");
   const desde = new Date(Date.now() - DIAS_GOVERNOS * 86_400_000).toISOString();
   const r = await listarDecisoes({ desde, limite: 1000 });
+  if (!r.ok) cacheReserva();
   return r.ok ? r.dados.map(paraDecisao) : [];
 }
 
@@ -298,6 +326,7 @@ export async function obterAtualizacaoGovernos(): Promise<string | null> {
   cacheLife(QUINZE_MINUTOS);
   cacheTag("execucoes");
   const r = await ultimaAtualizacao(["governos"]);
+  if (!r.ok) cacheReserva();
   return r.ok ? r.dados : null;
 }
 
@@ -317,6 +346,7 @@ export async function obterFeedsTecnologia(limite = 6): Promise<Record<IdTopico,
   cacheTag("noticias");
   const ids = Object.keys(FILTROS_TOPICO) as IdTopico[];
   const resultados = await Promise.all(ids.map((id) => listarNoticiasPorTemasETermos(FILTROS_TOPICO[id], limite)));
+  if (resultados.some((r) => !r.ok)) cacheReserva();
   return Object.fromEntries(
     ids.map((id, i) => {
       const r = resultados[i]!;
@@ -377,6 +407,7 @@ export async function obterVolumeSemanalTecnologia(): Promise<VolumeSemanal | nu
     TEMAS_VOLUME.map((t) => t.tema),
     desde,
   );
+  if (!r.ok) cacheReserva();
   return r.ok ? agregarVolumeSemanal(r.dados, agora) : null;
 }
 
@@ -435,6 +466,7 @@ export async function obterAtualizacaoNoticias(): Promise<string | null> {
   cacheLife(QUINZE_MINUTOS);
   cacheTag("execucoes");
   const r = await ultimaAtualizacao(["noticias"]);
+  if (!r.ok) cacheReserva();
   return r.ok ? r.dados : null;
 }
 
@@ -448,6 +480,7 @@ export async function obterNoticiasEquipamento(slug: string, limite = 5): Promis
   const lista = lerListaArsenal(readFileSync(path.join(process.cwd(), "config/arsenal.yaml"), "utf8"));
   const termos = lista.find((e) => e.slug === slug)?.termos ?? [];
   const r = await listarNoticiasPorTermos(termos, limite);
+  if (!r.ok) cacheReserva();
   return r.ok ? r.dados.map((l) => ({ ...paraManchete(l), resumo: l.resumo_pt })) : [];
 }
 
@@ -468,5 +501,6 @@ export async function obterBusca(termo: string): Promise<RespostaBusca> {
   cacheTag("noticias", "busca");
   if (termo.length < 2) return { ok: true, resultados: [] };
   const r = await buscarGlobal(termo, 10);
+  if (!r.ok) cacheReserva();
   return r.ok ? { ok: true, resultados: r.dados } : { ok: false, motivo: r.motivo };
 }

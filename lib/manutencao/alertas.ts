@@ -47,4 +47,5 @@ export async function publicarAlerta(alerta: Alerta, destino: DestinoGithub): Pr
 
 export const TITULO_ALERTA_FONTES = "Manutenção: fontes de dados com problema";
 export const TITULO_ALERTA_DEEPL = "Manutenção: cota do DeepL acima de 70%";
+export const TITULO_ALERTA_SITE = "Manutenção: site publicado sem dados reais";
 export const LIMIAR_COTA_DEEPL = 0.7;

@@ -49,6 +49,8 @@ jobs:
       LIBRETRANSLATE_URL: ${{ secrets.LIBRETRANSLATE_URL }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       WIKIMEDIA_USER_AGENT: ${{ vars.WIKIMEDIA_USER_AGENT }}
+      SITE_PUBLICO_URL: ${{ vars.SITE_PUBLICO_URL }}
+      VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

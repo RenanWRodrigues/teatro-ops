@@ -38,6 +38,7 @@ if (job === "manutencao") {
     fontes: [...configFontes().values()],
     usoDeepl: chave ? () => criarClienteDeepL(chave).uso() : undefined,
     github: token && repositorio ? { token, repositorio } : null,
+    site: process.env.SITE_PUBLICO_URL?.trim() ? { url: process.env.SITE_PUBLICO_URL.trim(), bypass: process.env.VERCEL_PROTECTION_BYPASS?.trim() || null } : null,
     seco: values.seco,
   });
   for (const c of r.coleta) {
@@ -47,6 +48,7 @@ if (job === "manutencao") {
   console.log(
     `[limpeza] ${r.removidas.noticias} notícia(s) com mais de ${RETENCAO_DIAS.noticias} dias e ${r.removidas.execucoes} registro(s) de execução com mais de ${RETENCAO_DIAS.execucoes} dias${values.seco ? " (seco: nada apagado)" : ""}`,
   );
+  for (const p of r.site ?? []) console.log(`[site] ${p.situacao} · ${p.caminho}${p.detalhe ? ` · ${p.detalhe}` : ""}`);
   if (r.deepl) console.log(`[deepl] ${r.deepl.usados.toLocaleString("pt-BR")} de ${r.deepl.limite.toLocaleString("pt-BR")} caracteres (${(r.deepl.fracao * 100).toFixed(1)}%)`);
   for (const p of r.publicados) console.log(`[alerta] ${p}`);
   if (!r.alertas.length) console.log("[alerta] nenhum");

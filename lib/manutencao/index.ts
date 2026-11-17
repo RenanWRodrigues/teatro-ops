@@ -4,8 +4,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FonteYaml } from "@/lib/fontes/registro";
 import { formatarCarimbo } from "@/lib/format";
-import { LIMIAR_COTA_DEEPL, publicarAlerta, TITULO_ALERTA_DEEPL, TITULO_ALERTA_FONTES, type Alerta, type DestinoGithub } from "./alertas";
+import { LIMIAR_COTA_DEEPL, publicarAlerta, TITULO_ALERTA_DEEPL, TITULO_ALERTA_FONTES, TITULO_ALERTA_SITE, type Alerta, type DestinoGithub } from "./alertas";
 import { avaliarColeta, sondarEndereco, type Execucao, type SaudeColeta, type SondagemEndereco } from "./saude";
+import { verificarSite, type VerificacaoPagina } from "./site";
 
 /** Retenção: notícias somem do banco depois de 180 dias; o log de execuções, depois de 90. */
 export const RETENCAO_DIAS = { noticias: 180, execucoes: 90 } as const;
@@ -15,6 +16,8 @@ export type RelatorioManutencao = {
   enderecos: SondagemEndereco[];
   removidas: { noticias: number; execucoes: number };
   deepl: { usados: number; limite: number; fracao: number } | null;
+  /** Páginas do site publicado (null = SITE_PUBLICO_URL não configurada). */
+  site: VerificacaoPagina[] | null;
   alertas: Alerta[];
   publicados: string[];
 };
@@ -26,6 +29,8 @@ type Opcoes = {
   /** Uso do DeepL (null = sem chave configurada). */
   usoDeepl?: () => Promise<{ usados: number; limite: number }>;
   github?: DestinoGithub | null;
+  /** Site publicado a verificar; `bypass` = segredo "Protection Bypass for Automation" da Vercel. */
+  site?: { url: string; bypass?: string | null } | null;
   /** Não apaga dados nem publica issues (só relata). */
   seco?: boolean;
   fetchImpl?: typeof fetch;
@@ -38,7 +43,7 @@ const quando = (iso: string | null) => (iso ? formatarCarimbo(iso) : "nunca");
 /** Endereço com problema que merece alerta: fora do ar de verdade (rede, 404, 5xx), não "pede parâmetros". */
 const enderecoQuebrado = (s: SondagemEndereco) => !s.ok && (s.status === null || s.status === 404 || s.status === 410 || s.status >= 500);
 
-export function montarAlertas(r: Pick<RelatorioManutencao, "coleta" | "enderecos" | "deepl">, agora: Date): Alerta[] {
+export function montarAlertas(r: Pick<RelatorioManutencao, "coleta" | "enderecos" | "deepl"> & { site?: VerificacaoPagina[] | null }, agora: Date): Alerta[] {
   const alertas: Alerta[] = [];
   const semColeta = r.coleta.filter((c) => c.quebrada);
   const foraDoAr = r.enderecos.filter(enderecoQuebrado);
@@ -79,6 +84,21 @@ export function montarAlertas(r: Pick<RelatorioManutencao, "coleta" | "enderecos
         "",
         "Ao acabar a cota, os títulos ficam com \"Tradução pendente\" até o mês virar (ou até o LibreTranslate, se configurado, assumir).",
         "Opções: reduzir as consultas do GDELT em `config/fontes.yaml`, configurar `LIBRETRANSLATE_URL` ou aguardar a renovação.",
+      ].join("\n"),
+    });
+  }
+  const paginasRuins = (r.site ?? []).filter((p) => p.situacao === "exemplo" || p.situacao === "erro");
+  if (paginasRuins.length) {
+    alertas.push({
+      titulo: TITULO_ALERTA_SITE,
+      corpo: [
+        `Verificação de ${formatarCarimbo(agora)} (horário de Brasília).`,
+        "",
+        "| Página | Problema |",
+        "|---|---|",
+        ...paginasRuins.map((p) => `| \`${p.caminho}\` | ${p.detalhe ?? p.situacao} |`),
+        "",
+        "Se aparece [EXEMPLO], o site não leu o banco: confira na Vercel (Settings → Environment Variables, ambiente Production) `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`, se o projeto do Supabase não está pausado e faça um Redeploy sem o cache de build.",
       ].join("\n"),
     });
   }
@@ -127,8 +147,13 @@ export async function executarManutencao(opcoes: Opcoes): Promise<RelatorioManut
     }
   }
 
-  // 5) Alertas.
-  const alertas = montarAlertas({ coleta, enderecos, deepl }, agora);
+  // 5) Site publicado: páginas no ar e com dados reais.
+  let site: VerificacaoPagina[] | null = null;
+  if (opcoes.site?.url) site = await verificarSite(opcoes.site.url, { bypass: opcoes.site.bypass, fetchImpl });
+  else log("[manutencao] SITE_PUBLICO_URL não configurada: verificação do site publicado pulada.");
+
+  // 6) Alertas.
+  const alertas = montarAlertas({ coleta, enderecos, deepl, site }, agora);
   const publicados: string[] = [];
   for (const a of alertas) {
     if (seco || !github) {
@@ -139,7 +164,7 @@ export async function executarManutencao(opcoes: Opcoes): Promise<RelatorioManut
     publicados.push(`${a.titulo} → issue #${r.numero} ${r.acao}`);
   }
 
-  // 6) Registro da própria execução (sem fonte: é um job de serviço).
+  // 7) Registro da própria execução (sem fonte: é um job de serviço).
   if (!seco) {
     const { error } = await db.from("execucoes_ingestao").insert({
       job: "manutencao",
@@ -153,5 +178,5 @@ export async function executarManutencao(opcoes: Opcoes): Promise<RelatorioManut
     if (error) log(`[manutencao] não foi possível registrar a execução: ${error.message}`);
   }
 
-  return { coleta, enderecos, removidas, deepl, alertas, publicados };
+  return { coleta, enderecos, removidas, deepl, site, alertas, publicados };
 }
