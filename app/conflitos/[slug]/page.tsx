@@ -13,7 +13,17 @@ import { MapaConflitos } from "@/components/MapaConflitos";
 import { Rodape } from "@/components/Rodape";
 import { RotuloSecao } from "@/components/RotuloSecao";
 import { SeloIntensidade } from "@/components/SeloIntensidade";
-import { DIAS_GOVERNOS, obterCamadasMapa, obterConflito, obterConflitos, obterDecisoesRelacionadas, obterDetalheConflito } from "@/lib/dados";
+import { CorpoDossie } from "@/components/CorpoDossie";
+import {
+  DIAS_GOVERNOS,
+  obterCamadasMapa,
+  obterConflito,
+  obterConflitos,
+  obterContextoConflito,
+  obterDecisoesRelacionadas,
+  obterDetalheConflito,
+} from "@/lib/dados";
+import type { Dossie } from "@/lib/tecnologia/dossie";
 import { formatarData, formatarNumero } from "@/lib/format";
 import type { ConflitoDetalhe, Decisao } from "@/lib/tipos";
 
@@ -41,7 +51,7 @@ export default async function Page({ params }: { params: Params }) {
     obterCamadasMapa(c.slug),
     obterDecisoesRelacionadas(c.paises),
   ]);
-  return <Conteudo c={c} detalhe={detalhe} camadas={camadas} decisoes={decisoes} />;
+  return <Conteudo c={c} detalhe={detalhe} camadas={camadas} decisoes={decisoes} contexto={obterContextoConflito(c.slug)} />;
 }
 
 const n = (v: number) => formatarNumero(v, { casas: 0 });
@@ -65,9 +75,11 @@ function Conteudo({
   detalhe,
   camadas,
   decisoes,
+  contexto,
 }: {
   c: ConflitoDetalhe;
   decisoes: Decisao[];
+  contexto: Dossie | null;
   detalhe: Awaited<ReturnType<typeof obterDetalheConflito>>;
   camadas: Awaited<ReturnType<typeof obterCamadasMapa>>;
 }) {
@@ -119,6 +131,18 @@ function Conteudo({
               <ListaFontes fontes={c.fontes} />
             </div>
           </section>
+        ) : null}
+
+        {contexto ? (
+          <Secao id="titulo-contexto" rotulo="Contexto" titulo="Entenda o conflito">
+            {contexto.status === "rascunho" ? (
+              <p role="note" className="mb-6 max-w-[680px] border border-accent bg-surface-accent px-4 py-3 font-mono text-xs tracking-[0.06em] text-text-2">
+                <strong className="font-medium text-accent">[RASCUNHO]</strong> Visível só no ambiente de desenvolvimento — {contexto.revisao}.
+              </p>
+            ) : null}
+            <p className="max-w-[680px] text-lg leading-relaxed text-text">{contexto.resumo}</p>
+            <CorpoDossie dossie={contexto} />
+          </Secao>
         ) : null}
 
         <Secao id="titulo-mapa" rotulo="Mapa" titulo="Onde ocorreram os eventos">

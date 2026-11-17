@@ -28,6 +28,7 @@ import { lerListaArsenal } from "@/lib/arsenal/cadastro";
 import { classificar } from "@/lib/fontes/gdelt-doc/classificacao";
 import { lerEntradasFontes } from "@/lib/fontes/registro";
 import { lerCuradoria } from "@/lib/fontes/ucdp-candidato/curadoria";
+import { contextoVisivel, lerContexto } from "@/lib/conflitos/contexto";
 import { lerSeriesUcdp, type SeriesArquivo } from "@/lib/arquivo/series";
 import { TATICAS, type TipoDiagrama } from "@/lib/taticas/taticas";
 import { lerDossie, type Dossie } from "@/lib/tecnologia/dossie";
@@ -391,6 +392,18 @@ export function obterLinhaDoTempoArquivo(): LinhaDoTempoComFontes | null {
   const arquivo = "content/arquivo/linha-do-tempo.yaml";
   const linha = lerLinhaDoTempo(readFileSync(path.join(process.cwd(), arquivo), "utf8"), arquivo);
   return linha.status === "publicado" ? linha : null;
+}
+
+/** Texto de contexto do conflito (content/conflitos/<slug>.mdx); null se não existe ou ainda é rascunho em produção. */
+export function obterContextoConflito(slug: string): Dossie | null {
+  let conteudo: string;
+  try {
+    conteudo = readFileSync(path.join(process.cwd(), "content/conflitos", `${slug}.mdx`), "utf8");
+  } catch {
+    return null;
+  }
+  const d = lerContexto(conteudo, slug);
+  return contextoVisivel(d) ? d : null;
 }
 
 // ───────────────────────────── Táticas (Fase 9) ─────────────────────────────
