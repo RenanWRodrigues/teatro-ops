@@ -130,10 +130,25 @@ const SOBRE_PESSOAS =
 const SOBRE_EQUIPAMENTO =
   /\b(fl(y|ies|ying|ight)|takes? off|take-?off|landing|lands|formation|refuel\w*|taxi\w*|underway|sails?|at sea|fires?|firing|launch\w*|static display|air show|airshow|parked|in flight|on display|rolls? out|maneuver\w*)\b/i;
 
-/** Pontua uma foto: `null` = descartar (fala de pessoas/bastidores ou é pequena demais). */
+/**
+ * Não são fotos do equipamento: mapas de operadores, selos postais, diagramas e esquemas
+ * (o S-400 vinha com 5 mapas e um selo na galeria; o Javelin, com diagramas de trajetória; 17/11/2026).
+ */
+const NAO_E_FOTO =
+  /\b(maps?|world ?map|locator|operators?|users?[ _]map|stamps?|postage|diagrams?|schematics?|flight[ _]path|trajector\w*|cutaway|infographic|logo|emblem|insignia|patch|ranges? of|engagement (zones?|areas?)|coverage area)\b|worldmap|_operators|operators_|-operators|зон[ыа]\s*поражени|дальност/i;
+
+/**
+ * Imagens de ataque: o equipamento na mira, sendo atingido ou destruído. Não mostram o equipamento em
+ * si e costumam ser divulgadas por uma das partes (neutralidade, CLAUDE.md §1.5; casos do S-400, 17/11/2026).
+ */
+const IMAGEM_DE_ATAQUE = /\b(targeted|in the crosshairs|explod\w*|explosion|destroy\w*|being (hit|struck)|hit by|struck by|strike on|wreck\w*|burning)\b/i;
+
+/** Pontua uma foto: `null` = descartar (fala de pessoas/bastidores, não é foto ou é pequena demais). */
 export function pontuarFoto(f: Pick<FotoCommons, "arquivo" | "descricao" | "largura">): number | null {
   const texto = `${f.arquivo} ${f.descricao ?? ""}`;
   if (SOBRE_PESSOAS.test(texto)) return null;
+  if (NAO_E_FOTO.test(texto.replaceAll("_", " ")) || NAO_E_FOTO.test(f.arquivo)) return null;
+  if (IMAGEM_DE_ATAQUE.test(texto.replaceAll("_", " "))) return null;
   if (f.largura !== null && f.largura < 800) return null;
   return SOBRE_EQUIPAMENTO.test(texto) ? 2 : 1;
 }

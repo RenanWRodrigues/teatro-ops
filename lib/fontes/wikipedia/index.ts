@@ -8,10 +8,12 @@ export const esquemaResumo = z.object({
   type: z.string(),
   title: z.string(),
   extract: z.string(),
+  /** Item do Wikidata do artigo de destino: difere do pedido quando o sitelink é um redirecionamento. */
+  wikibase_item: z.string().optional(),
   content_urls: z.object({ desktop: z.object({ page: z.string().url() }) }),
 });
 
-export type ResumoWikipedia = { idioma: "pt" | "en"; titulo: string; texto: string; url: string };
+export type ResumoWikipedia = { idioma: "pt" | "en"; titulo: string; texto: string; url: string; qid?: string | null };
 
 /** Até 3 frases, sem passar de ~600 caracteres: o card mostra um parágrafo curto, com link para o artigo. */
 export function encurtarResumo(texto: string, maxFrases = 3, maxCaracteres = 600): string {
@@ -37,7 +39,7 @@ export function criarClienteWikipedia(opcoes: { fetchImpl?: typeof fetch } = {})
       const r = esquemaResumo.safeParse(await resp.json());
       // Páginas de desambiguação não servem de resumo.
       if (!r.success || r.data.type !== "standard" || !r.data.extract.trim()) return null;
-      return { idioma, titulo: r.data.title, texto: encurtarResumo(r.data.extract), url: r.data.content_urls.desktop.page };
+      return { idioma, titulo: r.data.title, texto: encurtarResumo(r.data.extract), url: r.data.content_urls.desktop.page, qid: r.data.wikibase_item ?? null };
     },
   };
 }

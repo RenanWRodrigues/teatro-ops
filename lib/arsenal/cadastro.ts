@@ -7,7 +7,7 @@ import { criarClienteCommons, escolherFotos, pontuarFoto, type FotoCommons } fro
 import { consultaDeclaracoes, consultaMetadados, consultaVariantes } from "@/lib/fontes/wikidata/consultas";
 import { qidDaUri, urlEntidade, type ClienteWikidata, type LinhaSparql } from "@/lib/fontes/wikidata";
 import { arquivoDoP18, lerDeclaracoes, listaDeRotulos, montarSpecs, rotulosSemPt, selecionar, type SpecGravada } from "@/lib/fontes/wikidata/specs";
-import { criarClienteWikipedia, tituloDaUrl, type ResumoWikipedia } from "@/lib/fontes/wikipedia";
+import { criarClienteWikipedia, encurtarResumo, tituloDaUrl, type ResumoWikipedia } from "@/lib/fontes/wikipedia";
 import { CATEGORIAS, type Categoria } from "@/lib/tipos";
 import type { ItemTraducao, ResultadoTraducao } from "@/lib/traducao/traduzir";
 
@@ -26,6 +26,12 @@ export const esquemaEntradaArsenal = z.object({
   termos: z.array(z.string().min(2)).default([]),
   /** QIDs das variantes a listar (padrão: subclasses diretas da família, sem propostas nem agrupamentos). */
   variantes: z.array(z.string().regex(/^Q\d+$/)).optional(),
+  /**
+   * Corte editorial do resumo da Wikipédia: só as N primeiras frases. Use quando as seguintes trazem
+   * juízo de valor ("o melhor do mundo"), comparação sem fonte ou detalhe que não cabe no site
+   * (CLAUDE.md §1.5 e §1.6). Registre o motivo num comentário ao lado da entrada.
+   */
+  resumo_frases: z.number().int().min(1).max(3).optional(),
 });
 export type EntradaArsenal = z.infer<typeof esquemaEntradaArsenal>;
 
@@ -160,12 +166,12 @@ export async function montarEquipamento(
   const fontes: FonteJson[] = [{ nome: "Wikidata", url: urlEntidade(e.qid), licenca: "CC0", coletado_em: agora }];
   let resumo: ResumoWikipedia | null = null;
   const comPt = [item, ...meta.filter((m) => m.papel === "pai")].find((m) => m.wikiPt);
-  if (comPt?.wikiPt) resumo = await deps.wikipedia.resumo("pt", tituloDaUrl(comPt.wikiPt));
+  if (comPt?.wikiPt) resumo = descartarRedirecionado(await deps.wikipedia.resumo("pt", tituloDaUrl(comPt.wikiPt)), comPt.qid, avisos);
   let resumoPt: string | null = resumo?.texto ?? null;
   let wikipediaPt: string | null = resumo ? resumo.titulo : null;
   if (!resumo) {
     const comEn = [item, ...meta.filter((m) => m.papel === "pai")].find((m) => m.wikiEn);
-    const en = comEn?.wikiEn ? await deps.wikipedia.resumo("en", tituloDaUrl(comEn.wikiEn)) : null;
+    const en = comEn?.wikiEn ? descartarRedirecionado(await deps.wikipedia.resumo("en", tituloDaUrl(comEn.wikiEn)), comEn.qid, avisos) : null;
     if (en) {
       resumoPt = (await traduzir([en.texto]))[0] ?? null;
       wikipediaPt = null;
@@ -175,6 +181,7 @@ export async function montarEquipamento(
   } else {
     fontes.push({ nome: "Wikipédia em português", url: resumo.url, licenca: "CC BY-SA 4.0", licenca_url: LICENCA_CC_BY_SA, coletado_em: agora });
   }
+  if (resumoPt && e.resumo_frases) resumoPt = encurtarResumo(resumoPt, e.resumo_frases);
   if (!resumoPt) vazios.push("resumo_pt");
   if (resumo && comPt && comPt.qid !== e.qid) avisos.push(`resumo do artigo da família (${resumo.titulo}), não da variante`);
 
@@ -250,4 +257,14 @@ export async function montarEquipamento(
     midias,
     relatorio: { vazios, avisos, caracteresDeepL },
   };
+}
+
+/**
+ * Sitelink que redireciona para o artigo de outro item (ex.: "Ka-52" na Wikipédia em inglês cai em
+ * "Kamov Ka-50", outro helicóptero; 17/11/2026): o resumo descreveria o equipamento errado.
+ */
+export function descartarRedirecionado(r: ResumoWikipedia | null, qidEsperado: string, avisos: string[]): ResumoWikipedia | null {
+  if (!r || !r.qid || r.qid === qidEsperado) return r;
+  avisos.push(`resumo descartado: o artigo "${r.titulo}" (Wikipédia ${r.idioma}) é de outro item (${r.qid}), não de ${qidEsperado}`);
+  return null;
 }

@@ -32,6 +32,21 @@ describe("licencaLivre", () => {
 
 describe("pontuarFoto", () => {
   const f = (arquivo: string, descricao: string | null = null, largura: number | null = 2000): Pick<FotoCommons, "arquivo" | "descricao" | "largura"> => ({ arquivo, descricao, largura });
+  it("recusa mapas, selos e diagramas (casos reais do S-400, Patriot e Javelin, 17/11/2026)", () => {
+    for (const arquivo of ["S-400 operators.png", "S-400_missile_operators_(fix).png", "Worldmap-MIM104-S300.png", "Stamp of Russia 2013 No 1688 Obukhov Plant.jpg", "1-27 Top attack flight path..PNG", "Shahed-136-operators-pngs.png"]) {
+      expect(pontuarFoto(f(arquivo)), arquivo).toBeNull();
+    }
+    expect(pontuarFoto(f("TBMD-1.jpg", "Ranges of the air defence systems IRIS-T SLM, Patriot and MEADS"))).toBeNull();
+    expect(pontuarFoto(f("Зоны поражения ракет ЗРК С-400.png"))).toBeNull();
+    expect(pontuarFoto(f("S-400 SAM during the Victory parade 2010.jpg"))).not.toBeNull();
+    expect(pontuarFoto(f("Iron Dome near Sderot.jpg"))).not.toBeNull();
+  });
+
+  it("recusa imagens de ataque (equipamento na mira ou destruído)", () => {
+    expect(pontuarFoto(f("Russian S-400 targeted by Ukrainian UAV.png"))).toBeNull();
+    expect(pontuarFoto(f("S-400 explodes.jpg", "The moment of detonation of a Russian S-400 destroyed by the Armed Forces"))).toBeNull();
+    expect(pontuarFoto(f("Leopard 2A7 at Eurosatory.jpg", "Leopard 2A7 on static display"))).not.toBeNull();
+  });
   it("prefere voo/navegação, recusa manutenção e fotos pequenas", () => {
     expect(pontuarFoto(f("F-35A takes off at Hill AFB.jpg"))).toBe(2);
     expect(pontuarFoto(f("F-35A at Luke.jpg"))).toBe(1);

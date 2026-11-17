@@ -37,7 +37,7 @@ for (const e of alvo) {
   console.log(`\n══ ${linha.nome} (${linha.wikidata_id}) — ${linha.classe}`);
   console.log(`descrição: ${linha.descricao ?? "—"}`);
   console.log(`origem: ${linha.pais_origem.join(", ") || "—"} · em serviço: ${linha.em_servico ?? "—"} · fabricante: ${linha.fabricante ?? "—"}`);
-  console.log(`resumo (${linha.wikipedia_pt ? `Wikipedia PT: ${linha.wikipedia_pt}` : linha.fontes.find((f) => f.nome.startsWith("Wikipedia"))?.nome ?? "sem fonte"}):\n  ${linha.resumo_pt ?? "—"}`);
+  console.log(`resumo (${linha.wikipedia_pt ? `Wikipedia PT: ${linha.wikipedia_pt}` : linha.fontes.find((f) => /^Wikip[eé]dia/.test(f.nome))?.nome ?? "sem fonte"}):\n  ${linha.resumo_pt ?? "—"}`);
   console.log("specs:");
   for (const [k, s] of Object.entries(linha.specs)) {
     const valor = "texto" in s ? s.texto : formatarEspecificacao({ valor: s.valor, unidade: s.unidade, fonte: { nome: s.fonte, url: s.url } });

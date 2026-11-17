@@ -33,3 +33,21 @@ equipamentos:
   - { slug: m142-himars, nome: M142 HIMARS, categoria: armamento, classe: Lançador múltiplo de foguetes, qid: Q2495802, termos: ["HIMARS"] }
   - { slug: bayraktar-tb2, nome: Bayraktar TB2, categoria: drones, classe: Drone armado · MALE, qid: Q17501733, termos: ["Bayraktar", "TB2"] }
   - { slug: mq-9-reaper, nome: MQ-9 Reaper, categoria: drones, classe: Drone armado · MALE, qid: Q816695, termos: ["MQ-9"] }
+
+  # Ampliação aprovada em 17/11/2026: defesa aérea, helicópteros e equipamentos citados nos conflitos atuais.
+  # QIDs conferidos em 17/11/2026 pela busca do Wikidata (rótulo e descrição em inglês entre aspas).
+  # Os termos são buscados como trecho do título (ilike): evite palavras soltas ambíguas ("Patriot", "Javelin").
+  - { slug: mim-104-patriot, nome: MIM-104 Patriot, categoria: defesa-aerea, classe: Sistema antiaéreo · longo alcance, qid: Q339025, termos: ["Patriot missile", "Patriot air defense", "Patriot batter", "sistema Patriot", "mísseis Patriot", "baterias Patriot"] }  # "MIM-104 Patriot — surface-to-air missile system"
+  - { slug: s-400-triumf, nome: S-400 Triumf, categoria: defesa-aerea, classe: Sistema antiaéreo · longo alcance, qid: Q861006, termos: ["S-400"] }  # "S-400 Triumf — Russian developed surface-to-air missile system"
+  # resumo_frases: 2 — a 3ª frase do artigo é uma expectativa futura sem data ("Israel espera aumentar…").
+  - { slug: cupula-de-ferro, nome: Cúpula de Ferro (Iron Dome), categoria: defesa-aerea, classe: Defesa contra foguetes · curto alcance, qid: Q81231, termos: ["Iron Dome", "Cúpula de Ferro", "Domo de Ferro"], resumo_frases: 2 }  # "Iron Dome — Israeli air defense system…"
+  - { slug: iris-t-slm, nome: IRIS-T SLM, categoria: defesa-aerea, classe: Sistema antiaéreo · médio alcance, qid: Q18412559, termos: ["IRIS-T"] }  # "IRIS-T SLM — German surface to air defence system"
+  # resumo_frases: 1 — a 2ª frase do artigo é juízo de valor ("o melhor helicóptero de ataque do mundo"; §1.5).
+  - { slug: ah-64-apache, nome: AH-64 Apache, categoria: helicopteros, classe: Helicóptero de ataque, qid: Q171468, termos: ["AH-64", "Apache helicopter", "helicóptero Apache", "helicópteros Apache"], resumo_frases: 1 }  # "Hughes AH-64 Apache — 1975 attack helicopter family"
+  - { slug: ka-52-alligator, nome: Ka-52 Alligator, categoria: helicopteros, classe: Helicóptero de ataque, qid: Q1723252, termos: ["Ka-52"] }  # "Kamov Ka-52 Alligator — attack helicopter series by Kamov"
+  - { slug: shahed-136, nome: Shahed-136, categoria: drones, classe: Munição de espera, qid: Q109044360, termos: ["Shahed", "Geran-2"] }  # "HESA Shahed 136 — Iranian loitering munition"
+  # resumo_frases: 1 — a 2ª frase do artigo compara com o Su-57 sem fonte.
+  - { slug: chengdu-j-20, nome: Chengdu J-20, categoria: cacas, classe: Caça · 5ª geração, qid: Q560319, termos: ["J-20"], resumo_frases: 1 }  # "Chengdu J-20 — fighter aircraft developed by China"
+  # resumo_frases: 2 — a 3ª frase do artigo detalha onde a blindagem dos carros é mais vulnerável (§1.6).
+  - { slug: fgm-148-javelin, nome: FGM-148 Javelin, categoria: armamento, classe: Míssil anticarro portátil, qid: Q634188, termos: ["Javelin missile", "FGM-148", "míssil Javelin", "mísseis Javelin"], resumo_frases: 2 }  # "FGM-148 Javelin — American man-portable … anti-tank missile"
+  - { slug: astros-ii, nome: Astros II, categoria: armamento, classe: Lançador múltiplo de foguetes, qid: Q195169, termos: ["Astros II", "Astros 2020", "sistema Astros"] }  # "Astros II — multiple launch rocket system by Avibras"

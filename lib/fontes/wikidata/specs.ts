@@ -233,6 +233,16 @@ function custo(s: Selecao): string | null {
   return [...new Set(partes)].join(" · ");
 }
 
+/**
+ * Massa em t nas categorias pesadas e em kg nas demais. Abaixo de 1 t volta para kg: em defesa aérea e
+ * armamento o Wikidata costuma trazer a massa do míssil (22 kg viravam "0 t" no Javelin, 17/11/2026).
+ */
+function massa(todas: Declaracao[], ctx: ContextoSpecs): SpecGravada | null {
+  const v = numerica(todas, "P2067", PESADO(ctx.categoria) ? ["t", "kg"] : ["kg", "t"], ctx);
+  if (v && "valor" in v && v.unidade === "t" && v.valor < 1) return numerica(todas, "P2067", ["kg"], ctx);
+  return v;
+}
+
 /** Monta `specs` e diz quais campos ficaram vazios (para o relatório do cadastro). */
 export function montarSpecs(todas: Declaracao[], ctx: ContextoSpecs): { specs: Record<string, SpecGravada>; vazios: string[] } {
   const specs: Record<string, SpecGravada> = {};
@@ -243,7 +253,7 @@ export function montarSpecs(todas: Declaracao[], ctx: ContextoSpecs): { specs: R
   por("primeiro_voo", texto(todas, "P606", ctx, (s) => formatarDataWikidata(s.declaracoes[0]!.valor, s.declaracoes[0]!.precisao)));
   por("entrada_servico", texto(todas, "P729", ctx, (s) => formatarDataWikidata(s.declaracoes[0]!.valor, s.declaracoes[0]!.precisao)));
   for (const [chave, def] of Object.entries(NUMERICAS)) por(chave, numerica(todas, def.prop, def.alvos(ctx.categoria), ctx));
-  por(chaveMassa(ctx.categoria), numerica(todas, "P2067", PESADO(ctx.categoria) ? ["t", "kg"] : ["kg", "t"], ctx));
+  por(chaveMassa(ctx.categoria), massa(todas, ctx));
   por("motor", texto(todas, "P516", ctx, (s) => rotulos(s).join(" / ") || null));
   por("armamento_principal", texto(todas, "P520", ctx, (s) => rotulos(s, ctx.traducoes).slice(0, 4).join(" · ") || null));
   por(

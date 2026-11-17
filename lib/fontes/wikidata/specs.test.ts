@@ -67,6 +67,13 @@ describe("regras de seleção", () => {
     expect(specs.comprimento).toMatchObject({ texto: "10–12 m (valores divergentes no Wikidata)" });
   });
 
+  it("massa abaixo de 1 t fica em kg mesmo nas categorias pesadas (míssil do Javelin)", () => {
+    const { specs } = montarSpecs([d({ prop: "P2067", valor: "22.3", unidadeEn: "kilogram" })], { ...ctx, item: "Q1", pais: [], categoria: "armamento" });
+    expect(specs.massa).toMatchObject({ valor: 22, unidade: "kg" });
+    const pesado = montarSpecs([d({ prop: "P2067", valor: "16250", unidadeEn: "kilogram" })], { ...ctx, item: "Q1", pais: [], categoria: "armamento" });
+    expect(pesado.specs.massa).toMatchObject({ valor: 16.3, unidade: "t" });
+  });
+
   it("massa de navio vira deslocamento em toneladas", () => {
     const { specs } = montarSpecs([d({ prop: "P2067", valor: "100000", unidadeEn: "tonne" })], { ...ctx, item: "Q1", pais: [], categoria: "embarcacoes" });
     expect(specs.deslocamento).toMatchObject({ valor: 100000, unidade: "t" });
