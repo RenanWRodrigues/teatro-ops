@@ -90,6 +90,10 @@ export function MapaConflitos({ conflitos, camadas, controles, prefixoLink, clas
         // JS e CSS do MapLibre só são baixados quando o mapa entra na tela.
         const [maplibre] = await Promise.all([import("maplibre-gl"), import("maplibre-gl/dist/maplibre-gl.css")]);
         if (cancelado) return;
+        // O MapLibre 6 procura o worker ao lado do próprio arquivo (import.meta.url), mas o Turbopack
+        // não copia esse arquivo para o bundle — sem isto o mapa falha com "Worker failed to load".
+        // O `new URL(..., import.meta.url)` faz o bundler emitir o worker como asset.
+        maplibre.setWorkerUrl(new URL("maplibre-gl/dist/maplibre-gl-worker.mjs", import.meta.url).href);
         const mapa = new maplibre.Map({
           container: el,
           style: ESTILO,
@@ -237,7 +241,11 @@ export function MapaConflitos({ conflitos, camadas, controles, prefixoLink, clas
         role="region"
         aria-label="Mapa de conflitos. A mesma informação está na lista de conflitos."
       >
-        <div ref={alvo} className="absolute inset-0" />
+        {/* O CSS do MapLibre põe `position: relative` no contêiner do mapa e, por não estar numa camada,
+            vence o `absolute` do Tailwind — o mapa ficava com altura 0. Por isso o mapa vai num filho. */}
+        <div className="absolute inset-0">
+          <div ref={alvo} className="size-full" />
+        </div>
         {estado !== "pronto" ? (
           <p className="pointer-events-none absolute inset-0 flex items-center justify-center px-6 text-center font-mono text-[13px] tracking-[0.1em] text-muted">
             {estado === "erro" ? "Mapa indisponível neste navegador. Veja a lista de conflitos." : "Carregando mapa…"}
