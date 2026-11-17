@@ -67,7 +67,7 @@ A construção segue `PROMPTS.md` fase por fase (1 esqueleto → 2 design system
 
 Histórico detalhado de cada fase (arquivos, decisões, revisões): `docs/ROTEIRO.md`. Ao concluir algo, registre lá e atualize este resumo.
 
-**Fase atual: 11 — publicação e monitoramento.** Fases 1–10 concluídas, com as pendências abaixo.
+**Fase atual: 11 — publicação e monitoramento.** Fases 1–10 concluídas, com as pendências abaixo. Textos de contexto dos conflitos: Sudão publicado; os 12 de alta intensidade em rascunho aguardando o editor; os 15 em tensão ainda não escritos.
 
 | Fase | Entregue |
 |---|---|
@@ -83,7 +83,6 @@ Histórico detalhado de cada fase (arquivos, decisões, revisões): `docs/ROTEIR
 
 **Pendentes do usuário (bloqueiam partes do site):**
 - Variável `WIKIMEDIA_USER_AGENT` no GitHub (sem ela o job `arsenal` falha; issue #1) e secret `DEEPL_API_KEY` (`pnpm secrets:sincronizar`).
-- `pnpm db:migrate` para aplicar `0004_busca.sql` no remoto (a CLI do Supabase foi bloqueada pelo Windows nesta máquina); até lá `/busca` mostra "Busca temporariamente indisponível".
 - Deploy na Vercel pelo painel (`docs/PUBLICACAO.md`).
 - Credenciais: `acled` (myACLED), `reliefweb` (appname), `nasa-firms` (opcional), `congress-eua` (`CONGRESS_GOV_API_KEY`), `dvids` (`DVIDS_API_KEY`).
 - `/arsenal/comercio` aguarda o arquivo do SIPRI baixado à mão. Imprensa especializada de tecnologia ainda não integrada.
@@ -101,7 +100,7 @@ Histórico detalhado de cada fase (arquivos, decisões, revisões): `docs/ROTEIR
 - Títulos em inglês recebem `lang="en"` e o selo "TRADUÇÃO PENDENTE"; a função `buscar` devolve `pendente` e `idioma` para isso.
 - Animações decorativas são finitas (≤ 5 s) e respeitam `prefers-reduced-motion`; só o ticker é contínuo, tem pausa e vira lista vertical com movimento reduzido.
 - URL pública: `NEXT_PUBLIC_SITE_URL` › `VERCEL_PROJECT_PRODUCTION_URL` › localhost.
-- Migrações `0001`–`0004` existem (a `0004` ainda não foi aplicada no remoto); a próxima mudança de esquema vai numa `0005`.
+- Migrações `0001`–`0004` aplicadas no remoto (a `0004`, da busca, em 17/11/2026); a próxima mudança de esquema vai numa `0005`.
 
 Convenções transversais:
 
