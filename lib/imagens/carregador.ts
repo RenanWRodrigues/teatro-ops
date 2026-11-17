@@ -1,0 +1,46 @@
+// Carregador do next/image (images.loaderFile em next.config.ts).
+//
+// Por que não o otimizador da Vercel: o Wikimedia recusa pedidos de servidores sem User-Agent
+// identificável (403) e limita robôs genéricos (429) — em produção as fotos não carregavam.
+// Aqui o navegador do leitor busca direto a miniatura oficial do Commons no tamanho certo:
+// sem chave, sem cota de otimização da Vercel e com o cache do próprio Wikimedia.
+//
+// O Commons só gera miniaturas em degraus fixos (outros tamanhos dão HTTP 400); o original
+// pode ter vários MB, por isso nunca é usado.
+
+const HOST = "upload.wikimedia.org";
+/** A API do Commons devolve as miniaturas (`thumburl`) em thumb.wikimedia.org desde 2026; os caminhos são os mesmos. */
+const HOSTS_ACEITOS = new Set([HOST, "thumb.wikimedia.org"]);
+const PREFIXO = "/wikipedia/commons/";
+/** Degraus aceitos pelo Commons (conferidos em 17/11/2026: 640 px, por exemplo, devolve 400). */
+export const DEGRAUS_WIKIMEDIA = [250, 330, 500, 960, 1280, 1920] as const;
+
+/** Menor degrau que cobre a largura pedida; acima de 1920 px, usa 1920. */
+export function degrauPara(largura: number): number {
+  return DEGRAUS_WIKIMEDIA.find((d) => d >= largura) ?? DEGRAUS_WIKIMEDIA[DEGRAUS_WIKIMEDIA.length - 1]!;
+}
+
+/**
+ * Converte o endereço de um arquivo do Commons (original ou miniatura) no da miniatura com a largura pedida.
+ * Ex.: /wikipedia/commons/1/1e/Foto.jpg → /wikipedia/commons/thumb/1/1e/Foto.jpg/960px-Foto.jpg
+ */
+export function miniaturaWikimedia(src: string, largura: number): string {
+  const url = new URL(src);
+  if (!HOSTS_ACEITOS.has(url.hostname) || !url.pathname.startsWith(PREFIXO)) {
+    // Só fotos de licença livre do Commons (CLAUDE.md §1.4); outro host é erro de dados.
+    throw new Error(`Imagem fora do Wikimedia Commons: ${url.hostname}`);
+  }
+  let caminho = url.pathname.slice(PREFIXO.length);
+  // Já é miniatura ("thumb/1/1e/Foto.jpg/250px-Foto.jpg"): volta ao caminho do original.
+  if (caminho.startsWith("thumb/")) caminho = caminho.slice("thumb/".length).split("/").slice(0, 3).join("/");
+  const arquivo = caminho.split("/").at(-1)!;
+  // SVG vira PNG na miniatura; os demais formatos (JPG, PNG, GIF, WebP) mantêm a extensão.
+  const nomeMiniatura = /\.svg$/i.test(arquivo) ? `${arquivo}.png` : arquivo;
+  return `https://${HOST}${PREFIXO}thumb/${caminho}/${degrauPara(largura)}px-${nomeMiniatura}`;
+}
+
+export default function carregador({ src, width }: { src: string; width: number; quality?: number }): string {
+  // Imagens locais (/public) não passam por aqui com otimização; devolve como está.
+  if (src.startsWith("/")) return src;
+  return miniaturaWikimedia(src, width);
+}

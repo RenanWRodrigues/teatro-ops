@@ -7,12 +7,11 @@ const nextConfig: NextConfig = {
   // generateStaticParams aguardam `params` fora do <Suspense> e devolvem 404 de verdade.
   partialPrefetching: false,
   images: {
-    // Só fotos de licença livre (CLAUDE.md §1.4). Novos domínios entram junto com o adaptador da fonte.
-    remotePatterns: [
-      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/commons/**" },
-      // Miniaturas do Commons (a API devolve `thumburl` neste host desde 2026).
-      { protocol: "https", hostname: "thumb.wikimedia.org", pathname: "/wikipedia/commons/thumb/**" },
-    ],
+    // Fotos do Commons vão direto do Wikimedia ao navegador, como miniaturas no tamanho certo
+    // (lib/imagens/carregador.ts). O otimizador da Vercel não serve: o Wikimedia responde 403/429
+    // ao servidor dela. O carregador também recusa qualquer host fora do Commons (CLAUDE.md §1.4).
+    loader: "custom",
+    loaderFile: "./lib/imagens/carregador.ts",
   },
   turbopack: {
     rules: {
