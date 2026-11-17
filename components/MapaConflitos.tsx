@@ -28,6 +28,23 @@ const LOCALE_PT_BR = {
 
 type Estado = "ocioso" | "carregando" | "pronto" | "erro";
 
+/** Camadas de rótulos do estilo (países, estados, cidades, mares) que passam a usar o nome em português. */
+const CAMADAS_COM_NOME = /^(place_|water_name$)/;
+
+/**
+ * O estilo do OpenFreeMap rotula em inglês (`name_en`). Os tiles do OpenMapTiles trazem `name:pt`:
+ * usamos esse nome quando existe e mantemos a expressão original do estilo como reserva.
+ */
+function rotulosEmPortugues(mapa: import("maplibre-gl").Map) {
+  for (const camada of mapa.getStyle().layers) {
+    if (camada.type !== "symbol" || !CAMADAS_COM_NOME.test(camada.id)) continue;
+    const original: unknown = mapa.getLayoutProperty(camada.id, "text-field");
+    // Só expressões e textos fixos entram no `coalesce`; funções no formato antigo (`stops`) ficam como estão.
+    if (typeof original !== "string" && !Array.isArray(original)) continue;
+    mapa.setLayoutProperty(camada.id, "text-field", ["coalesce", ["get", "name:pt"], original as import("maplibre-gl").ExpressionSpecification]);
+  }
+}
+
 /** Conflito mostrado como marcador: ponto agregado do teatro, nunca posição de tropa. */
 export type MarcadorConflito = {
   slug: string;
@@ -109,6 +126,7 @@ export function MapaConflitos({ conflitos, camadas, controles, prefixoLink, clas
 
         mapa.on("load", () => {
           if (cancelado) return;
+          rotulosEmPortugues(mapa);
           for (const id of Object.keys(CAMADAS) as IdCamada[]) {
             const pontos = camadas?.[id];
             if (!pontos || pontos.length === 0) continue;
